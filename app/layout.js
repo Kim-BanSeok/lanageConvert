@@ -3,7 +3,35 @@ import "./globals.css";
 export const metadata = {
   title: "나만의 언어 생성기 - My Language Generator",
   description: "나만의 언어 규칙을 만들고 AI로 자동 생성하는 3D 스타일 암호화 도구. PWA 지원으로 앱처럼 설치 가능!",
+  keywords: ["언어 생성기", "암호화", "PWA", "Next.js", "AI 언어", "텍스트 변환", "나만의 언어"],
+  authors: [{ name: "Kim-BanSeok" }],
+  creator: "Kim-BanSeok",
+  publisher: "Kim-BanSeok",
   manifest: "/manifest.json",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  openGraph: {
+    title: "나만의 언어 생성기 - My Language Generator",
+    description: "3D 스타일의 암호화 언어 생성 도구 | PWA 지원 | AI 자동 생성",
+    url: "https://lanage-convert.vercel.app",
+    siteName: "나만의 언어 생성기",
+    locale: "ko_KR",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "나만의 언어 생성기",
+    description: "3D 스타일의 암호화 언어 생성 도구",
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",

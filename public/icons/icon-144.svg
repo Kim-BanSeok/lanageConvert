@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="144" height="144" viewBox="0 0 144 144" xmlns="http://www.w3.org/2000/svg">
+  <!-- 배경 -->
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e293b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0f172a;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="iconGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#60a5fa;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#a855f7;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#22c55e;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- 배경 원 -->
+  <circle cx="72" cy="72" r="72" fill="url(#bgGrad)"/>
+  
+  <!-- 메인 로고: A → 가 -->
+  <g transform="translate(0, 0)">
+    <!-- 글자 "A" -->
+    <text x="36" y="64.8" 
+          font-family="Arial, sans-serif" 
+          font-size="43.199999999999996" 
+          font-weight="bold" 
+          fill="url(#iconGrad)"
+          text-anchor="middle">A</text>
+    
+    <!-- 화살표 -->
+    <path d="M 54.72 50.4 
+             L 89.28 50.4
+             L 83.52 43.199999999999996
+             M 89.28 50.4
+             L 83.52 57.6"
+          stroke="url(#iconGrad)" 
+          stroke-width="4.32" 
+          fill="none"
+          stroke-linecap="round"/>
+    
+    <!-- 글자 "가" -->
+    <text x="108" y="64.8" 
+          font-family="AppleGothic, sans-serif" 
+          font-size="43.199999999999996" 
+          font-weight="bold" 
+          fill="url(#iconGrad)"
+          text-anchor="middle">가</text>
+    
+    <!-- 하단 텍스트 -->
+    <text x="72" y="108" 
+          font-family="Arial, sans-serif" 
+          font-size="17.28" 
+          font-weight="600" 
+          fill="#e2e8f0"
+          text-anchor="middle"
+          opacity="0.9">언어생성</text>
+  </g>
+  
+  <!-- 외곽 빛 효과 -->
+  <circle cx="72" cy="72" r="70" 
+          fill="none" 
+          stroke="url(#iconGrad)" 
+          stroke-width="2" 
+          opacity="0.3"/>
+</svg>

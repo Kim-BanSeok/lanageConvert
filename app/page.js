@@ -1,0 +1,880 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import RuleRow from "./components/RuleRow";
+import Logo3D from "./components/Logo3D";
+import AIGeneratorModal from "./components/AIGeneratorModal";
+import LearnRuleModal from "./components/LearnRuleModal";
+import ConflictChecker from "./components/ConflictChecker";
+import TestTranslator from "./components/TestTranslator";
+import TTSPlayer from "./components/TTSPlayer";
+import NameGenerator from "./components/NameGenerator";
+import PWAInstallPrompt from "./components/PWAInstallPrompt";
+import { useCustomAlert } from "./components/CustomAlert";
+import {
+  encodeText,
+  decodeText,
+  getLastEncodeRules,
+  saveLastEncodeRules,
+  getEncodeOrderFromRules,
+} from "./utils/encodeDecode";
+
+export default function Home() {
+  const router = useRouter();
+  const { showAlert, AlertComponent } = useCustomAlert();
+  
+  const [rules, setRules] = useState([
+    { from: "사랑", to: "BODO" },
+    { from: "나", to: "DO" },
+    { from: "가", to: "BA" },
+  ]);
+
+  const [inputText, setInputText] = useState("");
+  const [outputText, setOutputText] = useState("");
+
+  // 프리셋 UI State
+  const [showPresetModal, setShowPresetModal] = useState(false);
+  const [presetName, setPresetName] = useState("");
+  const [presetList, setPresetList] = useState([]);
+
+  // AI 생성기 모달 State
+  const [showAIModal, setShowAIModal] = useState(false);
+  const [showLearnModal, setShowLearnModal] = useState(false);
+  
+  // AI 미리보기 상태
+  const [preview, setPreview] = useState({ mode: null, data: null });
+
+  // 규칙 추가
+  const addRule = () => {
+    setRules([...rules, { from: "", to: "" }]);
+  };
+
+  // 규칙 수정
+  const updateRule = (index, newRule) => {
+    const updated = [...rules];
+    updated[index] = newRule;
+    setRules(updated);
+  };
+
+  // 규칙 삭제
+  const deleteRule = (index) => {
+    setRules(rules.filter((_, i) => i !== index));
+  };
+
+  /* ---------------------------
+   *   localStorage 관련 처리
+   * --------------------------- */
+
+  // localStorage에서 프리셋 불러오기
+  useEffect(() => {
+    const saved = localStorage.getItem("language-presets");
+    if (saved) {
+      try {
+        setPresetList(JSON.parse(saved));
+      } catch (error) {
+        console.error("프리셋 불러오기 실패:", error);
+      }
+    }
+  }, []);
+
+  // AI 생성 미리보기 생성
+  useEffect(() => {
+    if (preview.mode === 1) {
+      setPreview((p) => ({ ...p, data: generateAI_CharacterMap() }));
+    } else if (preview.mode === 2) {
+      setPreview((p) => ({ ...p, data: generateAI_SyllableLanguage() }));
+    } else if (preview.mode === 3) {
+      setPreview((p) => ({ ...p, data: generateAI_PrefixSuffix() }));
+    } else if (preview.mode === 4) {
+      setPreview((p) => ({ ...p, data: generateAI_Crypto() }));
+    } else {
+      // 모드가 없거나 초기화 시 데이터 클리어
+      if (preview.mode === null && preview.data) {
+        setPreview({ mode: null, data: null });
+      }
+    }
+  }, [preview.mode]);
+
+  // 프리셋 저장
+  const savePreset = async () => {
+    if (!presetName.trim()) {
+      await showAlert("프리셋 이름을 입력해주세요.", "warning");
+      return;
+    }
+
+    // 빈 규칙 필터링
+    const validRules = rules.filter(
+      (rule) => rule && rule.from && rule.from.trim() !== ""
+    );
+
+    if (validRules.length === 0) {
+      await showAlert("저장할 규칙이 없습니다.", "warning");
+      return;
+    }
+
+    const newPreset = {
+      name: presetName.trim(),
+      rules: validRules,
+      createdAt: new Date().toISOString(),
+    };
+
+    const updatedList = [...presetList, newPreset];
+    setPresetList(updatedList);
+    localStorage.setItem("language-presets", JSON.stringify(updatedList));
+
+    await showAlert("프리셋이 저장되었습니다!", "success");
+    setPresetName("");
+    setShowPresetModal(false);
+  };
+
+  // 프리셋 불러오기
+  const loadPreset = async (preset) => {
+    if (preset.rules && preset.rules.length > 0) {
+      setRules(preset.rules);
+      setShowPresetModal(false);
+      await showAlert(`"${preset.name}" 프리셋을 불러왔습니다.`, "success");
+    } else {
+      await showAlert("프리셋에 규칙이 없습니다.", "warning");
+    }
+  };
+
+  // 프리셋 삭제
+  const deletePreset = async (idx) => {
+    const confirmed = window.confirm(`"${presetList[idx].name}" 프리셋을 삭제할까요?`);
+    if (!confirmed) return;
+
+    const updated = presetList.filter((_, i) => i !== idx);
+    setPresetList(updated);
+    localStorage.setItem("language-presets", JSON.stringify(updated));
+    await showAlert("프리셋이 삭제되었습니다.", "success");
+  };
+
+  // 암호화
+  const encode = async () => {
+    try {
+      if (!inputText.trim()) {
+        await showAlert("원본 텍스트를 입력해주세요.", "warning");
+        return;
+      }
+
+      console.log("🔐 [암호화 시작]");
+      console.log("📝 원본 텍스트:", inputText);
+      console.log("📋 전체 규칙:", rules);
+
+      const { result, appliedRules } = encodeText(inputText, rules);
+
+      if (appliedRules.length === 0) {
+        await showAlert("변환할 규칙이 없습니다. 규칙을 추가해주세요.", "warning");
+        return;
+      }
+
+      console.log("✅ 적용된 규칙:", appliedRules.map((r, i) => `${i + 1}. ${r.from} → ${r.to}`));
+      console.log("🎯 최종 암호화 결과:", result);
+
+      // 적용된 규칙을 sessionStorage에 저장 (복호화 시 사용)
+      saveLastEncodeRules(appliedRules);
+
+      setOutputText(result);
+      await showAlert(`암호화 완료! (${appliedRules.length}개 규칙 적용)`, "success", 2000);
+    } catch (error) {
+      console.error("암호화 중 오류 발생:", error);
+      await showAlert("암호화 중 오류가 발생했습니다: " + error.message, "error");
+    }
+  };
+
+  // 복호화
+  const decode = async () => {
+    try {
+      if (!inputText.trim()) {
+        await showAlert("원본 텍스트를 입력해주세요.", "warning");
+        return;
+      }
+
+      console.log("🔓 [복호화 시작]");
+      console.log("📝 암호화된 텍스트:", inputText);
+
+      // 암호화 시 실제로 적용된 규칙 불러오기
+      let appliedRules = getLastEncodeRules();
+
+      // 저장된 규칙이 없으면 전체 규칙 사용 (하위 호환성)
+      if (appliedRules.length === 0) {
+        appliedRules = getEncodeOrderFromRules(rules);
+        console.log("📋 전체 규칙 사용 (from.length 기준):", appliedRules.map((r) => `${r.from} → ${r.to}`));
+      } else {
+        console.log("📋 암호화에 사용된 규칙:", appliedRules.map((r) => `${r.from} → ${r.to}`));
+      }
+
+      if (appliedRules.length === 0) {
+        await showAlert("복호화할 규칙이 없습니다. 규칙을 추가해주세요.", "warning");
+        return;
+      }
+
+      const result = decodeText(inputText, appliedRules);
+      console.log("🎯 최종 복호화 결과:", result);
+      setOutputText(result);
+      await showAlert(`복호화 완료! (${appliedRules.length}개 규칙 적용)`, "success", 2000);
+    } catch (error) {
+      console.error("복호화 중 오류 발생:", error);
+      await showAlert("복호화 중 오류가 발생했습니다: " + error.message, "error");
+    }
+  };
+
+  // 결과 복사
+  const copyResult = async () => {
+    if (!outputText.trim()) {
+      await showAlert("복사할 결과가 없습니다.", "warning");
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(outputText);
+      await showAlert("결과가 복사되었습니다!", "success", 2000);
+    } catch (error) {
+      console.error("복사 실패:", error);
+      await showAlert("복사에 실패했습니다. 브라우저 권한을 확인해주세요.", "error");
+    }
+  };
+
+  // 텍스트 swap
+  const swapText = () => {
+    setInputText(outputText);
+    setOutputText(inputText);
+  };
+
+  // 랜덤 언어 생성 (영어 + 한글)
+  const generateRandomAlphabet = () => {
+    // 영어 알파벳
+    const alphabet = "abcdefghijklmnopqrstuvwxyz".split("");
+    
+    // 자주 쓰는 한글 글자들 (가나다순)
+    const koreanChars = [
+      "가", "나", "다", "라", "마", "바", "사", "아", "자", "차", "카", "타", "파", "하",
+      "거", "너", "더", "러", "머", "버", "서", "어", "저", "처", "커", "터", "퍼", "허",
+      "고", "노", "도", "로", "모", "보", "소", "오", "조", "초", "코", "토", "포", "호",
+      "구", "누", "두", "루", "무", "부", "수", "우", "주", "추", "쿠", "투", "푸", "후",
+      "그", "느", "드", "르", "므", "브", "스", "으", "즈", "츠", "크", "트", "프", "흐",
+      "기", "니", "디", "리", "미", "비", "시", "이", "지", "치", "키", "티", "피", "히",
+    ];
+
+    // 전체 문자 목록
+    const allChars = [...alphabet, ...koreanChars];
+    
+    // 피셔–예이츠 셔플
+    const shuffled = [...allChars];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+
+    const newRules = allChars.map((ch, index) => ({
+      from: ch,
+      to: shuffled[index],
+    }));
+
+    setRules(newRules);
+    showAlert(`${newRules.length}개의 규칙이 생성되었습니다! (영어 ${alphabet.length}개 + 한글 ${koreanChars.length}개)`, "success");
+  };
+
+  const clearRules = async () => {
+    const confirmed = window.confirm("정말 모든 규칙을 삭제할까요?");
+    if (confirmed) {
+      setRules([]);
+      await showAlert("모든 규칙이 삭제되었습니다.", "success");
+    }
+  };
+
+  // 규칙 내보내기
+  const exportRules = async () => {
+    const validRules = rules.filter(
+      (rule) => rule && rule.from && rule.from.trim() !== ""
+    );
+
+    if (validRules.length === 0) {
+      await showAlert("내보낼 규칙이 없습니다.", "warning");
+      return;
+    }
+
+    const dataStr = JSON.stringify(
+      {
+        version: "1.0",
+        exportedAt: new Date().toISOString(),
+        rules: validRules,
+      },
+      null,
+      2
+    );
+
+    const dataBlob = new Blob([dataStr], { type: "application/json" });
+    const url = URL.createObjectURL(dataBlob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `language-rules-${new Date().toISOString().split("T")[0]}.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+
+    await showAlert(`${validRules.length}개의 규칙이 내보내졌습니다!`, "success");
+  };
+
+  // 규칙 가져오기
+  const importRules = async () => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = ".json";
+    input.onchange = async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      try {
+        const text = await file.text();
+        const data = JSON.parse(text);
+
+        if (!data.rules || !Array.isArray(data.rules)) {
+          await showAlert("잘못된 파일 형식입니다.", "error");
+          return;
+        }
+
+        const validRules = data.rules.filter(
+          (rule) => rule && rule.from && rule.from.trim() !== ""
+        );
+
+        if (validRules.length === 0) {
+          await showAlert("가져올 규칙이 없습니다.", "warning");
+          return;
+        }
+
+        const confirmed = window.confirm(
+          `${validRules.length}개의 규칙을 가져오시겠습니까?\n기존 규칙은 유지되고 추가됩니다.`
+        );
+
+        if (confirmed) {
+          setRules([...rules, ...validRules]);
+          await showAlert(`${validRules.length}개의 규칙이 가져와졌습니다!`, "success");
+        }
+      } catch (error) {
+        console.error("파일 읽기 실패:", error);
+        await showAlert("파일을 읽는 중 오류가 발생했습니다.", "error");
+      }
+    };
+
+    input.click();
+  };
+
+  // ========================================
+  // AI 언어 생성 알고리즘
+  // ========================================
+
+  // A) 문자 기반 암호 언어 생성
+  const generateAI_CharacterMap = () => {
+    // 영어 알파벳
+    const alphabet = "abcdefghijklmnopqrstuvwxyz".split("");
+    
+    // 자주 쓰는 한글 글자들
+    const koreanChars = [
+      "가", "나", "다", "라", "마", "바", "사", "아", "자", "차", "카", "타", "파", "하",
+      "거", "너", "더", "러", "머", "버", "서", "어", "저", "처", "커", "터", "퍼", "허",
+      "고", "노", "도", "로", "모", "보", "소", "오", "조", "초", "코", "토", "포", "호",
+      "구", "누", "두", "루", "무", "부", "수", "우", "주", "추", "쿠", "투", "푸", "후",
+    ];
+    
+    const allChars = [...alphabet, ...koreanChars];
+    const shuffled = [...allChars];
+
+    // 피셔–예이츠 셔플
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+
+    return allChars.map((c, i) => ({
+      from: c,
+      to: shuffled[i] + (Math.random() > 0.7 ? shuffled[(i + 3) % allChars.length] : ""), // 약간 확장
+    }));
+  };
+
+  // B) 음절 기반 판타지 언어 생성
+  const generateAI_SyllableLanguage = () => {
+    const syllables = [
+      "ka", "ra", "ma", "ta", "sha", "lo", "fi", "ze", "nu", "ki",
+      "ba", "da", "ga", "la", "na", "sa", "wa", "ya", "ha", "pa",
+    ];
+    
+    // 영어 + 한글
+    const alphabet = "abcdefghijklmnopqrstuvwxyz".split("");
+    const koreanChars = [
+      "가", "나", "다", "라", "마", "바", "사", "아", "자", "차", "카", "타", "파", "하",
+      "거", "너", "더", "러", "머", "버", "서", "어", "저", "처", "커", "터", "퍼", "허",
+      "고", "노", "도", "로", "모", "보", "소", "오", "조", "초", "코", "토", "포", "호",
+      "구", "누", "두", "루", "무", "부", "수", "우", "주", "추", "쿠", "투", "푸", "후",
+    ];
+    
+    const allChars = [...alphabet, ...koreanChars];
+
+    return allChars.map((c) => ({
+      from: c,
+      to:
+        syllables[Math.floor(Math.random() * syllables.length)] +
+        (Math.random() > 0.5
+          ? syllables[Math.floor(Math.random() * syllables.length)]
+          : ""),
+    }));
+  };
+
+  // C) 접두사/접미사 규칙 언어 생성
+  const generateAI_PrefixSuffix = () => {
+    const prefixes = ["xo", "va", "zi", "re", "mo", "qu", "fy", "lo"];
+    const suffixes = ["-en", "-ar", "-um", "-iq", "-al", "-is", "-ox", "-yn"];
+
+    // 영어 + 한글
+    const alphabet = "abcdefghijklmnopqrstuvwxyz".split("");
+    const koreanChars = [
+      "가", "나", "다", "라", "마", "바", "사", "아", "자", "차", "카", "타", "파", "하",
+      "거", "너", "더", "러", "머", "버", "서", "어", "저", "처", "커", "터", "퍼", "허",
+      "고", "노", "도", "로", "모", "보", "소", "오", "조", "초", "코", "토", "포", "호",
+      "구", "누", "두", "루", "무", "부", "수", "우", "주", "추", "쿠", "투", "푸", "후",
+    ];
+    
+    const allChars = [...alphabet, ...koreanChars];
+
+    return allChars.map((c) => ({
+      from: c,
+      to:
+        prefixes[Math.floor(Math.random() * prefixes.length)] +
+        c +
+        suffixes[Math.floor(Math.random() * suffixes.length)],
+    }));
+  };
+
+  // D) 난수 기반 암호 언어 생성
+  const generateAI_Crypto = () => {
+    // 영어 + 한글
+    const alphabet = "abcdefghijklmnopqrstuvwxyz".split("");
+    const koreanChars = [
+      "가", "나", "다", "라", "마", "바", "사", "아", "자", "차", "카", "타", "파", "하",
+      "거", "너", "더", "러", "머", "버", "서", "어", "저", "처", "커", "터", "퍼", "허",
+      "고", "노", "도", "로", "모", "보", "소", "오", "조", "초", "코", "토", "포", "호",
+      "구", "누", "두", "루", "무", "부", "수", "우", "주", "추", "쿠", "투", "푸", "후",
+    ];
+    
+    const allChars = [...alphabet, ...koreanChars];
+
+    const randomChunk = () => {
+      const length = Math.floor(Math.random() * 3) + 2; // 2~4글자
+      return Array(length)
+        .fill(0)
+        .map(() => String.fromCharCode(97 + Math.floor(Math.random() * 26)))
+        .join("");
+    };
+
+    return allChars.map((c) => ({
+      from: c,
+      to: randomChunk() + (Math.random() > 0.6 ? randomChunk() : ""),
+    }));
+  };
+
+  // AI 언어 생성 메인 함수는 제거되었습니다.
+  // 대신 AIGeneratorModal 컴포넌트를 사용하세요.
+
+  // AI 생성 적용
+  const applyAIGeneration = async () => {
+    if (!preview.data || preview.data.length === 0) {
+      await showAlert("언어 생성 방식을 선택하세요.", "warning");
+      return;
+    }
+    setRules(preview.data);
+    setShowAIModal(false);
+    setPreview({ mode: null, data: null });
+    await showAlert(`🤖 AI 언어가 적용되었습니다! (${preview.data.length}개 규칙)`, "success");
+  };
+
+  // 단어 규칙 학습 알고리즘
+  const learnWordRules = async (original, translated) => {
+    const oWords = original.trim().split(/\s+/);
+    const tWords = translated.trim().split(/\s+/);
+
+    if (oWords.length !== tWords.length) {
+      await showAlert("두 문장의 단어 개수가 일치해야 합니다.", "warning");
+      return;
+    }
+
+    const learned = oWords.map((w, i) => ({
+      from: w,
+      to: tWords[i],
+    }));
+
+    setRules(learned);
+    setShowLearnModal(false);
+
+    await showAlert(`🧠 단어 규칙이 자동 학습되었습니다! (${learned.length}개)`, "success");
+  };
+
+  // 한글 자동 변환 규칙 생성
+  const generateKoreanRules = async () => {
+    if (!inputText.trim()) {
+      await showAlert("먼저 원본 텍스트를 입력해주세요.", "warning");
+      return;
+    }
+
+    // 한글 문자 추출 (가-힣 범위)
+    const koreanChars = new Set();
+    const text = inputText;
+    
+    for (let i = 0; i < text.length; i++) {
+      const char = text[i];
+      // 한글 유니코드 범위: 가(0xAC00) ~ 힣(0xD7A3)
+      if (char >= "\uAC00" && char <= "\uD7A3") {
+        koreanChars.add(char);
+      }
+    }
+
+    if (koreanChars.size === 0) {
+      await showAlert("입력된 텍스트에 한글이 없습니다.", "warning");
+      return;
+    }
+
+    // 기존 규칙에서 이미 사용된 변환 문자열 확인
+    const usedToValues = new Set(rules.map((r) => r.to).filter((t) => t));
+    
+    // 각 한글 문자에 대해 랜덤 변환 문자열 생성
+    const newRules = [];
+    const charsArray = Array.from(koreanChars);
+    
+    charsArray.forEach((char) => {
+      // 이미 규칙이 있는지 확인
+      const existingRule = rules.find((r) => r.from === char);
+      if (existingRule) {
+        return; // 이미 규칙이 있으면 스킵
+      }
+
+      // 랜덤 문자열 생성 (대문자 알파벳 2-4자)
+      let randomStr;
+      let attempts = 0;
+      const maxAttempts = 100; // 무한 루프 방지
+      
+      do {
+        const length = Math.floor(Math.random() * 3) + 2; // 2-4자
+        randomStr = Array.from({ length }, () => {
+          return String.fromCharCode(65 + Math.floor(Math.random() * 26)); // A-Z
+        }).join("");
+        attempts++;
+        
+        // 충돌이 너무 많으면 숫자 추가
+        if (attempts > 50 && !usedToValues.has(randomStr + "1")) {
+          randomStr = randomStr + "1";
+        }
+      } while (usedToValues.has(randomStr) && attempts < maxAttempts);
+      
+      // 최대 시도 횟수 초과 시 타임스탬프 추가
+      if (attempts >= maxAttempts) {
+        randomStr = randomStr + Date.now().toString().slice(-3);
+      }
+      
+      usedToValues.add(randomStr);
+      newRules.push({ from: char, to: randomStr });
+    });
+
+    if (newRules.length === 0) {
+      await showAlert("모든 한글 문자에 대한 규칙이 이미 존재합니다.", "info");
+      return;
+    }
+
+    // 기존 규칙에 추가
+    setRules([...rules, ...newRules]);
+    await showAlert(`${newRules.length}개의 한글 변환 규칙이 추가되었습니다.`, "success");
+  };
+
+  return (
+    <>
+      {AlertComponent}
+      <PWAInstallPrompt />
+      
+      <div className="max-w-5xl mx-auto p-6 space-y-6">
+        {/* 3D 로고 + 타이틀 영역 */}
+        <Logo3D />
+
+      {/* 갤러리 이동 버튼 */}
+      <div className="flex justify-end">
+        <button
+          className="btn-3d"
+          onClick={() => router.push("/gallery")}
+          title="언어 갤러리 페이지로 이동"
+        >
+          🖼️ 언어 갤러리
+        </button>
+      </div>
+
+      {/* 입력/출력 카드 영역 */}
+      <div className="grid md:grid-cols-2 gap-6">
+        {/* 입력 카드 */}
+        <div className="card-3d">
+          <h2 className="text-xl font-semibold mb-3">원본 텍스트</h2>
+          <textarea
+            className="input-3d w-full min-h-[160px]"
+            value={inputText}
+            onChange={(e) => setInputText(e.target.value)}
+            placeholder="여기에 문장을 입력하세요"
+          />
+
+          <div className="flex gap-3 mt-4 flex-wrap">
+            <button className="btn-3d" onClick={encode}>
+              🔐 암호화
+            </button>
+            <button className="btn-3d" onClick={decode}>
+              🔓 복호화
+            </button>
+            <button 
+              className="btn-3d btn-green" 
+              onClick={generateKoreanRules}
+              title="입력된 텍스트의 한글을 자동으로 변환 규칙 생성"
+            >
+              ✨ 한글 자동 변환
+            </button>
+          </div>
+        </div>
+
+        {/* 출력 카드 */}
+        <div className="card-3d">
+          <h2 className="text-xl font-semibold mb-3">결과 텍스트</h2>
+          <textarea
+            className="input-3d w-full min-h-[160px]"
+            value={outputText}
+            readOnly
+            placeholder="결과가 여기에 표시됩니다"
+          />
+
+          <div className="flex gap-3 mt-4 flex-wrap">
+            <button className="btn-3d" onClick={copyResult}>
+              📋 복사
+            </button>
+            <button className="btn-3d" onClick={swapText}>
+              🔁 교환
+            </button>
+            <TTSPlayer text={outputText} buttonText="🔊 음성 듣기" />
+          </div>
+        </div>
+      </div>
+
+      {/* 충돌 검사기 */}
+      <ConflictChecker 
+        rules={rules} 
+        onFixConflicts={(fixedRules) => setRules(fixedRules)}
+      />
+
+      {/* 테스트 번역기 */}
+      <TestTranslator rules={rules} />
+
+      {/* 규칙 편집 카드 */}
+      <div className="card-3d">
+        <div className="flex justify-between mb-3 flex-wrap gap-2">
+          <h2 className="text-xl font-semibold">변환 규칙</h2>
+
+          <div className="flex gap-2 flex-wrap">
+            <button className="btn-3d" onClick={addRule}>
+              ➕ 규칙 추가
+            </button>
+            <button className="btn-3d" onClick={generateRandomAlphabet}>
+              🎲 랜덤 생성
+            </button>
+            <button 
+              className="btn-3d" 
+              onClick={() => setShowAIModal(true)}
+              title="AI 알고리즘으로 다양한 언어 패턴 자동 생성"
+            >
+              🤖 AI 언어 생성
+            </button>
+            <button 
+              className="btn-3d" 
+              onClick={() => setShowLearnModal(true)}
+              title="원문과 변환문으로부터 단어 규칙 자동 학습"
+            >
+              🧠 단어 규칙 학습
+            </button>
+            <button className="btn-3d btn-red" onClick={clearRules}>
+              🧹 삭제
+            </button>
+            <button 
+              className="btn-3d" 
+              onClick={exportRules}
+              title="규칙을 JSON 파일로 내보내기"
+            >
+              📤 내보내기
+            </button>
+            <button 
+              className="btn-3d" 
+              onClick={importRules}
+              title="JSON 파일에서 규칙 가져오기"
+            >
+              📥 가져오기
+            </button>
+            <button 
+              className="btn-3d" 
+              onClick={() => setShowPresetModal(true)}
+              title="언어 프리셋 저장 및 불러오기"
+            >
+              💾 프리셋
+            </button>
+          </div>
+        </div>
+
+        <table className="table-3d">
+          <thead>
+            <tr>
+              <th>From</th>
+              <th>To</th>
+              <th>삭제</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {rules.filter(r => r && (r.from || r.to)).length === 0 ? (
+              <tr>
+                <td colSpan="3" className="text-center py-8 opacity-60">
+                  규칙이 없습니다. 위의 버튼을 사용하여 규칙을 추가하세요.
+                </td>
+              </tr>
+            ) : (
+              rules.map((rule, index) => (
+                <RuleRow
+                  key={index}
+                  index={index}
+                  rule={rule}
+                  onChange={updateRule}
+                  onDelete={deleteRule}
+                />
+              ))
+            )}
+          </tbody>
+        </table>
+
+        <p className="text-gray-400 text-sm mt-4 opacity-80">
+          규칙은 위에서 아래 순서대로 적용됩니다.  
+          긴 단어를 위에 두면 올바른 치환이 더 잘 일어납니다.
+        </p>
+      </div>
+
+      {/* ------------------------
+          AI 생성기 모달
+      ------------------------- */}
+      {showAIModal && (
+        <AIGeneratorModal
+          onClose={() => {
+            setShowAIModal(false);
+            setPreview({ mode: null, data: null });
+          }}
+          onGenerate={applyAIGeneration}
+          preview={preview}
+          setPreview={setPreview}
+        />
+      )}
+
+      {/* ------------------------
+          단어 규칙 학습 모달
+      ------------------------- */}
+      {showLearnModal && (
+        <LearnRuleModal
+          onClose={() => setShowLearnModal(false)}
+          onLearn={learnWordRules}
+        />
+      )}
+
+      {/* ------------------------
+          프리셋 모달
+      ------------------------- */}
+      {showPresetModal && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50"
+          onClick={() => setShowPresetModal(false)}
+        >
+          <div 
+            className="card-3d p-6 w-[90%] max-w-[400px] space-y-4"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 className="text-xl font-bold text-center">언어 프리셋</h2>
+
+            {/* 프리셋 저장 섹션 */}
+            <div>
+              <h3 className="font-semibold mb-2">새 프리셋 저장</h3>
+              
+              <div className="flex gap-2 mb-2">
+                <input
+                  className="input-3d flex-1"
+                  value={presetName}
+                  onChange={(e) => setPresetName(e.target.value)}
+                  onKeyPress={(e) => {
+                    if (e.key === "Enter") {
+                      savePreset();
+                    }
+                  }}
+                  placeholder="프리셋 이름 입력"
+                />
+                
+                <NameGenerator 
+                  rules={rules} 
+                  onSelectName={(name) => setPresetName(name)}
+                />
+              </div>
+
+              <button className="btn-3d w-full" onClick={savePreset}>
+                💾 저장하기
+              </button>
+            </div>
+
+            <hr className="opacity-40" />
+
+            {/* 프리셋 리스트 */}
+            <div>
+              <h3 className="font-semibold mb-2">저장된 프리셋 ({presetList.length})</h3>
+
+              <div className="space-y-2 max-h-[300px] overflow-y-auto">
+                {presetList.length === 0 && (
+                  <p className="text-sm opacity-70 text-center py-4">
+                    저장된 프리셋이 없습니다.
+                  </p>
+                )}
+
+                {presetList.map((preset, idx) => (
+                  <div
+                    key={idx}
+                    className="flex justify-between items-center p-3 bg-white/10 rounded-lg hover:bg-white/15 transition"
+                  >
+                    <div className="flex-1 min-w-0">
+                      <div className="font-medium truncate">{preset.name}</div>
+                      <div className="text-xs opacity-70">
+                        규칙 {preset.rules?.length || 0}개
+                      </div>
+                    </div>
+
+                    <div className="flex gap-2 ml-2">
+                      <button
+                        className="btn-3d px-3 py-1 text-sm"
+                        onClick={() => loadPreset(preset)}
+                      >
+                        불러오기
+                      </button>
+
+                      <button
+                        className="btn-3d btn-red px-3 py-1 text-sm"
+                        onClick={() => deletePreset(idx)}
+                      >
+                        삭제
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <button
+              className="btn-3d w-full mt-4"
+              onClick={() => setShowPresetModal(false)}
+            >
+              닫기
+            </button>
+          </div>
+        </div>
+      )}
+      </div>
+    </>
+  );
+}

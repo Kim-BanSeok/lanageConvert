@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- 배경 -->
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e293b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0f172a;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="iconGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#60a5fa;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#a855f7;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#22c55e;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- 배경 원 -->
+  <circle cx="256" cy="256" r="256" fill="url(#bgGrad)"/>
+  
+  <!-- 메인 로고: A → 가 -->
+  <g transform="translate(0, 0)">
+    <!-- 글자 "A" -->
+    <text x="128" y="230.4" 
+          font-family="Arial, sans-serif" 
+          font-size="153.6" 
+          font-weight="bold" 
+          fill="url(#iconGrad)"
+          text-anchor="middle">A</text>
+    
+    <!-- 화살표 -->
+    <path d="M 194.56 179.2 
+             L 317.44 179.2
+             L 296.96 153.6
+             M 317.44 179.2
+             L 296.96 204.8"
+          stroke="url(#iconGrad)" 
+          stroke-width="15.36" 
+          fill="none"
+          stroke-linecap="round"/>
+    
+    <!-- 글자 "가" -->
+    <text x="384" y="230.4" 
+          font-family="AppleGothic, sans-serif" 
+          font-size="153.6" 
+          font-weight="bold" 
+          fill="url(#iconGrad)"
+          text-anchor="middle">가</text>
+    
+    <!-- 하단 텍스트 -->
+    <text x="256" y="384" 
+          font-family="Arial, sans-serif" 
+          font-size="61.44" 
+          font-weight="600" 
+          fill="#e2e8f0"
+          text-anchor="middle"
+          opacity="0.9">언어생성</text>
+  </g>
+  
+  <!-- 외곽 빛 효과 -->
+  <circle cx="256" cy="256" r="254" 
+          fill="none" 
+          stroke="url(#iconGrad)" 
+          stroke-width="2" 
+          opacity="0.3"/>
+</svg>

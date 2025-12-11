@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="152" height="152" viewBox="0 0 152 152" xmlns="http://www.w3.org/2000/svg">
+  <!-- 배경 -->
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e293b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0f172a;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="iconGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#60a5fa;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#a855f7;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#22c55e;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- 배경 원 -->
+  <circle cx="76" cy="76" r="76" fill="url(#bgGrad)"/>
+  
+  <!-- 메인 로고: A → 가 -->
+  <g transform="translate(0, 0)">
+    <!-- 글자 "A" -->
+    <text x="38" y="68.4" 
+          font-family="Arial, sans-serif" 
+          font-size="45.6" 
+          font-weight="bold" 
+          fill="url(#iconGrad)"
+          text-anchor="middle">A</text>
+    
+    <!-- 화살표 -->
+    <path d="M 57.76 53.199999999999996 
+             L 94.24 53.199999999999996
+             L 88.16 45.6
+             M 94.24 53.199999999999996
+             L 88.16 60.800000000000004"
+          stroke="url(#iconGrad)" 
+          stroke-width="4.56" 
+          fill="none"
+          stroke-linecap="round"/>
+    
+    <!-- 글자 "가" -->
+    <text x="114" y="68.4" 
+          font-family="AppleGothic, sans-serif" 
+          font-size="45.6" 
+          font-weight="bold" 
+          fill="url(#iconGrad)"
+          text-anchor="middle">가</text>
+    
+    <!-- 하단 텍스트 -->
+    <text x="76" y="114" 
+          font-family="Arial, sans-serif" 
+          font-size="18.24" 
+          font-weight="600" 
+          fill="#e2e8f0"
+          text-anchor="middle"
+          opacity="0.9">언어생성</text>
+  </g>
+  
+  <!-- 외곽 빛 효과 -->
+  <circle cx="76" cy="76" r="74" 
+          fill="none" 
+          stroke="url(#iconGrad)" 
+          stroke-width="2" 
+          opacity="0.3"/>
+</svg>

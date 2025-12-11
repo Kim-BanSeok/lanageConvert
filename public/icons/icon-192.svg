@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="192" height="192" viewBox="0 0 192 192" xmlns="http://www.w3.org/2000/svg">
+  <!-- 배경 -->
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e293b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0f172a;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="iconGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#60a5fa;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#a855f7;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#22c55e;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- 배경 원 -->
+  <circle cx="96" cy="96" r="96" fill="url(#bgGrad)"/>
+  
+  <!-- 메인 로고: A → 가 -->
+  <g transform="translate(0, 0)">
+    <!-- 글자 "A" -->
+    <text x="48" y="86.4" 
+          font-family="Arial, sans-serif" 
+          font-size="57.599999999999994" 
+          font-weight="bold" 
+          fill="url(#iconGrad)"
+          text-anchor="middle">A</text>
+    
+    <!-- 화살표 -->
+    <path d="M 72.96000000000001 67.19999999999999 
+             L 119.03999999999999 67.19999999999999
+             L 111.35999999999999 57.599999999999994
+             M 119.03999999999999 67.19999999999999
+             L 111.35999999999999 76.80000000000001"
+          stroke="url(#iconGrad)" 
+          stroke-width="5.76" 
+          fill="none"
+          stroke-linecap="round"/>
+    
+    <!-- 글자 "가" -->
+    <text x="144" y="86.4" 
+          font-family="AppleGothic, sans-serif" 
+          font-size="57.599999999999994" 
+          font-weight="bold" 
+          fill="url(#iconGrad)"
+          text-anchor="middle">가</text>
+    
+    <!-- 하단 텍스트 -->
+    <text x="96" y="144" 
+          font-family="Arial, sans-serif" 
+          font-size="23.04" 
+          font-weight="600" 
+          fill="#e2e8f0"
+          text-anchor="middle"
+          opacity="0.9">언어생성</text>
+  </g>
+  
+  <!-- 외곽 빛 효과 -->
+  <circle cx="96" cy="96" r="94" 
+          fill="none" 
+          stroke="url(#iconGrad)" 
+          stroke-width="2" 
+          opacity="0.3"/>
+</svg>

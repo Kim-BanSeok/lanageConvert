@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>나만의 언어 생성기</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: #f3f4f6;
+      color: #111827;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 24px 16px 40px;
+    }
+
+    header {
+      margin-bottom: 24px;
+    }
+
+    header h1 {
+      margin: 0 0 8px;
+      font-size: 1.8rem;
+    }
+
+    header p {
+      margin: 0;
+      color: #4b5563;
+      font-size: 0.95rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    @media (max-width: 768px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+    }
+
+    .card h2 {
+      margin: 0 0 12px;
+      font-size: 1.1rem;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 140px;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+      padding: 10px;
+      resize: vertical;
+      font-size: 0.95rem;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 1px #3b82f6;
+    }
+
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    button {
+      border: none;
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: #2563eb;
+      color: white;
+    }
+
+    .btn-secondary {
+      background: #e5e7eb;
+      color: #111827;
+    }
+
+    .btn-danger {
+      background: #f97373;
+      color: white;
+    }
+
+    .rules-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .rules-header h2 {
+      margin: 0;
+    }
+
+    .rules-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    .rules-table th,
+    .rules-table td {
+      border-bottom: 1px solid #e5e7eb;
+      padding: 6px;
+      text-align: left;
+    }
+
+    .rules-table input {
+      width: 100%;
+      padding: 4px 6px;
+      border-radius: 6px;
+      border: 1px solid #e5e7eb;
+      font-size: 0.87rem;
+    }
+
+    .rules-table input:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 1px #3b82f6;
+    }
+
+    .rules-footer {
+      margin-top: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      font-size: 0.8rem;
+      color: #6b7280;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      background: #eff6ff;
+      color: #1d4ed8;
+    }
+
+    .hint {
+      font-size: 0.8rem;
+      color: #6b7280;
+      margin-top: 6px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>나만의 언어 생성기</h1>
+      <p>
+        규칙을 만들어서 일반 문장을 나만의 언어로 변환하거나, 다시 복호화할 수 있는 도구입니다.
+        간단한 치환 규칙부터, 알파벳 랜덤 암호까지 마음대로 만들어 보세요.
+      </p>
+    </header>
+
+    <div class="grid">
+      <!-- 원본 텍스트 -->
+      <div class="card">
+        <h2>원본 텍스트</h2>
+        <textarea
+          id="inputText"
+          placeholder="예시: 오늘 새벽 5시에 일어나서 나만의 언어를 만들었다."
+        ></textarea>
+        <div class="hint">
+          ✨ 위에 문장을 적고, 오른쪽에서 규칙을 만든 뒤 아래 버튼으로
+          변환해 보세요.
+        </div>
+        <div class="btn-row" style="margin-top: 12px;">
+          <button class="btn-primary" id="btnEncode">
+            🔐 암호화 (Encode)
+          </button>
+          <button class="btn-secondary" id="btnDecode">
+            🔓 복호화 (Decode)
+          </button>
+        </div>
+      </div>
+
+      <!-- 결과 텍스트 -->
+      <div class="card">
+        <h2>결과 텍스트</h2>
+        <textarea
+          id="outputText"
+          placeholder="변환 결과가 여기에 표시됩니다."
+          readonly
+        ></textarea>
+        <div class="btn-row" style="margin-top: 12px;">
+          <button class="btn-secondary" id="btnCopy">
+            📋 결과 복사
+          </button>
+          <button class="btn-secondary" id="btnSwap">
+            🔁 입력 & 결과 바꾸기
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 규칙 편집 영역 -->
+    <div class="card" style="margin-top: 16px;">
+      <div class="rules-header">
+        <h2>언어 변환 규칙</h2>
+        <div class="btn-row">
+          <button class="btn-secondary" id="btnAddRule">➕ 규칙 추가</button>
+          <button class="btn-secondary" id="btnRandomAlphabet">
+            🎲 알파벳 랜덤 언어 생성
+          </button>
+          <button class="btn-danger" id="btnClearRules">
+            🧹 모든 규칙 삭제
+          </button>
+        </div>
+      </div>
+
+      <table class="rules-table">
+        <thead>
+          <tr>
+            <th style="width: 35%;">원래 문자열 (From)</th>
+            <th style="width: 35%;">변환 문자열 (To)</th>
+            <th style="width: 20%;">옵션</th>
+            <th style="width: 10%;">삭제</th>
+          </tr>
+        </thead>
+        <tbody id="rulesBody">
+          <!-- 규칙 행이 JS로 동적으로 생성됨 -->
+        </tbody>
+      </table>
+
+      <div class="rules-footer">
+        <span class="badge">Tip</span>
+        <span>
+          위에서 아래 순서대로 규칙이 적용됩니다. 긴 단어 규칙을 위에 두면
+          예상치 못한 치환을 줄일 수 있습니다.
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 규칙 테이블의 tbody
+    const rulesBody = document.getElementById("rulesBody");
+
+    // 버튼 요소
+    const btnAddRule = document.getElementById("btnAddRule");
+    const btnRandomAlphabet = document.getElementById("btnRandomAlphabet");
+    const btnClearRules = document.getElementById("btnClearRules");
+    const btnEncode = document.getElementById("btnEncode");
+    const btnDecode = document.getElementById("btnDecode");
+    const btnCopy = document.getElementById("btnCopy");
+    const btnSwap = document.getElementById("btnSwap");
+
+    const inputText = document.getElementById("inputText");
+    const outputText = document.getElementById("outputText");
+
+    // 규칙 한 행 추가
+    function addRuleRow(fromValue = "", toValue = "") {
+      const tr = document.createElement("tr");
+
+      const tdFrom = document.createElement("td");
+      const tdTo = document.createElement("td");
+      const tdOption = document.createElement("td");
+      const tdDelete = document.createElement("td");
+
+      const inputFrom = document.createElement("input");
+      inputFrom.type = "text";
+      inputFrom.value = fromValue;
+      inputFrom.placeholder = "예: 가";
+
+      const inputTo = document.createElement("input");
+      inputTo.type = "text";
+      inputTo.value = toValue;
+      inputTo.placeholder = "예: BA";
+
+      tdFrom.appendChild(inputFrom);
+      tdTo.appendChild(inputTo);
+
+      // 옵션: 대소문자 구분, 전체 단어만 등 (지금은 placeholder로만)
+      const optionSpan = document.createElement("span");
+      optionSpan.textContent = "단순 치환";
+      optionSpan.style.fontSize = "0.8rem";
+      optionSpan.style.color = "#6b7280";
+      tdOption.appendChild(optionSpan);
+
+      const btnDeleteRow = document.createElement("button");
+      btnDeleteRow.textContent = "삭제";
+      btnDeleteRow.className = "btn-danger";
+      btnDeleteRow.style.fontSize = "0.8rem";
+      btnDeleteRow.addEventListener("click", () => {
+        tr.remove();
+      });
+      tdDelete.appendChild(btnDeleteRow);
+
+      tr.appendChild(tdFrom);
+      tr.appendChild(tdTo);
+      tr.appendChild(tdOption);
+      tr.appendChild(tdDelete);
+
+      rulesBody.appendChild(tr);
+    }
+
+    // 현재 규칙들을 배열로 가져오기
+    // [{from: "...", to: "..."}, ...]
+    function getRules() {
+      const rows = Array.from(rulesBody.querySelectorAll("tr"));
+      return rows
+        .map((row) => {
+          const inputs = row.querySelectorAll("input");
+          const from = inputs[0]?.value ?? "";
+          const to = inputs[1]?.value ?? "";
+          return { from, to };
+        })
+        .filter((rule) => rule.from !== "");
+    }
+
+    // 문자열 치환 함수 (간단 버전)
+    function applyRules(text, rules, direction = "encode") {
+      let result = text;
+
+      if (direction === "encode") {
+        // from -> to
+        rules.forEach((rule) => {
+          if (!rule.from) return;
+          const from = rule.from;
+          const to = rule.to ?? "";
+          result = result.split(from).join(to);
+        });
+      } else {
+        // decode: 역순으로 to -> from
+        const reversed = [...rules].reverse();
+        reversed.forEach((rule) => {
+          if (!rule.to) return;
+          const from = rule.from ?? "";
+          const to = rule.to;
+          result = result.split(to).join(from);
+        });
+      }
+
+      return result;
+    }
+
+    // 암호화 버튼 클릭
+    btnEncode.addEventListener("click", () => {
+      const text = inputText.value ?? "";
+      const rules = getRules();
+      const converted = applyRules(text, rules, "encode");
+      outputText.value = converted;
+    });
+
+    // 복호화 버튼 클릭
+    btnDecode.addEventListener("click", () => {
+      const text = inputText.value ?? "";
+      const rules = getRules();
+      const converted = applyRules(text, rules, "decode");
+      outputText.value = converted;
+    });
+
+    // 결과 복사
+    btnCopy.addEventListener("click", async () => {
+      const text = outputText.value;
+      if (!text) return;
+      try {
+        await navigator.clipboard.writeText(text);
+        alert("결과 텍스트가 클립보드에 복사되었습니다.");
+      } catch (e) {
+        alert("복사 중 오류가 발생했습니다. (브라우저 권한 확인)");
+      }
+    });
+
+    // 입력/결과 swap
+    btnSwap.addEventListener("click", () => {
+      const temp = inputText.value;
+      inputText.value = outputText.value;
+      outputText.value = temp;
+    });
+
+    // 규칙 추가 버튼
+    btnAddRule.addEventListener("click", () => {
+      addRuleRow();
+    });
+
+    // 알파벳 랜덤 언어 생성
+    btnRandomAlphabet.addEventListener("click", () => {
+      const alphabet = "abcdefghijklmnopqrstuvwxyz".split("");
+
+      // 피셔–예이츠 셔플
+      const shuffled = [...alphabet];
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      }
+
+      // 기존 규칙 제거
+      rulesBody.innerHTML = "";
+
+      // 알파벳 규칙 생성
+      alphabet.forEach((ch, idx) => {
+        const from = ch;
+        const to = shuffled[idx];
+        addRuleRow(from, to);
+      });
+    });
+
+    // 모든 규칙 삭제
+    btnClearRules.addEventListener("click", () => {
+      if (!confirm("정말 모든 규칙을 삭제할까요?")) return;
+      rulesBody.innerHTML = "";
+    });
+
+    // 기본 예시 규칙 몇 개 넣어주기
+    function initExampleRules() {
+      addRuleRow("사랑", "BODO");
+      addRuleRow("나", "DO");
+      addRuleRow("가", "BA");
+    }
+
+    // 초기화
+    initExampleRules();
+  </script>
+</body>
+</html>

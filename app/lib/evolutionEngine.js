@@ -14,7 +14,9 @@ function safeJsonParse(s, fallback) {
 
 export function loadSamples() {
   if (typeof window === "undefined") return [];
-  return safeJsonParse(localStorage.getItem(STORE_KEY), []);
+  const result = safeJsonParse(localStorage.getItem(STORE_KEY), []);
+  // null이나 undefined가 반환되지 않도록 보장
+  return Array.isArray(result) ? result : [];
 }
 
 export function saveSamples(samples) {

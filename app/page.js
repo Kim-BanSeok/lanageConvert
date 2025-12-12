@@ -124,12 +124,18 @@ export default function Home() {
 
   // 샘플 수 확인 및 진화 추천 체크
   useEffect(() => {
-    const samples = loadSamples();
-    setSampleCount(samples.length);
+    try {
+      const samples = loadSamples();
+      const count = Array.isArray(samples) ? samples.length : 0;
+      setSampleCount(count);
 
-    if (shouldRecommendEvolution(samples.length, 20)) {
-      setShowEvolutionRecommend(true);
-      markRecommended(samples.length);
+      if (shouldRecommendEvolution(count, 20)) {
+        setShowEvolutionRecommend(true);
+        markRecommended(count);
+      }
+    } catch (error) {
+      console.warn("샘플 로드 실패:", error);
+      setSampleCount(0);
     }
   }, [outputText]); // outputText 변경 시 체크
 

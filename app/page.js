@@ -953,7 +953,7 @@ export default function Home() {
           encode={encode}
           decode={decode}
           copyResult={copyResult}
-          swap={swap}
+          swap={swapText}
           showAlert={showAlert}
           router={router}
           theme={theme}

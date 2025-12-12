@@ -713,9 +713,13 @@ export default function Home() {
       <div className="max-w-5xl mx-auto p-6 space-y-6">
         {/* 3D 로고 + 타이틀 영역 */}
         <Logo3D
-        title={languageIdentity?.name || "My Secret Language"}
-        subtitle={languageIdentity?.tagline || "나만의 언어 생성기 · 3D Crypto Text Lab"}
-      />
+          title="My Secret Language"
+          subtitle={
+            languageIdentity
+              ? `${languageIdentity.name} · ${languageIdentity.tagline}`
+              : "나만의 언어 생성기 · 3D Crypto Text Lab"
+          }
+        />
 
         {/* AdSense 광고 영역 - 상단 */}
         <div className="card-3d p-3 my-4">

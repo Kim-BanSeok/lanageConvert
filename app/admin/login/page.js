@@ -9,9 +9,16 @@ export default function AdminLoginPage() {
   const onLogin = async () => {
     setLoading(true);
     try {
+      // 🛡️ CSRF 토큰 먼저 가져오기
+      const csrfRes = await fetch("/api/csrf-token");
+      const { token: csrfToken } = await csrfRes.json();
+
       const res = await fetch("/api/admin/login", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "X-CSRF-Token": csrfToken, // CSRF 토큰 헤더 추가
+        },
         body: JSON.stringify({ password }),
       });
 

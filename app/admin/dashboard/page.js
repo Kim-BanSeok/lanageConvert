@@ -72,8 +72,22 @@ export default function DashboardPage() {
   }, [stats]);
 
   const logout = async () => {
-    await fetch("/api/admin/logout", { method: "POST" });
-    window.location.href = "/admin/login";
+    try {
+      // 🛡️ CSRF 토큰 가져오기
+      const csrfRes = await fetch("/api/csrf-token");
+      const { token: csrfToken } = await csrfRes.json();
+
+      await fetch("/api/admin/logout", { 
+        method: "POST",
+        headers: {
+          "X-CSRF-Token": csrfToken,
+        },
+      });
+    } catch (error) {
+      console.error("Logout error:", error);
+    } finally {
+      window.location.href = "/admin/login";
+    }
   };
 
   return (

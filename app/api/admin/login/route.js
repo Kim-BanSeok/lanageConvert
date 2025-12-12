@@ -1,8 +1,37 @@
 import { NextResponse } from "next/server";
 import { makeSessionTokenSync, ADMIN_COOKIE_NAME } from "../../../lib/adminAuth";
+import { rateLimitCheck } from "../../../lib/rateLimiter";
+import { csrfMiddleware } from "../../../lib/csrf";
 
 export async function POST(req) {
   try {
+    // 🛡️ Rate Limiting 체크 (브루트포스 공격 방지)
+    const rateLimitResult = rateLimitCheck(req, 'login');
+    if (!rateLimitResult.allowed) {
+      return NextResponse.json(
+        { 
+          ok: false, 
+          message: `너무 많은 로그인 시도입니다. ${Math.ceil((rateLimitResult.resetTime - Date.now()) / 1000)}초 후에 다시 시도하세요.`,
+          retryAfter: Math.ceil((rateLimitResult.resetTime - Date.now()) / 1000)
+        }, 
+        { 
+          status: 429,
+          headers: {
+            'Retry-After': Math.ceil((rateLimitResult.resetTime - Date.now()) / 1000).toString(),
+            'X-RateLimit-Limit': rateLimitResult.limit.toString(),
+            'X-RateLimit-Remaining': rateLimitResult.remaining.toString(),
+            'X-RateLimit-Reset': new Date(rateLimitResult.resetTime).toISOString(),
+          }
+        }
+      );
+    }
+
+    // 🛡️ CSRF 토큰 검증
+    const csrfError = await csrfMiddleware(req);
+    if (csrfError) {
+      return csrfError;
+    }
+
     const body = await req.json();
     const password = body?.password || "";
 

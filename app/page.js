@@ -983,9 +983,24 @@ export default function Home() {
         <table className="table-3d">
           <thead>
             <tr>
-              <th>From</th>
-              <th>To</th>
-              <th>삭제</th>
+              <th className="text-left">
+                <div className="flex items-center gap-2">
+                  <span className="text-lg">📝</span>
+                  <span>원본 (From)</span>
+                </div>
+              </th>
+              <th className="text-left">
+                <div className="flex items-center gap-2">
+                  <span className="text-lg">🔄</span>
+                  <span>변환 (To)</span>
+                </div>
+              </th>
+              <th className="text-center">
+                <div className="flex items-center justify-center gap-2">
+                  <span className="text-lg">🗑️</span>
+                  <span>작업</span>
+                </div>
+              </th>
             </tr>
           </thead>
 

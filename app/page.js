@@ -24,7 +24,7 @@ import RuleSearch from "./components/RuleSearch";
 import ShortcutsHelpModal from "./components/ShortcutsHelpModal";
 import TranslationHistory from "./components/TranslationHistory";
 import RuleStatistics from "./components/RuleStatistics";
-import ThemeToggle from "./components/ThemeToggle";
+import NavigationBar from "./components/NavigationBar";
 import { useCustomAlert } from "./components/CustomAlert";
 import Adsense from "./components/Adsense";
 import { useKeyboardShortcuts } from "./hooks/useKeyboardShortcuts";
@@ -955,63 +955,21 @@ export default function Home() {
           />
         </div>
 
-      {/* 상단 네비게이션 바 */}
-      <div className="flex items-center justify-between mb-6 p-4 bg-slate-800/30 backdrop-blur-md rounded-2xl border border-slate-700/50">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
-            <span className="text-xl">🔮</span>
-          </div>
-          <div>
-            <div className="text-sm font-semibold text-white">Language Creator</div>
-            <div className="text-xs text-slate-400">나만의 암호 언어를 만들어보세요</div>
-          </div>
-        </div>
-        <div className="flex gap-2">
-          <ThemeToggle theme={theme} onToggle={toggleTheme} />
-          <button
-            className="btn-3d btn-compact"
-            onClick={() => setShowBackupModal(true)}
-            title="데이터 백업 및 복원 (Ctrl+B)"
-          >
-            💾 백업
-          </button>
-          <button
-            className="btn-3d btn-compact"
-            onClick={() => setShowHistory(true)}
-            title="번역 히스토리 보기"
-          >
-            📜 히스토리
-          </button>
-          <button
-            className="btn-3d btn-compact"
-            onClick={() => setShowStatistics(true)}
-            title="규칙 사용 통계"
-          >
-            📊 통계
-          </button>
-          <button
-            className="btn-3d btn-compact"
-            onClick={() => setShowShortcutsHelp(true)}
-            title="키보드 단축키 보기"
-          >
-            ⌨️ 단축키
-          </button>
-          <button
-            className="btn-3d btn-compact"
-            onClick={() => setShowQuickGuide(true)}
-            title="빠른 사용 가이드 (Ctrl+/)"
-          >
-            ❓ 사용법
-          </button>
-          <button
-            className="btn-3d btn-compact"
-            onClick={() => router.push("/gallery")}
-            title="언어 갤러리 페이지로 이동"
-          >
-            🖼️ 갤러리
-          </button>
-        </div>
-      </div>
+      {/* 🎨 깔끔하게 정리된 네비게이션 바 */}
+      <NavigationBar
+        theme={theme}
+        onToggleTheme={toggleTheme}
+        onBackup={() => setShowBackupModal(true)}
+        onHistory={() => setShowHistory(true)}
+        onStatistics={() => setShowStatistics(true)}
+        onShortcuts={() => setShowShortcutsHelp(true)}
+        onGuide={() => setShowQuickGuide(true)}
+        onGallery={() => router.push("/gallery")}
+        canUndo={canUndo}
+        canRedo={canRedo}
+        onUndo={undo}
+        onRedo={redo}
+      />
 
       {/* 입력/출력 카드 영역 */}
       <div className="grid md:grid-cols-2 gap-6">

@@ -16,7 +16,8 @@ function safeJsonParse(s, fallback) {
 
 export function loadSamples() {
   if (typeof window === "undefined") return [];
-  const result = safeJsonParse(safeLocalStorageGet(STORE_KEY, "[]"), []);
+  const value = safeLocalStorageGet(STORE_KEY);
+  const result = safeJsonParse(value, []);
   // null이나 undefined가 반환되지 않도록 보장
   return Array.isArray(result) ? result : [];
 }
@@ -169,7 +170,8 @@ export function normalizeRules(rules) {
  */
 export function loadVersions() {
   if (typeof window === "undefined") return [];
-  const result = safeJsonParse(safeLocalStorageGet(VERSION_KEY, "[]"), []);
+  const value = safeLocalStorageGet(VERSION_KEY);
+  const result = safeJsonParse(value, []);
   // null이나 undefined가 반환되지 않도록 보장
   return Array.isArray(result) ? result : [];
 }

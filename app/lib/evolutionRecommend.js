@@ -1,11 +1,14 @@
 // app/lib/evolutionRecommend.js
 
+import { safeLocalStorageGet, safeLocalStorageSet, safeLocalStorageRemove } from "../utils/storage";
+
 const RECOMMEND_KEY = "evolution_recommend_state_v1";
 
 function loadState() {
   if (typeof window === "undefined") return null;
   try {
-    return JSON.parse(localStorage.getItem(RECOMMEND_KEY));
+    const value = safeLocalStorageGet(RECOMMEND_KEY);
+    return value ? JSON.parse(value) : null;
   } catch {
     return null;
   }
@@ -13,7 +16,7 @@ function loadState() {
 
 function saveState(state) {
   if (typeof window === "undefined") return;
-  localStorage.setItem(RECOMMEND_KEY, JSON.stringify(state));
+  safeLocalStorageSet(RECOMMEND_KEY, JSON.stringify(state));
 }
 
 /**

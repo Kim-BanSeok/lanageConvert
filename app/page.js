@@ -15,6 +15,8 @@ import ServiceWorkerRegistration from "./components/ServiceWorkerRegistration";
 import LanguageIdentityModal from "./components/LanguageIdentityModal";
 import EvolutionModal from "./components/EvolutionModal";
 import EvolutionRecommendBanner from "./components/EvolutionRecommendBanner";
+import TutorialModal from "./components/TutorialModal";
+import QuickGuideModal from "./components/QuickGuideModal";
 import { useCustomAlert } from "./components/CustomAlert";
 import Adsense from "./components/Adsense";
 import { translateText } from "./lib/translationEngine";
@@ -68,6 +70,10 @@ export default function Home() {
   const [sampleCount, setSampleCount] = useState(0);
   const [learnToast, setLearnToast] = useState(false);
 
+  // 튜토리얼 모달 State
+  const [showTutorial, setShowTutorial] = useState(false);
+  const [showQuickGuide, setShowQuickGuide] = useState(false);
+
   // 생성된 언어 아이덴티티 저장(로컬)
   const [languageIdentity, setLanguageIdentity] = useState(null);
 
@@ -81,6 +87,16 @@ export default function Home() {
       }
     } catch (error) {
       console.warn("언어 아이덴티티 로드 실패:", error);
+    }
+
+    // 첫 방문자 체크
+    const hasVisited = safeLocalStorageGet("has_visited");
+    if (!hasVisited) {
+      // 2초 후에 튜토리얼 표시
+      setTimeout(() => {
+        setShowTutorial(true);
+        safeLocalStorageSet("has_visited", "true");
+      }, 1500);
     }
   }, []);
 
@@ -740,13 +756,22 @@ export default function Home() {
             <div className="text-xs text-slate-400">나만의 암호 언어를 만들어보세요</div>
           </div>
         </div>
-        <button
-          className="btn-3d"
-          onClick={() => router.push("/gallery")}
-          title="언어 갤러리 페이지로 이동"
-        >
-          🖼️ 갤러리
-        </button>
+        <div className="flex gap-2">
+          <button
+            className="btn-3d btn-compact"
+            onClick={() => setShowQuickGuide(true)}
+            title="빠른 사용 가이드"
+          >
+            ❓ 사용법
+          </button>
+          <button
+            className="btn-3d btn-compact"
+            onClick={() => router.push("/gallery")}
+            title="언어 갤러리 페이지로 이동"
+          >
+            🖼️ 갤러리
+          </button>
+        </div>
       </div>
 
       {/* 입력/출력 카드 영역 */}
@@ -1244,6 +1269,20 @@ export default function Home() {
           baseRules={rules}
           onClose={() => setShowEvolutionModal(false)}
           onApplyRules={applyEvolvedRules}
+        />
+      )}
+
+      {/* 튜토리얼 모달 (첫 방문자용) */}
+      {showTutorial && (
+        <TutorialModal
+          onClose={() => setShowTutorial(false)}
+        />
+      )}
+
+      {/* 빠른 가이드 모달 */}
+      {showQuickGuide && (
+        <QuickGuideModal
+          onClose={() => setShowQuickGuide(false)}
         />
       )}
       </div>

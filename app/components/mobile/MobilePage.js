@@ -51,6 +51,7 @@ export default function MobilePage({
         return (
           <MobileTranslate
             rules={rules}
+            setRules={setRules}
             inputText={inputText}
             setInputText={setInputText}
             outputText={outputText}

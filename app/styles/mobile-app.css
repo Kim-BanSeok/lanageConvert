@@ -152,6 +152,17 @@
   margin-top: 8px;
 }
 
+.mobile-btn-special {
+  width: 100%;
+  margin-bottom: 12px;
+  background: linear-gradient(135deg, rgba(236, 72, 153, 0.3), rgba(219, 39, 119, 0.3));
+  border: 2px solid rgba(236, 72, 153, 0.4);
+}
+
+.mobile-btn-special:active {
+  background: linear-gradient(135deg, rgba(236, 72, 153, 0.4), rgba(219, 39, 119, 0.4));
+}
+
 /* ==================== 홈 화면 ==================== */
 .mobile-home-container {
   padding: 20px 0;

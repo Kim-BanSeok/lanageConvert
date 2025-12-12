@@ -7,6 +7,7 @@ import { useState } from "react";
  */
 export default function MobileTranslate({
   rules,
+  setRules,
   inputText,
   setInputText,
   outputText,
@@ -51,6 +52,79 @@ export default function MobileTranslate({
     
     await decode();
     setIsOutputMode(true);
+  };
+
+  // 한글 자동 변환 규칙 생성
+  const handleGenerateKoreanRules = async () => {
+    if (!inputText.trim()) {
+      await showAlert("먼저 텍스트를 입력해주세요", "warning");
+      return;
+    }
+
+    // 한글 문자 추출 (가-힣 범위)
+    const koreanChars = new Set();
+    const text = inputText;
+    
+    for (let i = 0; i < text.length; i++) {
+      const char = text[i];
+      // 한글 유니코드 범위: 가(0xAC00) ~ 힣(0xD7A3)
+      if (char >= "\uAC00" && char <= "\uD7A3") {
+        koreanChars.add(char);
+      }
+    }
+
+    if (koreanChars.size === 0) {
+      await showAlert("입력된 텍스트에 한글이 없습니다", "warning");
+      return;
+    }
+
+    // 기존 규칙에서 이미 사용된 변환 문자열 확인
+    const usedToValues = new Set(rules.map((r) => r.to).filter((t) => t));
+    
+    // 각 한글 문자에 대해 랜덤 변환 문자열 생성
+    const newRules = [];
+    const charsArray = Array.from(koreanChars);
+    
+    charsArray.forEach((char) => {
+      // 이미 규칙이 있는지 확인
+      const existingRule = rules.find((r) => r.from === char);
+      if (existingRule) {
+        return; // 이미 규칙이 있으면 스킵
+      }
+
+      // 랜덤 문자열 생성 (대문자 알파벳 2-4자)
+      let randomStr;
+      let attempts = 0;
+      const maxAttempts = 100;
+      
+      do {
+        const length = Math.floor(Math.random() * 3) + 2; // 2-4자
+        randomStr = Array.from({ length }, () => {
+          return String.fromCharCode(65 + Math.floor(Math.random() * 26)); // A-Z
+        }).join("");
+        attempts++;
+        
+        if (attempts > 50 && !usedToValues.has(randomStr + "1")) {
+          randomStr = randomStr + "1";
+        }
+      } while (usedToValues.has(randomStr) && attempts < maxAttempts);
+      
+      if (attempts >= maxAttempts) {
+        randomStr = randomStr + Date.now().toString().slice(-3);
+      }
+      
+      usedToValues.add(randomStr);
+      newRules.push({ from: char, to: randomStr });
+    });
+
+    if (newRules.length === 0) {
+      await showAlert("모든 한글 문자에 대한 규칙이 이미 존재합니다", "info");
+      return;
+    }
+
+    // 기존 규칙에 추가
+    setRules([...rules, ...newRules], "✨ 한글 자동 변환");
+    await showAlert(`${newRules.length}개의 한글 변환 규칙이 추가되었습니다!`, "success");
   };
 
   return (
@@ -100,6 +174,15 @@ export default function MobileTranslate({
               </button>
             </div>
           </div>
+
+          {/* 한글 자동 변환 버튼 */}
+          <button 
+            className="mobile-btn mobile-btn-special"
+            onClick={handleGenerateKoreanRules}
+          >
+            <span className="mobile-btn-icon">✨</span>
+            <span>한글 자동 변환</span>
+          </button>
 
           {/* 액션 버튼 */}
           <div className="mobile-action-buttons">

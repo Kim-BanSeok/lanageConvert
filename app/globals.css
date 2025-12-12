@@ -5,42 +5,69 @@
 /* 전체 배경 3D 느낌 */
 body {
   background: radial-gradient(circle at top, #1e293b, #0f172a 60%, #000);
-  color: #f8fafc;
+  color: #f1f5f9;
   min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+  line-height: 1.6;
 }
 
 /* 3D 카드 스타일 */
 .card-3d {
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 20px;
-  padding: 20px;
+  background: rgba(30, 41, 59, 0.8);
+  border-radius: 16px;
+  padding: 24px;
   backdrop-filter: blur(20px);
   box-shadow: 
     10px 10px 25px rgba(0, 0, 0, 0.6),
     -5px -5px 15px rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #f1f5f9;
+}
+
+/* 카드 내부 제목 */
+.card-3d h2 {
+  color: #e2e8f0;
+  font-weight: 700;
+  margin-bottom: 16px;
+  font-size: 1.25rem;
+}
+
+.card-3d h3 {
+  color: #cbd5e1;
+  font-weight: 600;
+  margin-bottom: 12px;
+  font-size: 1.1rem;
 }
 
 /* 3D 입력창 */
 .input-3d {
-  background: rgba(255, 255, 255, 0.07);
-  border-radius: 12px;
-  border: none;
-  padding: 12px;
-  color: white;
+  background: rgba(15, 23, 42, 0.6);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 14px 16px;
+  color: #f1f5f9;
+  font-size: 0.95rem;
   resize: none;
+  transition: all 0.2s ease;
 
   box-shadow:
-    inset 4px 4px 8px rgba(0,0,0,0.6),
-    inset -4px -4px 8px rgba(255,255,255,0.1);
+    inset 2px 2px 6px rgba(0,0,0,0.4),
+    inset -1px -1px 4px rgba(255,255,255,0.05);
 }
 
 .input-3d:focus {
-  outline: 2px solid #60a5fa;
+  outline: none;
+  border-color: #60a5fa;
+  background: rgba(15, 23, 42, 0.8);
+  box-shadow:
+    inset 2px 2px 6px rgba(0,0,0,0.4),
+    inset -1px -1px 4px rgba(255,255,255,0.05),
+    0 0 0 3px rgba(96, 165, 250, 0.2);
 }
 
 .input-3d::placeholder {
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(203, 213, 225, 0.5);
+  font-size: 0.9rem;
 }
 
 /* 3D 버튼 */
@@ -78,34 +105,74 @@ body {
 /* 3D 테이블 */
 .table-3d {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   color: #e2e8f0;
+  margin-top: 16px;
 }
 
 .table-3d th {
-  padding: 10px;
+  padding: 14px 12px;
   font-weight: 600;
   text-align: left;
+  background: rgba(30, 41, 59, 0.5);
+  color: #cbd5e1;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.table-3d th:first-child {
+  border-top-left-radius: 8px;
+}
+
+.table-3d th:last-child {
+  border-top-right-radius: 8px;
 }
 
 .table-3d td {
-  padding: 10px;
+  padding: 14px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(15, 23, 42, 0.3);
+}
+
+.table-3d tr:hover td {
+  background: rgba(30, 41, 59, 0.5);
+}
+
+.table-3d tr:last-child td {
+  border-bottom: none;
 }
 
 .row-3d input {
-  background: rgba(255, 255, 255, 0.07);
+  background: rgba(15, 23, 42, 0.6);
   border-radius: 8px;
-  padding: 6px 10px;
-  border: none;
-  color: #fff;
+  padding: 10px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #f1f5f9;
+  font-size: 0.95rem;
+  width: 100%;
+  transition: all 0.2s ease;
 
   box-shadow:
-    inset 2px 2px 6px rgba(0,0,0,0.5),
-    inset -2px -2px 6px rgba(255,255,255,0.1);
+    inset 2px 2px 4px rgba(0,0,0,0.3),
+    inset -1px -1px 3px rgba(255,255,255,0.05);
+}
+
+.row-3d input:focus {
+  outline: none;
+  border-color: #60a5fa;
+  background: rgba(15, 23, 42, 0.8);
+  box-shadow:
+    inset 2px 2px 4px rgba(0,0,0,0.3),
+    inset -1px -1px 3px rgba(255,255,255,0.05),
+    0 0 0 2px rgba(96, 165, 250, 0.15);
 }
 
 .row-3d input::placeholder {
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(203, 213, 225, 0.5);
+  font-size: 0.9rem;
 }
 
 .row-3d button {
@@ -194,17 +261,21 @@ body {
 
 /* ========== 버튼 그룹 스타일 ========== */
 .button-group {
-  margin-bottom: 16px;
+  margin-bottom: 20px;
+  padding: 12px;
+  background: rgba(15, 23, 42, 0.4);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .button-group-label {
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #94a3b8;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 8px;
-  padding-left: 4px;
+  letter-spacing: 0.1em;
+  margin-bottom: 10px;
+  padding-left: 2px;
 }
 
 .button-group-items {
@@ -215,31 +286,65 @@ body {
 
 /* 컴팩트 버튼 스타일 */
 .btn-compact {
-  padding: 8px 16px !important;
+  padding: 9px 18px !important;
   font-size: 0.875rem !important;
   white-space: nowrap;
+  font-weight: 500;
 }
 
 /* 모바일에서 버튼 크기 조정 */
 @media (max-width: 640px) {
+  .button-group {
+    padding: 10px;
+    margin-bottom: 16px;
+  }
+  
   .button-group-items {
     gap: 6px;
   }
   
   .btn-compact {
-    padding: 7px 12px !important;
+    padding: 8px 14px !important;
     font-size: 0.8rem !important;
   }
   
   .button-group-label {
-    font-size: 0.7rem;
+    font-size: 0.65rem;
+    margin-bottom: 8px;
   }
 }
 
 /* ========== 규칙 Row 마우스 Hover ========== */
 .row-3d:hover input {
-  transform: scale(1.015);
-  background: rgba(255,255,255,0.12);
+  background: rgba(30, 41, 59, 0.7);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+/* ========== 텍스트 가독성 개선 ========== */
+p, span, div {
+  color: #e2e8f0;
+}
+
+.text-sm {
+  color: #cbd5e1;
+  line-height: 1.6;
+}
+
+/* 설명 텍스트 */
+.card-3d p {
+  color: #94a3b8;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  margin-top: 12px;
+}
+
+/* 라벨 텍스트 */
+label, .label {
+  color: #cbd5e1;
+  font-weight: 500;
+  font-size: 0.9rem;
+  margin-bottom: 6px;
+  display: block;
 }
 
 /* ========================== */
@@ -283,11 +388,13 @@ body {
 /* 서브 타이틀 (한글 설명) */
 .logo-3d-sub {
   display: block;
-  margin-top: 6px;
-  font-size: 0.95rem;
-  color: #cbd5f5;
-  opacity: 0.9;
+  margin-top: 8px;
+  font-size: 1rem;
+  color: #cbd5e1;
+  opacity: 0.95;
+  font-weight: 400;
   text-shadow: 0 0 8px rgba(15, 23, 42, 0.8);
+  letter-spacing: 0.02em;
 }
 
 /* 로고 주변을 도는 궤도 */

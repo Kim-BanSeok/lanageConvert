@@ -1,17 +1,40 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 /**
  * Google AdSense 컴포넌트
  * Next.js App Router 환경에서 광고를 표시합니다.
  */
 export default function Adsense({ slot, style, format = "auto" }) {
+  const adRef = useRef(false);
+
   useEffect(() => {
+    // 이미 초기화했으면 스킵
+    if (adRef.current) return;
+    
     try {
-      // AdSense 초기화
-      if (window.adsbygoogle && Array.isArray(window.adsbygoogle)) {
-        window.adsbygoogle.push({});
+      // AdSense 스크립트가 로드될 때까지 대기
+      const initAd = () => {
+        if (window.adsbygoogle && Array.isArray(window.adsbygoogle)) {
+          try {
+            window.adsbygoogle.push({});
+            adRef.current = true;
+          } catch (e) {
+            console.error("AdSense push error:", e);
+          }
+        } else {
+          // 스크립트가 아직 로드되지 않았으면 재시도
+          setTimeout(initAd, 100);
+        }
+      };
+
+      // DOM이 준비되면 초기화 시도
+      if (document.readyState === "complete") {
+        initAd();
+      } else {
+        window.addEventListener("load", initAd);
+        return () => window.removeEventListener("load", initAd);
       }
     } catch (e) {
       console.error("AdSense error:", e);

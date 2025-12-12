@@ -896,6 +896,230 @@ textarea.input-3d::-webkit-scrollbar-thumb {
   background: linear-gradient(135deg, rgba(236, 72, 153, 0.5), rgba(219, 39, 119, 0.5)) !important;
 }
 
+/* 복사 버튼 - 하늘색 */
+.btn-copy {
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.25), rgba(14, 165, 233, 0.25)) !important;
+  border: 2px solid rgba(56, 189, 248, 0.4) !important;
+}
+
+.btn-copy:hover {
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.35), rgba(14, 165, 233, 0.35)) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(56, 189, 248, 0.4);
+}
+
+.btn-copy:active {
+  transform: scale(0.97);
+}
+
+/* 교환 버튼 - 청록색 */
+.btn-swap {
+  background: linear-gradient(135deg, rgba(20, 184, 166, 0.25), rgba(13, 148, 136, 0.25)) !important;
+  border: 2px solid rgba(20, 184, 166, 0.4) !important;
+}
+
+.btn-swap:hover {
+  background: linear-gradient(135deg, rgba(20, 184, 166, 0.35), rgba(13, 148, 136, 0.35)) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(20, 184, 166, 0.4);
+}
+
+.btn-swap:active {
+  transform: scale(0.97);
+}
+
+/* 추가 버튼 - 에메랄드 */
+.btn-add {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(5, 150, 105, 0.25)) !important;
+  border: 2px solid rgba(16, 185, 129, 0.4) !important;
+}
+
+.btn-add:hover {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.35), rgba(5, 150, 105, 0.35)) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.4);
+}
+
+.btn-add:active {
+  transform: scale(0.97);
+}
+
+/* Undo 버튼 - 회색 */
+.btn-undo {
+  background: linear-gradient(135deg, rgba(148, 163, 184, 0.2), rgba(100, 116, 139, 0.2)) !important;
+  border: 2px solid rgba(148, 163, 184, 0.3) !important;
+}
+
+.btn-undo:hover:not(:disabled) {
+  background: linear-gradient(135deg, rgba(148, 163, 184, 0.3), rgba(100, 116, 139, 0.3)) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(148, 163, 184, 0.3);
+}
+
+.btn-undo:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+/* Redo 버튼 - 회색 */
+.btn-redo {
+  background: linear-gradient(135deg, rgba(148, 163, 184, 0.2), rgba(100, 116, 139, 0.2)) !important;
+  border: 2px solid rgba(148, 163, 184, 0.3) !important;
+}
+
+.btn-redo:hover:not(:disabled) {
+  background: linear-gradient(135deg, rgba(148, 163, 184, 0.3), rgba(100, 116, 139, 0.3)) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(148, 163, 184, 0.3);
+}
+
+.btn-redo:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+/* AI 버튼 - 보라색 */
+.btn-ai {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.25), rgba(124, 58, 237, 0.25)) !important;
+  border: 2px solid rgba(139, 92, 246, 0.4) !important;
+}
+
+.btn-ai:hover {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.35), rgba(124, 58, 237, 0.35)) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(139, 92, 246, 0.4);
+}
+
+.btn-ai:active {
+  transform: scale(0.97);
+}
+
+/* 학습 버튼 - 인디고 */
+.btn-learn {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.25), rgba(79, 70, 229, 0.25)) !important;
+  border: 2px solid rgba(99, 102, 241, 0.4) !important;
+}
+
+.btn-learn:hover {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.35), rgba(79, 70, 229, 0.35)) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4);
+}
+
+.btn-learn:active {
+  transform: scale(0.97);
+}
+
+/* 랜덤 버튼 - 오렌지 */
+.btn-random {
+  background: linear-gradient(135deg, rgba(251, 146, 60, 0.25), rgba(249, 115, 22, 0.25)) !important;
+  border: 2px solid rgba(251, 146, 60, 0.4) !important;
+}
+
+.btn-random:hover {
+  background: linear-gradient(135deg, rgba(251, 146, 60, 0.35), rgba(249, 115, 22, 0.35)) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(251, 146, 60, 0.4);
+}
+
+.btn-random:active {
+  transform: scale(0.97);
+}
+
+/* 프리셋 버튼 - 바이올렛 */
+.btn-preset {
+  background: linear-gradient(135deg, rgba(167, 139, 250, 0.25), rgba(139, 92, 246, 0.25)) !important;
+  border: 2px solid rgba(167, 139, 250, 0.4) !important;
+}
+
+.btn-preset:hover {
+  background: linear-gradient(135deg, rgba(167, 139, 250, 0.35), rgba(139, 92, 246, 0.35)) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(167, 139, 250, 0.4);
+}
+
+.btn-preset:active {
+  transform: scale(0.97);
+}
+
+/* Export 버튼 - 앰버 */
+.btn-export {
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.25), rgba(245, 158, 11, 0.25)) !important;
+  border: 2px solid rgba(251, 191, 36, 0.4) !important;
+}
+
+.btn-export:hover {
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.35), rgba(245, 158, 11, 0.35)) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(251, 191, 36, 0.4);
+}
+
+.btn-export:active {
+  transform: scale(0.97);
+}
+
+/* Import 버튼 - 라임 */
+.btn-import {
+  background: linear-gradient(135deg, rgba(132, 204, 22, 0.25), rgba(101, 163, 13, 0.25)) !important;
+  border: 2px solid rgba(132, 204, 22, 0.4) !important;
+}
+
+.btn-import:hover {
+  background: linear-gradient(135deg, rgba(132, 204, 22, 0.35), rgba(101, 163, 13, 0.35)) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(132, 204, 22, 0.4);
+}
+
+.btn-import:active {
+  transform: scale(0.97);
+}
+
+/* 검색 버튼 - 사이안 */
+.btn-search {
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.25), rgba(8, 145, 178, 0.25)) !important;
+  border: 2px solid rgba(6, 182, 212, 0.4) !important;
+}
+
+.btn-search:hover {
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.35), rgba(8, 145, 178, 0.35)) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(6, 182, 212, 0.4);
+}
+
+.btn-search:active {
+  transform: scale(0.97);
+}
+
+/* 네이밍 버튼 - 핑크-퍼플 */
+.btn-naming {
+  background: linear-gradient(135deg, rgba(236, 72, 153, 0.25), rgba(168, 85, 247, 0.25)) !important;
+  border: 2px solid rgba(236, 72, 153, 0.4) !important;
+}
+
+.btn-naming:hover {
+  background: linear-gradient(135deg, rgba(236, 72, 153, 0.35), rgba(168, 85, 247, 0.35)) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(236, 72, 153, 0.4);
+}
+
+.btn-naming:active {
+  transform: scale(0.97);
+}
+
+/* 진화 버튼 - 퍼플-블루 */
+.btn-evolution {
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.25), rgba(79, 70, 229, 0.25)) !important;
+  border: 2px solid rgba(124, 58, 237, 0.4) !important;
+}
+
+.btn-evolution:hover {
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.35), rgba(79, 70, 229, 0.35)) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(124, 58, 237, 0.4);
+}
+
+.btn-evolution:active {
+  transform: scale(0.97);
+}
+
 /* Disabled 상태 */
 .btn-3d:disabled {
   opacity: 0.5;

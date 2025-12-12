@@ -1131,10 +1131,10 @@ export default function Home() {
           {/* 결과 작업 버튼 그룹 */}
           <div className="mt-4 space-y-2">
             <div className="flex gap-2">
-              <button className="btn-3d flex-1" onClick={copyResult}>
+              <button className="btn-3d btn-copy flex-1" onClick={copyResult}>
                 📋 복사
               </button>
-              <button className="btn-3d flex-1" onClick={swapText}>
+              <button className="btn-3d btn-swap flex-1" onClick={swapText}>
                 🔁 교환
               </button>
             </div>
@@ -1172,7 +1172,7 @@ export default function Home() {
         <div className="button-group mb-3">
           <div className="button-group-label">기본 작업</div>
           <div className="button-group-items">
-            <button className="btn-3d btn-compact" onClick={addRule} title="새 규칙 추가">
+            <button className="btn-3d btn-compact btn-add" onClick={addRule} title="새 규칙 추가">
               ➕ 규칙 추가
             </button>
             <button className="btn-3d btn-compact btn-red" onClick={clearRules} title="모든 규칙 삭제">
@@ -1180,7 +1180,7 @@ export default function Home() {
             </button>
             {/* 🔄 Undo/Redo 버튼 */}
             <button 
-              className="btn-3d btn-compact" 
+              className="btn-3d btn-compact btn-undo" 
               onClick={undo} 
               disabled={!canUndo}
               title="실행 취소 (Ctrl+Z)"
@@ -1188,7 +1188,7 @@ export default function Home() {
               ↶ Undo
             </button>
             <button 
-              className="btn-3d btn-compact" 
+              className="btn-3d btn-compact btn-redo" 
               onClick={redo} 
               disabled={!canRedo}
               title="다시 실행 (Ctrl+Shift+Z)"
@@ -1203,20 +1203,20 @@ export default function Home() {
           <div className="button-group-label">AI 생성</div>
           <div className="button-group-items">
             <button 
-              className="btn-3d btn-compact" 
+              className="btn-3d btn-compact btn-ai" 
               onClick={() => setShowAIModal(true)}
               title="AI 알고리즘으로 다양한 언어 패턴 자동 생성"
             >
               🤖 AI 언어 생성
             </button>
             <button 
-              className="btn-3d btn-compact" 
+              className="btn-3d btn-compact btn-learn" 
               onClick={() => setShowLearnModal(true)}
               title="원문과 변환문으로부터 단어 규칙 자동 학습"
             >
               🧠 단어 규칙 학습
             </button>
-            <button className="btn-3d btn-compact" onClick={generateRandomAlphabet} title="랜덤 알파벳 규칙 생성">
+            <button className="btn-3d btn-compact btn-random" onClick={generateRandomAlphabet} title="랜덤 알파벳 규칙 생성">
               🎲 랜덤 생성
             </button>
           </div>
@@ -1227,21 +1227,21 @@ export default function Home() {
           <div className="button-group-label">고급 기능</div>
           <div className="button-group-items">
             <button 
-              className="btn-3d btn-compact" 
+              className="btn-3d btn-compact btn-naming" 
               onClick={() => setShowIdentityModal(true)}
               title="언어 이름 및 세계관 생성"
             >
               ✨ 네이밍/세계관
             </button>
             <button 
-              className="btn-3d btn-compact" 
+              className="btn-3d btn-compact btn-evolution" 
               onClick={() => {
                 setShowEvolutionRecommend(false);
                 setShowEvolutionModal(true);
               }}
               title="학습 샘플 기반 언어 진화"
             >
-              🧠 언어 진화
+              🧬 언어 진화
             </button>
           </div>
         </div>
@@ -1265,14 +1265,14 @@ export default function Home() {
               📥 가져오기
             </button>
             <button 
-              className="btn-3d btn-compact" 
+              className="btn-3d btn-compact btn-preset" 
               onClick={() => setShowPresetModal(true)}
               title="언어 프리셋 저장 및 불러오기"
             >
               💾 프리셋
             </button>
             <button 
-              className="btn-3d btn-compact" 
+              className="btn-3d btn-compact btn-search" 
               onClick={() => setShowSearch(!showSearch)}
               title="규칙 검색 및 필터"
             >

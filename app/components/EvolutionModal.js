@@ -16,8 +16,16 @@ export default function EvolutionModal({ baseRules, onClose, onApplyRules }) {
   const [minCount, setMinCount] = useState(1);
 
   useEffect(() => {
-    setSamples(loadSamples());
-    setVersions(loadVersions());
+    try {
+      const samples = loadSamples();
+      const versions = loadVersions();
+      setSamples(Array.isArray(samples) ? samples : []);
+      setVersions(Array.isArray(versions) ? versions : []);
+    } catch (error) {
+      console.warn("데이터 로드 실패:", error);
+      setSamples([]);
+      setVersions([]);
+    }
   }, []);
 
   const learnedRules = useMemo(() => {
@@ -124,7 +132,7 @@ export default function EvolutionModal({ baseRules, onClose, onApplyRules }) {
             <div className="text-sm opacity-70">최근 저장된 버전이 위에 표시</div>
           </div>
 
-          {versions.length === 0 ? (
+          {!versions || versions.length === 0 ? (
             <div className="text-sm opacity-70">저장된 버전이 없습니다.</div>
           ) : (
             <div className="space-y-2 max-h-[180px] overflow-auto">

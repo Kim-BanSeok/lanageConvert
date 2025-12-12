@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { makeSessionToken, ADMIN_COOKIE_NAME } from "../../../lib/adminAuth";
+import { makeSessionTokenSync, ADMIN_COOKIE_NAME } from "../../../lib/adminAuth";
 
 export async function POST(req) {
   try {
@@ -20,7 +20,7 @@ export async function POST(req) {
       return NextResponse.json({ ok: false, message: "비밀번호가 틀렸습니다." }, { status: 401 });
     }
 
-    const token = makeSessionToken();
+    const token = makeSessionTokenSync();
 
     const res = NextResponse.json({ ok: true });
     res.cookies.set(ADMIN_COOKIE_NAME, token, {

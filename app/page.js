@@ -24,9 +24,11 @@ import RuleSearch from "./components/RuleSearch";
 import ShortcutsHelpModal from "./components/ShortcutsHelpModal";
 import TranslationHistory from "./components/TranslationHistory";
 import RuleStatistics from "./components/RuleStatistics";
+import ThemeToggle from "./components/ThemeToggle";
 import { useCustomAlert } from "./components/CustomAlert";
 import Adsense from "./components/Adsense";
 import { useKeyboardShortcuts } from "./hooks/useKeyboardShortcuts";
+import { useTheme } from "./hooks/useTheme";
 import { addToHistory } from "./lib/translationHistory";
 import { recordRuleUsage } from "./lib/ruleStatistics";
 import { translateText } from "./lib/translationEngine";
@@ -135,6 +137,9 @@ export default function Home() {
 
   // 📊 규칙 통계 모달
   const [showStatistics, setShowStatistics] = useState(false);
+
+  // 🌓 테마
+  const [theme, toggleTheme] = useTheme();
 
   // 생성된 언어 아이덴티티 저장(로컬)
   const [languageIdentity, setLanguageIdentity] = useState(null);

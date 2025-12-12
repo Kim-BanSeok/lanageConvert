@@ -128,14 +128,16 @@ export default function TTSPlayer({ text, buttonText = "🔊 음성 듣기", cla
 
       {/* 음성 선택 드롭다운 */}
       {showVoiceSelector && voices.length > 0 && (
-        <div className="absolute top-full mt-2 left-0 z-50 bg-gray-900 border border-gray-700 rounded-lg p-3 shadow-lg min-w-[250px]">
-          <h4 className="text-sm font-semibold mb-2">음성 선택</h4>
-          <div className="max-h-[200px] overflow-y-auto space-y-1">
+        <div className="absolute top-full mt-2 left-0 z-[200] bg-slate-800 border border-slate-600 rounded-lg p-3 shadow-2xl min-w-[280px] backdrop-blur-sm">
+          <h4 className="text-sm font-semibold mb-3 text-slate-200">음성 선택</h4>
+          <div className="max-h-[200px] overflow-y-auto space-y-1 custom-scrollbar">
             {voices.map((voice, idx) => (
               <button
                 key={idx}
-                className={`w-full text-left px-2 py-1 rounded text-sm hover:bg-white/10 ${
-                  selectedVoice?.name === voice.name ? "bg-blue-500/30" : ""
+                className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-all ${
+                  selectedVoice?.name === voice.name 
+                    ? "bg-blue-500/40 text-white border border-blue-400/50" 
+                    : "text-slate-300 hover:bg-white/10 hover:text-white"
                 }`}
                 onClick={() => {
                   setSelectedVoice(voice);
@@ -143,7 +145,7 @@ export default function TTSPlayer({ text, buttonText = "🔊 음성 듣기", cla
                 }}
               >
                 <div className="font-medium">{voice.name}</div>
-                <div className="text-xs opacity-70">{voice.lang}</div>
+                <div className="text-xs opacity-70 mt-0.5">{voice.lang}</div>
               </button>
             ))}
           </div>

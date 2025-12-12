@@ -236,20 +236,48 @@
   border-radius: 4px;
 }
 
-/* 반응형 */
+/* 📱 모바일 반응형 최적화 (768px 이하) */
 @media (max-width: 768px) {
-  .nav-container {
-    flex-direction: column;
-    gap: 12px;
+  /* ===== 네비게이션 ===== */
+  .nav-bar {
+    padding: 8px 12px;
+    margin-bottom: 14px;
   }
 
-  .nav-section {
-    width: 100%;
+  .nav-container {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .nav-left {
+    flex: 0 0 auto;
+  }
+
+  .nav-center {
+    flex: 0 0 auto;
+    order: 3;
+    flex-basis: 100%;
     justify-content: center;
+    margin-top: 4px;
+  }
+
+  .nav-right {
+    flex: 1;
+    justify-content: flex-end;
+    gap: 4px;
+  }
+
+  .nav-logo {
+    gap: 6px;
   }
 
   .nav-logo-text {
     display: none;
+  }
+
+  .nav-logo-icon {
+    font-size: 1.2rem;
   }
 
   .nav-label {
@@ -257,13 +285,106 @@
   }
 
   .nav-btn {
-    padding: 10px;
+    padding: 7px 10px;
+    font-size: 0.8rem;
+  }
+
+  .nav-btn-icon {
+    padding: 5px 7px;
+    min-width: 32px;
+    font-size: 0.9rem;
+  }
+
+  .nav-group {
+    gap: 4px;
+    padding: 3px 4px;
   }
 
   .nav-dropdown-menu {
-    right: auto;
-    left: 50%;
-    transform: translateX(-50%);
+    right: 8px;
+    left: auto;
+    min-width: 180px;
+  }
+
+  /* ===== 로고/헤더 ===== */
+  .logo-3d-wrapper {
+    padding: 16px 0 12px;
+    gap: 8px;
+  }
+
+  .logo-3d-orbit {
+    width: 40px;
+    height: 40px;
+  }
+
+  .logo-3d-main {
+    font-size: 1.25rem;
+  }
+
+  .logo-3d-sub {
+    font-size: 0.65rem;
+  }
+
+  /* ===== 카드 ===== */
+  .card-3d {
+    padding: 12px;
+    margin-bottom: 12px;
+  }
+
+  /* ===== 버튼 ===== */
+  .btn-3d {
+    padding: 8px 12px;
+    font-size: 0.85rem;
+  }
+
+  .btn-compact {
+    padding: 7px 10px;
+    font-size: 0.8rem;
+  }
+
+  /* ===== 입력 ===== */
+  .input-3d {
+    padding: 8px 12px;
+    font-size: 0.85rem;
+  }
+
+  textarea.input-3d {
+    min-height: 110px !important;
+  }
+
+  /* ===== 텍스트 ===== */
+  h1 {
+    font-size: 1.35rem !important;
+  }
+
+  h2 {
+    font-size: 1.05rem !important;
+  }
+
+  /* ===== 레이아웃 ===== */
+  .max-w-5xl {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .space-y-6 > * + * {
+    margin-top: 12px !important;
+  }
+
+  /* ===== 테이블 ===== */
+  .table-3d {
+    font-size: 0.8rem;
+  }
+
+  .table-3d thead th,
+  .table-3d tbody td {
+    padding: 8px;
+    font-size: 0.8rem;
+  }
+
+  .table-3d tbody td input.input-3d {
+    padding: 6px 8px;
+    font-size: 0.8rem;
   }
 }
 
@@ -590,16 +711,7 @@ textarea.input-3d::-webkit-scrollbar-thumb {
   gap: 10px;
 }
 
-@media (max-width: 768px) {
-  .button-group-items {
-    flex-direction: column;
-  }
-
-  .button-group-items .btn-3d {
-    width: 100%;
-    justify-content: center;
-  }
-}
+/* 버튼 그룹 모바일 (위 media query에 포함됨) */
 
 /* ==========================================
    테이블 스타일

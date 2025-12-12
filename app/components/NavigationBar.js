@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import ThemeToggle from "./ThemeToggle";
 
 /**
@@ -22,24 +23,88 @@ export default function NavigationBar({
 }) {
   const [showToolsMenu, setShowToolsMenu] = useState(false);
   const [showHelpMenu, setShowHelpMenu] = useState(false);
+  const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
+  const [mounted, setMounted] = useState(false);
   
-  const toolsRef = useRef(null);
-  const helpRef = useRef(null);
+  const toolsButtonRef = useRef(null);
+  const helpButtonRef = useRef(null);
+  const toolsMenuRef = useRef(null);
+  const helpMenuRef = useRef(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // 드롭다운 위치 계산
+  const calculatePosition = (buttonRef) => {
+    if (!buttonRef.current) return { top: 0, left: 0 };
+    
+    const rect = buttonRef.current.getBoundingClientRect();
+    const top = rect.bottom + 8;
+    const left = rect.right - 240; // 메뉴 너비만큼 왼쪽으로
+    
+    return { top, left };
+  };
+
+  // 도구 메뉴 열기
+  const toggleToolsMenu = (e) => {
+    e.stopPropagation();
+    if (!showToolsMenu) {
+      setMenuPosition(calculatePosition(toolsButtonRef));
+    }
+    setShowToolsMenu(!showToolsMenu);
+    setShowHelpMenu(false);
+  };
+
+  // 도움말 메뉴 열기
+  const toggleHelpMenu = (e) => {
+    e.stopPropagation();
+    if (!showHelpMenu) {
+      setMenuPosition(calculatePosition(helpButtonRef));
+    }
+    setShowHelpMenu(!showHelpMenu);
+    setShowToolsMenu(false);
+  };
 
   // 외부 클릭 감지
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (toolsRef.current && !toolsRef.current.contains(event.target)) {
+      if (
+        toolsMenuRef.current && 
+        !toolsMenuRef.current.contains(event.target) &&
+        toolsButtonRef.current &&
+        !toolsButtonRef.current.contains(event.target)
+      ) {
         setShowToolsMenu(false);
       }
-      if (helpRef.current && !helpRef.current.contains(event.target)) {
+      if (
+        helpMenuRef.current && 
+        !helpMenuRef.current.contains(event.target) &&
+        helpButtonRef.current &&
+        !helpButtonRef.current.contains(event.target)
+      ) {
         setShowHelpMenu(false);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+    if (showToolsMenu || showHelpMenu) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [showToolsMenu, showHelpMenu]);
+
+  // 스크롤 시 메뉴 닫기
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowToolsMenu(false);
+      setShowHelpMenu(false);
+    };
+
+    if (showToolsMenu || showHelpMenu) {
+      window.addEventListener('scroll', handleScroll, true);
+      return () => window.removeEventListener('scroll', handleScroll, true);
+    }
+  }, [showToolsMenu, showHelpMenu]);
 
   return (
     <nav className="nav-bar">
@@ -80,76 +145,101 @@ export default function NavigationBar({
           <ThemeToggle theme={theme} onToggle={onToggleTheme} />
 
           {/* 도구 메뉴 */}
-          <div className="nav-dropdown" ref={toolsRef}>
+          <div className="nav-dropdown">
             <button
+              ref={toolsButtonRef}
               className="nav-btn nav-btn-primary"
-              onClick={(e) => {
-                e.stopPropagation();
-                setShowToolsMenu(!showToolsMenu);
-                setShowHelpMenu(false);
-              }}
+              onClick={toggleToolsMenu}
               title="도구"
             >
               <span className="nav-icon">🛠️</span>
               <span className="nav-label">도구</span>
               <span className="nav-arrow">{showToolsMenu ? '▲' : '▼'}</span>
             </button>
-            
-            {showToolsMenu && (
-              <div className="nav-dropdown-menu">
-                <button className="nav-dropdown-item" onClick={() => { onBackup(); setShowToolsMenu(false); }}>
-                  <span className="nav-item-icon">💾</span>
-                  <span className="nav-item-text">백업/복원</span>
-                  <span className="nav-item-shortcut">Ctrl+B</span>
-                </button>
-                <button className="nav-dropdown-item" onClick={() => { onHistory(); setShowToolsMenu(false); }}>
-                  <span className="nav-item-icon">📜</span>
-                  <span className="nav-item-text">번역 히스토리</span>
-                </button>
-                <button className="nav-dropdown-item" onClick={() => { onStatistics(); setShowToolsMenu(false); }}>
-                  <span className="nav-item-icon">📊</span>
-                  <span className="nav-item-text">규칙 통계</span>
-                </button>
-                <button className="nav-dropdown-item" onClick={() => { onGallery(); setShowToolsMenu(false); }}>
-                  <span className="nav-item-icon">🖼️</span>
-                  <span className="nav-item-text">언어 갤러리</span>
-                </button>
-              </div>
-            )}
           </div>
 
           {/* 도움말 메뉴 */}
-          <div className="nav-dropdown" ref={helpRef}>
+          <div className="nav-dropdown">
             <button
+              ref={helpButtonRef}
               className="nav-btn nav-btn-secondary"
-              onClick={(e) => {
-                e.stopPropagation();
-                setShowHelpMenu(!showHelpMenu);
-                setShowToolsMenu(false);
-              }}
+              onClick={toggleHelpMenu}
               title="도움말"
             >
               <span className="nav-icon">❓</span>
               <span className="nav-label">도움말</span>
               <span className="nav-arrow">{showHelpMenu ? '▲' : '▼'}</span>
             </button>
-            
-            {showHelpMenu && (
-              <div className="nav-dropdown-menu">
-                <button className="nav-dropdown-item" onClick={() => { onShortcuts(); setShowHelpMenu(false); }}>
-                  <span className="nav-item-icon">⌨️</span>
-                  <span className="nav-item-text">키보드 단축키</span>
-                </button>
-                <button className="nav-dropdown-item" onClick={() => { onGuide(); setShowHelpMenu(false); }}>
-                  <span className="nav-item-icon">📖</span>
-                  <span className="nav-item-text">사용 가이드</span>
-                  <span className="nav-item-shortcut">Ctrl+/</span>
-                </button>
-              </div>
-            )}
           </div>
         </div>
       </div>
+
+      {/* 🎨 Portal로 드롭다운 렌더링 (절대 가려지지 않음) */}
+      {mounted && showToolsMenu && createPortal(
+        <>
+          <div 
+            className="nav-dropdown-overlay"
+            onClick={() => setShowToolsMenu(false)}
+          />
+          <div 
+            ref={toolsMenuRef}
+            className="nav-dropdown-menu"
+            style={{
+              position: 'fixed',
+              top: `${menuPosition.top}px`,
+              left: `${menuPosition.left}px`,
+            }}
+          >
+            <button className="nav-dropdown-item" onClick={() => { onBackup(); setShowToolsMenu(false); }}>
+              <span className="nav-item-icon">💾</span>
+              <span className="nav-item-text">백업/복원</span>
+              <span className="nav-item-shortcut">Ctrl+B</span>
+            </button>
+            <button className="nav-dropdown-item" onClick={() => { onHistory(); setShowToolsMenu(false); }}>
+              <span className="nav-item-icon">📜</span>
+              <span className="nav-item-text">번역 히스토리</span>
+            </button>
+            <button className="nav-dropdown-item" onClick={() => { onStatistics(); setShowToolsMenu(false); }}>
+              <span className="nav-item-icon">📊</span>
+              <span className="nav-item-text">규칙 통계</span>
+            </button>
+            <button className="nav-dropdown-item" onClick={() => { onGallery(); setShowToolsMenu(false); }}>
+              <span className="nav-item-icon">🖼️</span>
+              <span className="nav-item-text">언어 갤러리</span>
+            </button>
+          </div>
+        </>,
+        document.body
+      )}
+
+      {mounted && showHelpMenu && createPortal(
+        <>
+          <div 
+            className="nav-dropdown-overlay"
+            onClick={() => setShowHelpMenu(false)}
+          />
+          <div 
+            ref={helpMenuRef}
+            className="nav-dropdown-menu"
+            style={{
+              position: 'fixed',
+              top: `${menuPosition.top}px`,
+              left: `${menuPosition.left}px`,
+            }}
+          >
+            <button className="nav-dropdown-item" onClick={() => { onShortcuts(); setShowHelpMenu(false); }}>
+              <span className="nav-item-icon">⌨️</span>
+              <span className="nav-item-text">키보드 단축키</span>
+            </button>
+            <button className="nav-dropdown-item" onClick={() => { onGuide(); setShowHelpMenu(false); }}>
+              <span className="nav-item-icon">📖</span>
+              <span className="nav-item-text">사용 가이드</span>
+              <span className="nav-item-shortcut">Ctrl+/</span>
+            </button>
+          </div>
+        </>,
+        document.body
+      )}
     </nav>
   );
 }

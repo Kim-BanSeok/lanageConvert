@@ -167,6 +167,35 @@ export default function Home() {
     );
   };
 
+  // 🎯 Phase 2-2: 드래그 앤 드롭 정렬
+  const [draggedIndex, setDraggedIndex] = useState(null);
+
+  const handleDragStart = (e, index) => {
+    setDraggedIndex(index);
+    e.dataTransfer.effectAllowed = "move";
+  };
+
+  const handleDragOver = (e, index) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+  };
+
+  const handleDrop = (e, dropIndex) => {
+    e.preventDefault();
+    
+    if (draggedIndex === null || draggedIndex === dropIndex) {
+      setDraggedIndex(null);
+      return;
+    }
+
+    const newRules = [...rules];
+    const [draggedItem] = newRules.splice(draggedIndex, 1);
+    newRules.splice(dropIndex, 0, draggedItem);
+
+    setRules(newRules, `📋 규칙 순서 변경 (${draggedIndex + 1} → ${dropIndex + 1})`);
+    setDraggedIndex(null);
+  };
+
   /* ---------------------------
    *   localStorage 관련 처리
    * --------------------------- */
@@ -1175,6 +1204,9 @@ export default function Home() {
                     rule={rule}
                     onChange={updateRule}
                     onDelete={deleteRule}
+                    onDragStart={handleDragStart}
+                    onDragOver={handleDragOver}
+                    onDrop={handleDrop}
                   />
                 );
               })

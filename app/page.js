@@ -1073,20 +1073,40 @@ export default function Home() {
       ------------------------- */}
       {showPresetModal && (
         <div 
-          className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50"
+          className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-[9999] p-4 animate-fade-in"
           onClick={() => setShowPresetModal(false)}
         >
           <div 
-            className="card-3d p-6 w-[90%] max-w-[400px] space-y-4"
+            className="bg-gradient-to-br from-slate-800/95 to-slate-900/95 backdrop-blur-xl rounded-2xl p-8 w-full max-w-[520px] max-h-[90vh] overflow-y-auto custom-scrollbar space-y-6 shadow-2xl border-2 border-indigo-500/30 animate-scale-in"
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 className="text-xl font-bold text-center">언어 프리셋</h2>
+            {/* 헤더 */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="text-4xl">💾</div>
+                <div>
+                  <h2 className="text-2xl font-extrabold text-white">언어 프리셋</h2>
+                  <p className="text-sm text-slate-400 mt-1">
+                    언어를 저장하고 불러오세요
+                  </p>
+                </div>
+              </div>
+              <button
+                className="text-slate-400 hover:text-white transition-colors text-2xl leading-none hover:rotate-90 transition-transform duration-300"
+                onClick={() => setShowPresetModal(false)}
+              >
+                ✕
+              </button>
+            </div>
 
             {/* 프리셋 저장 섹션 */}
-            <div>
-              <h3 className="font-semibold mb-2">새 프리셋 저장</h3>
+            <div className="bg-slate-700/30 border-2 border-slate-600/50 rounded-xl p-5 space-y-3">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-xl">✨</span>
+                <h3 className="font-bold text-white">새 프리셋 저장</h3>
+              </div>
               
-              <div className="flex gap-2 mb-2">
+              <div className="flex gap-2">
                 <input
                   className="input-3d flex-1"
                   value={presetName}
@@ -1096,7 +1116,7 @@ export default function Home() {
                       savePreset();
                     }
                   }}
-                  placeholder="프리셋 이름 입력"
+                  placeholder="프리셋 이름을 입력하세요"
                 />
                 
                 <NameGenerator 
@@ -1110,60 +1130,79 @@ export default function Home() {
               </button>
             </div>
 
-            <hr className="opacity-40" />
+            <hr />
 
             {/* 프리셋 리스트 */}
             <div>
-              <h3 className="font-semibold mb-2">저장된 프리셋 ({presetList.length})</h3>
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                  <span className="text-xl">📚</span>
+                  <h3 className="font-bold text-white">저장된 프리셋</h3>
+                </div>
+                <span className="text-xs bg-indigo-500/20 text-indigo-300 px-3 py-1 rounded-full">
+                  {presetList.length}개
+                </span>
+              </div>
 
-              <div className="space-y-2 max-h-[300px] overflow-y-auto">
-                {presetList.length === 0 && (
-                  <p className="text-sm opacity-70 text-center py-4">
-                    저장된 프리셋이 없습니다.
-                  </p>
-                )}
+              <div className="space-y-2 max-h-[350px] overflow-y-auto custom-scrollbar">
+                {presetList.length === 0 ? (
+                  <div className="text-center py-12 opacity-70">
+                    <div className="text-5xl mb-3">📦</div>
+                    <p className="text-sm text-slate-400">저장된 프리셋이 없습니다</p>
+                    <p className="text-xs text-slate-500 mt-1">
+                      위에서 프리셋을 저장해보세요
+                    </p>
+                  </div>
+                ) : (
+                  presetList.map((preset, idx) => (
+                    <div
+                      key={idx}
+                      className="bg-slate-700/50 border border-slate-600/50 rounded-xl p-4 hover:bg-slate-700/70 hover:border-slate-500/50 transition-all group"
+                    >
+                      <div className="flex justify-between items-center gap-3">
+                        <div className="flex-1 min-w-0">
+                          <div className="font-bold text-white mb-1 truncate group-hover:text-blue-300 transition-colors">
+                            {preset.name}
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded-full">
+                              규칙 {preset.rules?.length || 0}개
+                            </span>
+                            {preset.createdAt && (
+                              <span className="text-xs text-slate-500">
+                                {new Date(preset.createdAt).toLocaleDateString()}
+                              </span>
+                            )}
+                          </div>
+                        </div>
 
-                {presetList.map((preset, idx) => (
-                  <div
-                    key={idx}
-                    className="flex justify-between items-center p-3 bg-white/10 rounded-lg hover:bg-white/15 transition"
-                  >
-                    <div className="flex-1 min-w-0">
-                      <div className="font-medium truncate">{preset.name}</div>
-                      <div className="text-xs opacity-70">
-                        규칙 {preset.rules?.length || 0}개
-                      </div>
-                    </div>
-
-                    <div className="flex gap-2 ml-2">
+                    <div className="flex gap-2 flex-shrink-0">
                       <button
-                        className="btn-3d px-3 py-1 text-sm"
+                        className="btn-3d text-sm px-3 py-1"
                         onClick={() => loadPreset(preset)}
                       >
-                        불러오기
+                        📥 불러오기
                       </button>
-
                       <button
-                        className="btn-3d btn-red px-3 py-1 text-sm"
+                        className="btn-3d btn-red text-sm px-3 py-1"
                         onClick={() => deletePreset(idx)}
                       >
-                        삭제
+                        ✕
                       </button>
                     </div>
                   </div>
-                ))}
-              </div>
+                ))
+              )}
             </div>
-
-            <button
-              className="btn-3d w-full mt-4"
-              onClick={() => setShowPresetModal(false)}
-            >
-              닫기
-            </button>
           </div>
+
+          {/* 닫기 버튼 */}
+          <button className="btn-3d btn-red w-full text-lg" onClick={() => setShowPresetModal(false)}>
+            닫기
+          </button>
         </div>
-      )}
+      </div>
+    )}
 
       {/* 언어 네이밍/세계관 모달 */}
       {showIdentityModal && (

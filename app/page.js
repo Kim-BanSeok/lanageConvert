@@ -22,9 +22,11 @@ import BackupRestoreModal from "./components/BackupRestoreModal";
 import StorageIndicator from "./components/StorageIndicator";
 import RuleSearch from "./components/RuleSearch";
 import ShortcutsHelpModal from "./components/ShortcutsHelpModal";
+import TranslationHistory from "./components/TranslationHistory";
 import { useCustomAlert } from "./components/CustomAlert";
 import Adsense from "./components/Adsense";
 import { useKeyboardShortcuts } from "./hooks/useKeyboardShortcuts";
+import { addToHistory } from "./lib/translationHistory";
 import { translateText } from "./lib/translationEngine";
 import { translateTextV3, clearTranslationCache, getTranslationCacheSize } from "./lib/translationEngineV3";
 import { addSample, loadSamples } from "./lib/evolutionEngine";
@@ -125,6 +127,9 @@ export default function Home() {
 
   // ⌨️ 단축키 도움말 모달
   const [showShortcutsHelp, setShowShortcutsHelp] = useState(false);
+
+  // 📜 번역 히스토리 모달
+  const [showHistory, setShowHistory] = useState(false);
 
   // 생성된 언어 아이덴티티 저장(로컬)
   const [languageIdentity, setLanguageIdentity] = useState(null);
@@ -456,6 +461,16 @@ export default function Home() {
       setLastAutoTranslated(result);
       setUserEditedOutput(false);
 
+      // 📜 히스토리에 추가
+      addToHistory({
+        direction: 'encode',
+        mode: engineMode,
+        input: inputText,
+        output: result,
+        rulesCount: validRules.length,
+        engineVersion: useV3 ? 'v3' : 'v2'
+      });
+
       await showAlert(`암호화 완료! (${engineMode} 모드, ${validRules.length}개 규칙, ${engineVersion})`, "success", 2000);
     } catch (error) {
       console.error("암호화 중 오류 발생:", error);
@@ -503,6 +518,17 @@ export default function Home() {
 
       console.log("🎯 최종 복호화 결과:", result);
       setOutputText(result);
+
+      // 📜 히스토리에 추가
+      addToHistory({
+        direction: 'decode',
+        mode: engineMode,
+        input: inputText,
+        output: result,
+        rulesCount: validRules.length,
+        engineVersion: useV3 ? 'v3' : 'v2'
+      });
+
       await showAlert(`복호화 완료! (${engineMode} 모드, ${validRules.length}개 규칙, ${engineVersion})`, "success", 2000);
     } catch (error) {
       console.error("복호화 중 오류 발생:", error);
@@ -931,6 +957,13 @@ export default function Home() {
             title="데이터 백업 및 복원 (Ctrl+B)"
           >
             💾 백업
+          </button>
+          <button
+            className="btn-3d btn-compact"
+            onClick={() => setShowHistory(true)}
+            title="번역 히스토리 보기"
+          >
+            📜 히스토리
           </button>
           <button
             className="btn-3d btn-compact"
@@ -1578,6 +1611,18 @@ export default function Home() {
       {/* ⌨️ 키보드 단축키 도움말 모달 */}
       {showShortcutsHelp && (
         <ShortcutsHelpModal onClose={() => setShowShortcutsHelp(false)} />
+      )}
+
+      {/* 📜 번역 히스토리 모달 */}
+      {showHistory && (
+        <TranslationHistory 
+          onClose={() => setShowHistory(false)}
+          onRestore={(item) => {
+            setInputText(item.input);
+            setOutputText(item.output);
+            setEngineMode(item.mode);
+          }}
+        />
       )}
       </div>
     </>

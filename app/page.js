@@ -967,6 +967,7 @@ export default function Home() {
           </div>
         </div>
         <div className="flex gap-2">
+          <ThemeToggle theme={theme} onToggle={toggleTheme} />
           <button
             className="btn-3d btn-compact"
             onClick={() => setShowBackupModal(true)}

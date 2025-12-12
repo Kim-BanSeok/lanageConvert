@@ -411,7 +411,7 @@ export default function Home() {
     setEditingPresetName("");
   };
 
-  // 암호화 (v2 엔진 사용)
+  // 암호화 (v2/v3 엔진 자동 선택)
   const encode = async () => {
     try {
       if (!inputText.trim()) {
@@ -425,13 +425,18 @@ export default function Home() {
         return;
       }
 
-      console.log("🔐 [v2 엔진 암호화 시작]");
+      // 🚀 100개 이상 규칙 시 v3 엔진 자동 사용
+      const useV3 = validRules.length >= 100;
+      const engineVersion = useV3 ? "v3 (최적화)" : "v2";
+
+      console.log(`🔐 [${engineVersion} 엔진 암호화 시작]`);
       console.log("📝 원본 텍스트:", inputText);
       console.log("🔧 엔진 모드:", engineMode);
-      console.log("📋 전체 규칙:", validRules);
+      console.log("📋 전체 규칙:", validRules.length);
 
-      // v2 번역 엔진 사용
-      const result = translateText(inputText, validRules, {
+      // v2 또는 v3 번역 엔진 사용
+      const translationFn = useV3 ? translateTextV3 : translateText;
+      const result = translationFn(inputText, validRules, {
         direction: "encode",
         mode: engineMode,
       });
@@ -451,14 +456,14 @@ export default function Home() {
       setLastAutoTranslated(result);
       setUserEditedOutput(false);
 
-      await showAlert(`암호화 완료! (${engineMode} 모드, ${validRules.length}개 규칙)`, "success", 2000);
+      await showAlert(`암호화 완료! (${engineMode} 모드, ${validRules.length}개 규칙, ${engineVersion})`, "success", 2000);
     } catch (error) {
       console.error("암호화 중 오류 발생:", error);
       await showAlert("암호화 중 오류가 발생했습니다: " + error.message, "error");
     }
   };
 
-  // 복호화 (v2 엔진 사용)
+  // 복호화 (v2/v3 엔진 자동 선택)
   const decode = async () => {
     try {
       if (!inputText.trim()) {
@@ -466,19 +471,12 @@ export default function Home() {
         return;
       }
 
-      console.log("🔓 [v2 엔진 복호화 시작]");
-      console.log("📝 암호화된 텍스트:", inputText);
-      console.log("🔧 엔진 모드:", engineMode);
-
       // 암호화 시 실제로 적용된 규칙 불러오기
       let appliedRules = getLastEncodeRules();
 
       // 저장된 규칙이 없으면 전체 규칙 사용 (하위 호환성)
       if (appliedRules.length === 0) {
         appliedRules = getEncodeOrderFromRules(rules);
-        console.log("📋 전체 규칙 사용:", appliedRules.map((r) => `${r.from} → ${r.to}`));
-      } else {
-        console.log("📋 암호화에 사용된 규칙:", appliedRules.map((r) => `${r.from} → ${r.to}`));
       }
 
       const validRules = appliedRules.filter((r) => r && ((r.from && r.from.trim()) || (r.to && r.to.trim())));
@@ -487,15 +485,25 @@ export default function Home() {
         return;
       }
 
-      // v2 번역 엔진 사용
-      const result = translateText(inputText, validRules, {
+      // 🚀 100개 이상 규칙 시 v3 엔진 자동 사용
+      const useV3 = validRules.length >= 100;
+      const engineVersion = useV3 ? "v3 (최적화)" : "v2";
+
+      console.log(`🔓 [${engineVersion} 엔진 복호화 시작]`);
+      console.log("📝 암호화된 텍스트:", inputText);
+      console.log("🔧 엔진 모드:", engineMode);
+      console.log("📋 규칙 개수:", validRules.length);
+
+      // v2 또는 v3 번역 엔진 사용
+      const translationFn = useV3 ? translateTextV3 : translateText;
+      const result = translationFn(inputText, validRules, {
         direction: "decode",
         mode: engineMode,
       });
 
       console.log("🎯 최종 복호화 결과:", result);
       setOutputText(result);
-      await showAlert(`복호화 완료! (${engineMode} 모드, ${validRules.length}개 규칙)`, "success", 2000);
+      await showAlert(`복호화 완료! (${engineMode} 모드, ${validRules.length}개 규칙, ${engineVersion})`, "success", 2000);
     } catch (error) {
       console.error("복호화 중 오류 발생:", error);
       await showAlert("복호화 중 오류가 발생했습니다: " + error.message, "error");

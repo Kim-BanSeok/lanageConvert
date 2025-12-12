@@ -17,6 +17,7 @@ import EvolutionModal from "./components/EvolutionModal";
 import EvolutionRecommendBanner from "./components/EvolutionRecommendBanner";
 import TutorialModal from "./components/TutorialModal";
 import QuickGuideModal from "./components/QuickGuideModal";
+import BackupRestoreModal from "./components/BackupRestoreModal";
 import { useCustomAlert } from "./components/CustomAlert";
 import Adsense from "./components/Adsense";
 import { translateText } from "./lib/translationEngine";
@@ -73,6 +74,7 @@ export default function Home() {
   // 튜토리얼 모달 State
   const [showTutorial, setShowTutorial] = useState(false);
   const [showQuickGuide, setShowQuickGuide] = useState(false);
+  const [showBackupModal, setShowBackupModal] = useState(false);
 
   // 생성된 언어 아이덴티티 저장(로컬)
   const [languageIdentity, setLanguageIdentity] = useState(null);
@@ -797,6 +799,13 @@ export default function Home() {
         <div className="flex gap-2">
           <button
             className="btn-3d btn-compact"
+            onClick={() => setShowBackupModal(true)}
+            title="데이터 백업 및 복원"
+          >
+            💾 백업
+          </button>
+          <button
+            className="btn-3d btn-compact"
             onClick={() => setShowQuickGuide(true)}
             title="빠른 사용 가이드"
           >
@@ -1327,6 +1336,17 @@ export default function Home() {
       {showQuickGuide && (
         <QuickGuideModal
           onClose={() => setShowQuickGuide(false)}
+        />
+      )}
+
+      {/* 백업/복원 모달 */}
+      {showBackupModal && (
+        <BackupRestoreModal
+          onClose={() => setShowBackupModal(false)}
+          onRestore={() => {
+            // 복원 후 페이지 새로고침
+            window.location.reload();
+          }}
         />
       )}
       </div>

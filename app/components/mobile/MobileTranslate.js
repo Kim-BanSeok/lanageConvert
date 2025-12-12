@@ -116,13 +116,13 @@ export default function MobileTranslate({
       ) : (
         /* 결과 영역 */
         <div className="mobile-translate-output-section">
-          <div className="mobile-section-header">
+          <div className="mobile-section-header mobile-section-header-result">
             <h2 className="mobile-section-title">결과</h2>
             <button
               className="mobile-back-btn"
               onClick={() => setIsOutputMode(false)}
             >
-              ← 돌아가기
+              ← 편집
             </button>
           </div>
 
@@ -133,28 +133,30 @@ export default function MobileTranslate({
           </div>
 
           {/* 결과 액션 */}
-          <div className="mobile-action-buttons">
-            <button className="mobile-btn mobile-btn-outline" onClick={copyResult}>
-              <span className="mobile-btn-icon">📋</span>
-              <span>복사</span>
-            </button>
-            <button className="mobile-btn mobile-btn-outline" onClick={swap}>
-              <span className="mobile-btn-icon">🔄</span>
-              <span>입력/출력 교환</span>
+          <div className="mobile-result-actions">
+            <div className="mobile-action-buttons">
+              <button className="mobile-btn mobile-btn-outline" onClick={copyResult}>
+                <span className="mobile-btn-icon">📋</span>
+                <span>복사</span>
+              </button>
+              <button className="mobile-btn mobile-btn-outline" onClick={swap}>
+                <span className="mobile-btn-icon">🔄</span>
+                <span>교환</span>
+              </button>
+            </div>
+
+            <button
+              className="mobile-btn mobile-btn-primary mobile-btn-new"
+              onClick={() => {
+                setInputText("");
+                setOutputText("");
+                setIsOutputMode(false);
+              }}
+            >
+              <span className="mobile-btn-icon">✨</span>
+              <span>새로 시작</span>
             </button>
           </div>
-
-          <button
-            className="mobile-btn mobile-btn-primary"
-            onClick={() => {
-              setInputText("");
-              setOutputText("");
-              setIsOutputMode(false);
-            }}
-          >
-            <span className="mobile-btn-icon">✨</span>
-            <span>새로 시작</span>
-          </button>
         </div>
       )}
     </div>

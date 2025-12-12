@@ -136,6 +136,22 @@
   word-break: break-word;
 }
 
+.mobile-section-header-result {
+  flex-direction: row-reverse;
+}
+
+.mobile-result-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.mobile-btn-new {
+  width: 100%;
+  margin-top: 8px;
+}
+
 /* ==================== 홈 화면 ==================== */
 .mobile-home-container {
   padding: 20px 0;

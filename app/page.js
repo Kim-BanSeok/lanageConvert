@@ -23,10 +23,12 @@ import StorageIndicator from "./components/StorageIndicator";
 import RuleSearch from "./components/RuleSearch";
 import ShortcutsHelpModal from "./components/ShortcutsHelpModal";
 import TranslationHistory from "./components/TranslationHistory";
+import RuleStatistics from "./components/RuleStatistics";
 import { useCustomAlert } from "./components/CustomAlert";
 import Adsense from "./components/Adsense";
 import { useKeyboardShortcuts } from "./hooks/useKeyboardShortcuts";
 import { addToHistory } from "./lib/translationHistory";
+import { recordRuleUsage } from "./lib/ruleStatistics";
 import { translateText } from "./lib/translationEngine";
 import { translateTextV3, clearTranslationCache, getTranslationCacheSize } from "./lib/translationEngineV3";
 import { addSample, loadSamples } from "./lib/evolutionEngine";
@@ -130,6 +132,9 @@ export default function Home() {
 
   // 📜 번역 히스토리 모달
   const [showHistory, setShowHistory] = useState(false);
+
+  // 📊 규칙 통계 모달
+  const [showStatistics, setShowStatistics] = useState(false);
 
   // 생성된 언어 아이덴티티 저장(로컬)
   const [languageIdentity, setLanguageIdentity] = useState(null);
@@ -471,6 +476,9 @@ export default function Home() {
         engineVersion: useV3 ? 'v3' : 'v2'
       });
 
+      // 📊 규칙 사용 통계 기록
+      recordRuleUsage(validRules, 'encode');
+
       await showAlert(`암호화 완료! (${engineMode} 모드, ${validRules.length}개 규칙, ${engineVersion})`, "success", 2000);
     } catch (error) {
       console.error("암호화 중 오류 발생:", error);
@@ -528,6 +536,9 @@ export default function Home() {
         rulesCount: validRules.length,
         engineVersion: useV3 ? 'v3' : 'v2'
       });
+
+      // 📊 규칙 사용 통계 기록
+      recordRuleUsage(validRules, 'decode');
 
       await showAlert(`복호화 완료! (${engineMode} 모드, ${validRules.length}개 규칙, ${engineVersion})`, "success", 2000);
     } catch (error) {
@@ -964,6 +975,13 @@ export default function Home() {
             title="번역 히스토리 보기"
           >
             📜 히스토리
+          </button>
+          <button
+            className="btn-3d btn-compact"
+            onClick={() => setShowStatistics(true)}
+            title="규칙 사용 통계"
+          >
+            📊 통계
           </button>
           <button
             className="btn-3d btn-compact"
@@ -1622,6 +1640,14 @@ export default function Home() {
             setOutputText(item.output);
             setEngineMode(item.mode);
           }}
+        />
+      )}
+
+      {/* 📊 규칙 통계 모달 */}
+      {showStatistics && (
+        <RuleStatistics 
+          rules={rules}
+          onClose={() => setShowStatistics(false)}
         />
       )}
       </div>

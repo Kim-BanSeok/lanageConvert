@@ -3,11 +3,25 @@
 import { useState } from "react";
 import MobileConflictChecker from "./MobileConflictChecker";
 import MobileTestTranslator from "./MobileTestTranslator";
+import MobileAIGenerator from "./MobileAIGenerator";
+import MobileLearnRule from "./MobileLearnRule";
+import MobileRandomGenerator from "./MobileRandomGenerator";
+import MobileStatistics from "./MobileStatistics";
 
 /**
  * 📱 모바일 도구 화면
  */
-export default function MobileTools({ router, rules, setRules, showAlert, engineMode }) {
+export default function MobileTools({ 
+  router, 
+  rules, 
+  setRules, 
+  showAlert, 
+  engineMode,
+  generateAI_CharacterMap,
+  generateAI_SyllableLanguage,
+  generateAI_PrefixSuffix,
+  generateAI_Crypto
+}) {
   const [currentTool, setCurrentTool] = useState(null);
   const tools = [
     {
@@ -49,39 +63,75 @@ export default function MobileTools({ router, rules, setRules, showAlert, engine
   ];
 
   const handleToolClick = (action) => {
-    if (action === 'conflict') {
-      setCurrentTool('conflict');
-    } else if (action === 'testTranslator') {
-      setCurrentTool('testTranslator');
-    } else {
-      alert(`${action} 기능은 곧 추가됩니다!`);
-    }
+    setCurrentTool(action);
   };
 
-  // 충돌 검사기 표시 중
-  if (currentTool === 'conflict') {
-    return (
-      <MobileConflictChecker
-        rules={rules}
-        setRules={setRules}
-        showAlert={showAlert}
-        onBack={() => setCurrentTool(null)}
-      />
-    );
+  // 도구별 렌더링
+  switch (currentTool) {
+    case 'conflict':
+      return (
+        <MobileConflictChecker
+          rules={rules}
+          setRules={setRules}
+          showAlert={showAlert}
+          onBack={() => setCurrentTool(null)}
+        />
+      );
+
+    case 'testTranslator':
+      return (
+        <MobileTestTranslator
+          rules={rules}
+          engineMode={engineMode}
+          showAlert={showAlert}
+          onBack={() => setCurrentTool(null)}
+        />
+      );
+
+    case 'aiGenerate':
+      return (
+        <MobileAIGenerator
+          setRules={setRules}
+          showAlert={showAlert}
+          onBack={() => setCurrentTool(null)}
+          generateAI_CharacterMap={generateAI_CharacterMap}
+          generateAI_SyllableLanguage={generateAI_SyllableLanguage}
+          generateAI_PrefixSuffix={generateAI_PrefixSuffix}
+          generateAI_Crypto={generateAI_Crypto}
+        />
+      );
+
+    case 'learn':
+      return (
+        <MobileLearnRule
+          setRules={setRules}
+          showAlert={showAlert}
+          onBack={() => setCurrentTool(null)}
+        />
+      );
+
+    case 'random':
+      return (
+        <MobileRandomGenerator
+          setRules={setRules}
+          showAlert={showAlert}
+          onBack={() => setCurrentTool(null)}
+        />
+      );
+
+    case 'stats':
+      return (
+        <MobileStatistics
+          rules={rules}
+          onBack={() => setCurrentTool(null)}
+        />
+      );
+
+    default:
+      break;
   }
 
-  // 테스트 번역기 표시 중
-  if (currentTool === 'testTranslator') {
-    return (
-      <MobileTestTranslator
-        rules={rules}
-        engineMode={engineMode}
-        showAlert={showAlert}
-        onBack={() => setCurrentTool(null)}
-      />
-    );
-  }
-
+  // 도구 목록 표시
   return (
     <div className="mobile-tools-container">
       <div className="mobile-section-header">

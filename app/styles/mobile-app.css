@@ -962,3 +962,507 @@
   font-size: 0.8rem;
 }
 
+/* ==================== AI 생성기 ==================== */
+.mobile-ai-generator {
+  padding-bottom: 20px;
+}
+
+.mobile-ai-modes {
+  display: grid;
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.mobile-ai-mode-card {
+  position: relative;
+  background: var(--card-bg);
+  border: 2px solid var(--border-color);
+  border-radius: 16px;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.mobile-ai-mode-card.active {
+  transform: scale(1.02);
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.3);
+}
+
+.mobile-ai-mode-icon {
+  font-size: 3rem;
+  margin-bottom: 12px;
+}
+
+.mobile-ai-mode-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+
+.mobile-ai-mode-desc {
+  font-size: 0.85rem;
+  color: var(--text-tertiary);
+}
+
+.mobile-ai-mode-check {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 28px;
+  height: 28px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.mobile-ai-preview {
+  margin: 20px 0;
+}
+
+.mobile-ai-loading {
+  text-align: center;
+  padding: 40px;
+  color: var(--text-tertiary);
+}
+
+.mobile-ai-preview-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.mobile-ai-preview-item {
+  padding: 10px;
+  background: rgba(99, 102, 241, 0.1);
+  border-radius: 8px;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.mobile-ai-preview-from {
+  color: rgba(239, 68, 68, 0.9);
+  font-weight: 600;
+}
+
+.mobile-ai-preview-arrow {
+  color: rgba(99, 102, 241, 0.6);
+  margin: 0 4px;
+}
+
+.mobile-ai-preview-to {
+  color: rgba(34, 197, 94, 0.9);
+  font-weight: 600;
+}
+
+.mobile-ai-preview-more {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: var(--text-tertiary);
+  font-size: 0.8rem;
+  padding: 8px;
+}
+
+/* ==================== 단어 학습기 ==================== */
+.mobile-learn-container {
+  padding-bottom: 20px;
+}
+
+.mobile-learn-guide {
+  text-align: center;
+  padding: 30px 20px;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+  border-radius: 16px;
+  margin-bottom: 20px;
+}
+
+.mobile-learn-guide-icon {
+  font-size: 3rem;
+  margin-bottom: 12px;
+}
+
+.mobile-learn-guide h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.mobile-learn-guide p {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.mobile-learn-example {
+  background: rgba(99, 102, 241, 0.05);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+.mobile-learn-example strong {
+  display: block;
+  margin-bottom: 12px;
+  color: var(--text-primary);
+}
+
+.mobile-learn-example-text {
+  padding: 8px 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.mobile-learn-example-text code {
+  color: rgba(99, 102, 241, 0.9);
+  font-weight: 600;
+}
+
+.mobile-learn-example-arrow {
+  text-align: center;
+  font-size: 1.5rem;
+  color: rgba(99, 102, 241, 0.6);
+  margin: 8px 0;
+}
+
+.mobile-learn-example-result {
+  padding: 12px;
+  background: rgba(34, 197, 94, 0.1);
+  border-radius: 8px;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.mobile-form-textarea {
+  width: 100%;
+  padding: 14px;
+  background: var(--card-bg);
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
+  color: var(--text-primary);
+  font-size: 1rem;
+  line-height: 1.6;
+  resize: vertical;
+  font-family: inherit;
+}
+
+.mobile-form-textarea:focus {
+  outline: none;
+  border-color: rgba(99, 102, 241, 0.5);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.mobile-learn-success {
+  text-align: center;
+  padding: 30px 20px;
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(16, 185, 129, 0.1));
+  border-radius: 16px;
+  margin-bottom: 20px;
+}
+
+.mobile-learn-success-icon {
+  font-size: 4rem;
+  margin-bottom: 12px;
+}
+
+.mobile-learn-success h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.mobile-learn-results {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.mobile-learn-result-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px;
+  background: var(--card-bg);
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
+}
+
+.mobile-learn-result-num {
+  font-size: 0.75rem;
+  padding: 4px 8px;
+  background: rgba(99, 102, 241, 0.2);
+  border-radius: 6px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.mobile-learn-result-from {
+  flex: 1;
+  color: rgba(239, 68, 68, 0.9);
+  font-weight: 600;
+}
+
+.mobile-learn-result-arrow {
+  color: rgba(99, 102, 241, 0.6);
+  font-size: 1.2rem;
+}
+
+.mobile-learn-result-to {
+  flex: 1;
+  color: rgba(34, 197, 94, 0.9);
+  font-weight: 600;
+  text-align: right;
+}
+
+/* ==================== 랜덤 생성기 ==================== */
+.mobile-random-container {
+  padding-bottom: 20px;
+}
+
+.mobile-random-guide {
+  text-align: center;
+  padding: 30px 20px;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+  border-radius: 16px;
+  margin-bottom: 20px;
+}
+
+.mobile-random-guide-icon {
+  font-size: 3rem;
+  margin-bottom: 12px;
+}
+
+.mobile-random-guide h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.mobile-random-guide p {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.mobile-random-options {
+  margin: 20px 0;
+}
+
+.mobile-options-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+}
+
+.mobile-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background: var(--card-bg);
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.mobile-checkbox-label:active {
+  transform: scale(0.98);
+}
+
+.mobile-checkbox {
+  width: 24px;
+  height: 24px;
+  accent-color: rgba(99, 102, 241, 0.8);
+}
+
+.mobile-checkbox-text {
+  flex: 1;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+}
+
+.mobile-random-preview {
+  margin: 20px 0;
+}
+
+.mobile-random-preview-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin: 12px 0 20px;
+}
+
+.mobile-random-preview-item {
+  padding: 10px;
+  background: rgba(99, 102, 241, 0.1);
+  border-radius: 8px;
+  font-size: 0.85rem;
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.mobile-random-preview-more {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: var(--text-tertiary);
+  font-size: 0.8rem;
+  padding: 8px;
+}
+
+/* ==================== 통계 ==================== */
+.mobile-stats-container {
+  padding-bottom: 20px;
+}
+
+.mobile-stats-loading {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-tertiary);
+}
+
+.mobile-stats-summary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.mobile-stats-summary-card {
+  background: var(--card-bg);
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
+  padding: 16px 8px;
+  text-align: center;
+}
+
+.mobile-stats-summary-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.mobile-stats-summary-label {
+  font-size: 0.7rem;
+  color: var(--text-tertiary);
+}
+
+.mobile-stats-subtitle {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+}
+
+.mobile-stats-highlight {
+  margin-bottom: 20px;
+}
+
+.mobile-stats-highlight-card {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.2));
+  border: 2px solid rgba(99, 102, 241, 0.4);
+  border-radius: 16px;
+  padding: 20px;
+  text-align: center;
+}
+
+.mobile-stats-highlight-rule {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.mobile-stats-highlight-from {
+  color: rgba(239, 68, 68, 0.9);
+}
+
+.mobile-stats-highlight-arrow {
+  color: rgba(99, 102, 241, 0.6);
+  margin: 0 8px;
+}
+
+.mobile-stats-highlight-to {
+  color: rgba(34, 197, 94, 0.9);
+}
+
+.mobile-stats-highlight-count {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+}
+
+.mobile-stats-list {
+  margin-top: 20px;
+}
+
+.mobile-stats-item {
+  background: var(--card-bg);
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 10px;
+}
+
+.mobile-stats-item-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.mobile-stats-item-rule {
+  flex: 1;
+  font-size: 0.95rem;
+}
+
+.mobile-stats-item-from {
+  color: rgba(239, 68, 68, 0.9);
+  font-weight: 600;
+}
+
+.mobile-stats-item-arrow {
+  color: rgba(99, 102, 241, 0.6);
+  margin: 0 6px;
+}
+
+.mobile-stats-item-to {
+  color: rgba(34, 197, 94, 0.9);
+  font-weight: 600;
+}
+
+.mobile-stats-item-count {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  padding: 4px 10px;
+  background: rgba(99, 102, 241, 0.15);
+  border-radius: 8px;
+}
+
+.mobile-stats-item-detail {
+  display: flex;
+  gap: 12px;
+  font-size: 0.8rem;
+  color: var(--text-tertiary);
+  padding-top: 8px;
+  border-top: 1px solid var(--border-color);
+}
+
+.mobile-stats-item-unused {
+  font-size: 0.85rem;
+  color: var(--text-tertiary);
+  font-style: italic;
+  opacity: 0.7;
+}
+

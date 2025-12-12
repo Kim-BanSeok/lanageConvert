@@ -29,6 +29,10 @@ export default function MobilePage({
   router,
   theme,
   toggleTheme,
+  generateAI_CharacterMap,
+  generateAI_SyllableLanguage,
+  generateAI_PrefixSuffix,
+  generateAI_Crypto,
 }) {
   const [activeTab, setActiveTab] = useState('translate');
 
@@ -77,6 +81,10 @@ export default function MobilePage({
             setRules={setRules}
             showAlert={showAlert}
             engineMode={engineMode}
+            generateAI_CharacterMap={generateAI_CharacterMap}
+            generateAI_SyllableLanguage={generateAI_SyllableLanguage}
+            generateAI_PrefixSuffix={generateAI_PrefixSuffix}
+            generateAI_Crypto={generateAI_Crypto}
           />
         );
       

@@ -1,4 +1,5 @@
 import "./globals.css";
+import "./styles/mobile-app.css";
 
 export const metadata = {
   title: "나만의 언어 생성기 - My Language Generator",

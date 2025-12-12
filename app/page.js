@@ -6,7 +6,7 @@ import { useHistory } from "./hooks/useHistory";
 import { useIsMobile } from "./hooks/useMediaQuery";
 import RuleRow from "./components/RuleRow";
 import Logo3D from "./components/Logo3D";
-import MobileLayout from "./components/MobileLayout";
+import MobilePage from "./components/mobile/MobilePage";
 import AIGeneratorModal from "./components/AIGeneratorModal";
 import LearnRuleModal from "./components/LearnRuleModal";
 import ConflictChecker from "./components/ConflictChecker";
@@ -933,6 +933,37 @@ export default function Home() {
     await showAlert(`${newRules.length}개의 한글 변환 규칙이 추가되었습니다.`, "success");
   };
 
+  // 📱 모바일 vs 💻 데스크톱 분기
+  if (isMobile) {
+    return (
+      <>
+        {AlertComponent}
+        <PWAInstallPrompt />
+        <ServiceWorkerRegistration />
+        
+        <MobilePage
+          rules={rules}
+          setRules={setRules}
+          inputText={inputText}
+          setInputText={setInputText}
+          outputText={outputText}
+          setOutputText={setOutputText}
+          engineMode={engineMode}
+          setEngineMode={setEngineMode}
+          encode={encode}
+          decode={decode}
+          copyResult={copyResult}
+          swap={swap}
+          showAlert={showAlert}
+          router={router}
+          theme={theme}
+          toggleTheme={toggleTheme}
+        />
+      </>
+    );
+  }
+
+  // 💻 데스크톱 UI
   return (
     <>
       {AlertComponent}

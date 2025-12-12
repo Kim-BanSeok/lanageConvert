@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { useCustomAlert } from "./CustomAlert";
 
 export default function TTSPlayer({ text, buttonText = "🔊 음성 듣기", className = "" }) {
+  // 모든 Hooks는 항상 같은 순서로 호출되어야 함
   const { showAlert, AlertComponent } = useCustomAlert();
   const [isPlaying, setIsPlaying] = useState(false);
   const [isSupported, setIsSupported] = useState(false);
@@ -94,15 +95,32 @@ export default function TTSPlayer({ text, buttonText = "🔊 음성 듣기", cla
     );
   }
 
-  // 드롭다운 위치 계산
+  // 드롭다운 위치 계산 - useEffect는 항상 호출되어야 함
   useEffect(() => {
-    if (showVoiceSelector && buttonRef.current && dropdownRef.current) {
+    if (!showVoiceSelector || !buttonRef.current || !dropdownRef.current) {
+      return;
+    }
+    
+    const updatePosition = () => {
       const buttonRect = buttonRef.current.getBoundingClientRect();
       const dropdown = dropdownRef.current;
       
-      dropdown.style.top = `${buttonRect.bottom + window.scrollY + 8}px`;
-      dropdown.style.left = `${buttonRect.left + window.scrollX}px`;
-    }
+      if (dropdown) {
+        dropdown.style.top = `${buttonRect.bottom + window.scrollY + 8}px`;
+        dropdown.style.left = `${buttonRect.left + window.scrollX}px`;
+      }
+    };
+    
+    updatePosition();
+    
+    // 스크롤이나 리사이즈 시 위치 업데이트
+    window.addEventListener('scroll', updatePosition, true);
+    window.addEventListener('resize', updatePosition);
+    
+    return () => {
+      window.removeEventListener('scroll', updatePosition, true);
+      window.removeEventListener('resize', updatePosition);
+    };
   }, [showVoiceSelector]);
 
   return (

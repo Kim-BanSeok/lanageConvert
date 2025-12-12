@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import { useCustomAlert } from "./CustomAlert";
 
 export default function TTSPlayer({ text, buttonText = "🔊 음성 듣기", className = "" }) {
@@ -11,8 +12,15 @@ export default function TTSPlayer({ text, buttonText = "🔊 음성 듣기", cla
   const [voices, setVoices] = useState([]);
   const [selectedVoice, setSelectedVoice] = useState(null);
   const [showVoiceSelector, setShowVoiceSelector] = useState(false);
+  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, width: 0 });
   const buttonRef = useRef(null);
   const dropdownRef = useRef(null);
+  const [mounted, setMounted] = useState(false);
+
+  // Portal을 위한 mounted 상태
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     // Web Speech API 지원 확인
@@ -83,22 +91,63 @@ export default function TTSPlayer({ text, buttonText = "🔊 음성 듣기", cla
     setIsPlaying(false);
   };
 
-  // 드롭다운 위치 계산 - absolute positioning 사용 시 자동으로 버튼 아래에 배치됨
-  // 추가 위치 조정이 필요하면 여기서 처리
+  // 드롭다운 위치 계산 (fixed positioning)
   useEffect(() => {
-    if (!showVoiceSelector || !dropdownRef.current) {
+    if (!showVoiceSelector || !buttonRef.current) {
       return;
     }
     
-    const dropdown = dropdownRef.current;
-    const viewportWidth = window.innerWidth;
-    const dropdownRect = dropdown.getBoundingClientRect();
+    const updatePosition = () => {
+      if (!buttonRef.current) return;
+      
+      const buttonRect = buttonRef.current.getBoundingClientRect();
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+      
+      // 드롭다운 예상 크기
+      const dropdownWidth = 300;
+      const dropdownHeight = 250;
+      
+      let top = buttonRect.bottom + 8; // 버튼 아래 8px
+      let left = buttonRect.left;
+      
+      // 화면 오른쪽을 넘어가면 왼쪽 정렬
+      if (left + dropdownWidth > viewportWidth - 16) {
+        left = buttonRect.right - dropdownWidth;
+      }
+      
+      // 화면 왼쪽을 넘어가면 조정
+      if (left < 16) {
+        left = 16;
+      }
+      
+      // 화면 아래로 넘어가면 버튼 위로 표시
+      if (top + dropdownHeight > viewportHeight - 16) {
+        top = buttonRect.top - dropdownHeight - 8;
+      }
+      
+      // 위로도 공간이 없으면 화면 중앙에
+      if (top < 16) {
+        top = Math.max(16, (viewportHeight - dropdownHeight) / 2);
+      }
+      
+      setDropdownPosition({
+        top,
+        left,
+        width: buttonRect.width
+      });
+    };
     
-    // 화면 오른쪽으로 넘어가는 경우 왼쪽으로 조정
-    if (dropdownRect.right > viewportWidth - 16) {
-      dropdown.style.left = 'auto';
-      dropdown.style.right = '0';
-    }
+    updatePosition();
+    
+    // 스크롤 시 위치 업데이트
+    window.addEventListener('scroll', updatePosition, true);
+    window.addEventListener('resize', updatePosition);
+    
+    return () => {
+      window.removeEventListener('scroll', updatePosition, true);
+      window.removeEventListener('resize', updatePosition);
+    };
   }, [showVoiceSelector]);
 
   // early return은 모든 Hooks 호출 후에
@@ -138,56 +187,80 @@ export default function TTSPlayer({ text, buttonText = "🔊 음성 듣기", cla
 
           {/* 음성 선택 버튼 */}
           {voices.length > 0 && (
-            <div className="relative">
-              <button
-                ref={buttonRef}
-                className="btn-3d px-3 py-2 flex-shrink-0"
-                onClick={() => setShowVoiceSelector(!showVoiceSelector)}
-                title="음성 선택"
-              >
-                ⚙️
-              </button>
-
-              {/* 음성 선택 드롭다운 - absolute positioning으로 변경 */}
-              {showVoiceSelector && (
-                <>
-                  {/* 배경 오버레이 */}
-                  <div 
-                    className="fixed inset-0 z-[199] bg-black/20"
-                    onClick={() => setShowVoiceSelector(false)}
-                  />
-                  {/* 드롭다운 메뉴 */}
-                  <div 
-                    ref={dropdownRef}
-                    className="absolute top-full left-0 mt-2 z-[200] bg-slate-800 border border-slate-600 rounded-lg p-3 shadow-2xl min-w-[280px] backdrop-blur-sm"
-                  >
-                    <h4 className="text-sm font-semibold mb-3 text-slate-200">음성 선택</h4>
-                    <div className="max-h-[200px] overflow-y-auto space-y-1 custom-scrollbar">
-                      {voices.map((voice, idx) => (
-                        <button
-                          key={idx}
-                          className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-all ${
-                            selectedVoice?.name === voice.name 
-                              ? "bg-blue-500/40 text-white border border-blue-400/50" 
-                              : "text-slate-300 hover:bg-white/10 hover:text-white"
-                          }`}
-                          onClick={() => {
-                            setSelectedVoice(voice);
-                            setShowVoiceSelector(false);
-                          }}
-                        >
-                          <div className="font-medium">{voice.name}</div>
-                          <div className="text-xs opacity-70 mt-0.5">{voice.lang}</div>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                </>
-              )}
-            </div>
+            <button
+              ref={buttonRef}
+              className="btn-3d px-3 py-2 flex-shrink-0"
+              onClick={() => setShowVoiceSelector(!showVoiceSelector)}
+              title="음성 선택"
+            >
+              ⚙️
+            </button>
           )}
         </div>
       </div>
+
+      {/* Portal을 사용한 드롭다운 - body에 직접 렌더링 */}
+      {mounted && showVoiceSelector && createPortal(
+        <>
+          {/* 배경 오버레이 */}
+          <div 
+            className="fixed inset-0 z-[9998] bg-black/30"
+            onClick={() => setShowVoiceSelector(false)}
+            style={{ backdropFilter: 'blur(2px)' }}
+          />
+          
+          {/* 드롭다운 메뉴 */}
+          <div 
+            ref={dropdownRef}
+            className="fixed z-[9999] bg-slate-800/95 border-2 border-blue-500/50 rounded-xl p-4 shadow-2xl backdrop-blur-md"
+            style={{
+              top: `${dropdownPosition.top}px`,
+              left: `${dropdownPosition.left}px`,
+              width: '300px',
+              maxHeight: '400px'
+            }}
+          >
+            <div className="flex items-center justify-between mb-3">
+              <h4 className="text-sm font-bold text-white">🎙️ 음성 선택</h4>
+              <button
+                className="text-slate-400 hover:text-white transition-colors text-lg leading-none"
+                onClick={() => setShowVoiceSelector(false)}
+              >
+                ✕
+              </button>
+            </div>
+            
+            <div className="text-xs text-slate-400 mb-3">
+              {selectedVoice && (
+                <div className="bg-blue-500/20 border border-blue-500/30 rounded-lg px-2 py-1">
+                  선택됨: <span className="text-white font-medium">{selectedVoice.name}</span>
+                </div>
+              )}
+            </div>
+            
+            <div className="max-h-[280px] overflow-y-auto space-y-1.5 custom-scrollbar pr-1">
+              {voices.map((voice, idx) => (
+                <button
+                  key={idx}
+                  className={`w-full text-left px-3 py-2.5 rounded-lg text-sm transition-all ${
+                    selectedVoice?.name === voice.name 
+                      ? "bg-blue-500/50 text-white border-2 border-blue-400 shadow-lg shadow-blue-500/20" 
+                      : "text-slate-300 bg-slate-700/30 hover:bg-slate-700/60 hover:text-white border border-transparent hover:border-slate-600"
+                  }`}
+                  onClick={() => {
+                    setSelectedVoice(voice);
+                    setShowVoiceSelector(false);
+                  }}
+                >
+                  <div className="font-semibold">{voice.name}</div>
+                  <div className="text-xs opacity-70 mt-0.5">{voice.lang}</div>
+                </button>
+              ))}
+            </div>
+          </div>
+        </>,
+        document.body
+      )}
     </>
   );
 }

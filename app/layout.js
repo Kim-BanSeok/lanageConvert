@@ -144,6 +144,7 @@ export default function RootLayout({ children }) {
         {/* 구조화된 데이터 준비 (JSON-LD는 별도로 추가 가능) */}
         <script
           type="application/ld+json"
+          suppressHydrationWarning
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",

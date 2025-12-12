@@ -1,5 +1,7 @@
 // app/lib/evolutionEngine.js
 
+import { safeLocalStorageGet, safeLocalStorageSet, safeLocalStorageRemove } from "../utils/storage";
+
 const STORE_KEY = "evolution_samples_v1";
 const VERSION_KEY = "language_versions_v1";
 
@@ -14,14 +16,14 @@ function safeJsonParse(s, fallback) {
 
 export function loadSamples() {
   if (typeof window === "undefined") return [];
-  const result = safeJsonParse(localStorage.getItem(STORE_KEY), []);
+  const result = safeJsonParse(safeLocalStorageGet(STORE_KEY, "[]"), []);
   // null이나 undefined가 반환되지 않도록 보장
   return Array.isArray(result) ? result : [];
 }
 
 export function saveSamples(samples) {
   if (typeof window === "undefined") return;
-  localStorage.setItem(STORE_KEY, JSON.stringify(samples));
+  safeLocalStorageSet(STORE_KEY, JSON.stringify(samples));
 }
 
 export function addSample({ original, translated, mode }) {
@@ -39,7 +41,7 @@ export function addSample({ original, translated, mode }) {
 
 export function clearSamples() {
   if (typeof window === "undefined") return;
-  localStorage.removeItem(STORE_KEY);
+  safeLocalStorageRemove(STORE_KEY);
 }
 
 function cryptoRandomId() {
@@ -167,7 +169,7 @@ export function normalizeRules(rules) {
  */
 export function loadVersions() {
   if (typeof window === "undefined") return [];
-  const result = safeJsonParse(localStorage.getItem(VERSION_KEY), []);
+  const result = safeJsonParse(safeLocalStorageGet(VERSION_KEY, "[]"), []);
   // null이나 undefined가 반환되지 않도록 보장
   return Array.isArray(result) ? result : [];
 }
@@ -181,13 +183,13 @@ export function saveVersion({ name, rules, meta }) {
     rules: rules || [],
     meta: meta || {},
   });
-  localStorage.setItem(VERSION_KEY, JSON.stringify(versions));
+  safeLocalStorageSet(VERSION_KEY, JSON.stringify(versions));
   return versions;
 }
 
 export function deleteVersion(id) {
   const versions = loadVersions().filter(v => v.id !== id);
-  localStorage.setItem(VERSION_KEY, JSON.stringify(versions));
+  safeLocalStorageSet(VERSION_KEY, JSON.stringify(versions));
   return versions;
 }
 

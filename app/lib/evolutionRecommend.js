@@ -47,6 +47,6 @@ export function markRecommended(sampleCount) {
  */
 export function resetRecommendState() {
   if (typeof window === "undefined") return;
-  localStorage.removeItem(RECOMMEND_KEY);
+  safeLocalStorageRemove(RECOMMEND_KEY);
 }
 

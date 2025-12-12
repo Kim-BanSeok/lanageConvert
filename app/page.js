@@ -19,6 +19,7 @@ import EvolutionRecommendBanner from "./components/EvolutionRecommendBanner";
 import TutorialModal from "./components/TutorialModal";
 import QuickGuideModal from "./components/QuickGuideModal";
 import BackupRestoreModal from "./components/BackupRestoreModal";
+import StorageIndicator from "./components/StorageIndicator";
 import { useCustomAlert } from "./components/CustomAlert";
 import Adsense from "./components/Adsense";
 import { translateText } from "./lib/translationEngine";
@@ -1394,6 +1395,9 @@ export default function Home() {
           }}
         />
       )}
+
+      {/* 🔧 localStorage 용량 모니터링 표시기 */}
+      <StorageIndicator onClick={() => setShowBackupModal(true)} />
       </div>
     </>
   );

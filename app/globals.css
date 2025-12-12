@@ -192,6 +192,50 @@ body {
     0 0 10px rgba(96, 165, 250, 0.4);
 }
 
+/* ========== 버튼 그룹 스타일 ========== */
+.button-group {
+  margin-bottom: 16px;
+}
+
+.button-group-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+  padding-left: 4px;
+}
+
+.button-group-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* 컴팩트 버튼 스타일 */
+.btn-compact {
+  padding: 8px 16px !important;
+  font-size: 0.875rem !important;
+  white-space: nowrap;
+}
+
+/* 모바일에서 버튼 크기 조정 */
+@media (max-width: 640px) {
+  .button-group-items {
+    gap: 6px;
+  }
+  
+  .btn-compact {
+    padding: 7px 12px !important;
+    font-size: 0.8rem !important;
+  }
+  
+  .button-group-label {
+    font-size: 0.7rem;
+  }
+}
+
 /* ========== 규칙 Row 마우스 Hover ========== */
 .row-3d:hover input {
   transform: scale(1.015);

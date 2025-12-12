@@ -877,58 +877,91 @@ export default function Home() {
 
       {/* 규칙 편집 카드 */}
       <div className="card-3d">
-        <div className="flex justify-between mb-3 flex-wrap gap-2">
+        <div className="flex justify-between items-center mb-4 flex-wrap gap-3">
           <h2 className="text-xl font-semibold">변환 규칙</h2>
+        </div>
 
-          <div className="flex gap-2 flex-wrap">
-            <button className="btn-3d" onClick={addRule}>
+        {/* 버튼 그룹: 기본 작업 */}
+        <div className="button-group mb-3">
+          <div className="button-group-label">기본 작업</div>
+          <div className="button-group-items">
+            <button className="btn-3d btn-compact" onClick={addRule} title="새 규칙 추가">
               ➕ 규칙 추가
             </button>
-            <button className="btn-3d" onClick={() => setShowIdentityModal(true)}>
-              ✨ 네이밍/세계관
+            <button className="btn-3d btn-compact btn-red" onClick={clearRules} title="모든 규칙 삭제">
+              🧹 삭제
             </button>
-            <button className="btn-3d" onClick={() => {
-              setShowEvolutionRecommend(false);
-              setShowEvolutionModal(true);
-            }}>
-              🧠 언어 진화
-            </button>
-            <button className="btn-3d" onClick={generateRandomAlphabet}>
-              🎲 랜덤 생성
-            </button>
+          </div>
+        </div>
+
+        {/* 버튼 그룹: AI 생성 */}
+        <div className="button-group mb-3">
+          <div className="button-group-label">AI 생성</div>
+          <div className="button-group-items">
             <button 
-              className="btn-3d" 
+              className="btn-3d btn-compact" 
               onClick={() => setShowAIModal(true)}
               title="AI 알고리즘으로 다양한 언어 패턴 자동 생성"
             >
               🤖 AI 언어 생성
             </button>
             <button 
-              className="btn-3d" 
+              className="btn-3d btn-compact" 
               onClick={() => setShowLearnModal(true)}
               title="원문과 변환문으로부터 단어 규칙 자동 학습"
             >
               🧠 단어 규칙 학습
             </button>
-            <button className="btn-3d btn-red" onClick={clearRules}>
-              🧹 삭제
+            <button className="btn-3d btn-compact" onClick={generateRandomAlphabet} title="랜덤 알파벳 규칙 생성">
+              🎲 랜덤 생성
+            </button>
+          </div>
+        </div>
+
+        {/* 버튼 그룹: 고급 기능 */}
+        <div className="button-group mb-3">
+          <div className="button-group-label">고급 기능</div>
+          <div className="button-group-items">
+            <button 
+              className="btn-3d btn-compact" 
+              onClick={() => setShowIdentityModal(true)}
+              title="언어 이름 및 세계관 생성"
+            >
+              ✨ 네이밍/세계관
             </button>
             <button 
-              className="btn-3d" 
+              className="btn-3d btn-compact" 
+              onClick={() => {
+                setShowEvolutionRecommend(false);
+                setShowEvolutionModal(true);
+              }}
+              title="학습 샘플 기반 언어 진화"
+            >
+              🧠 언어 진화
+            </button>
+          </div>
+        </div>
+
+        {/* 버튼 그룹: 저장/불러오기 */}
+        <div className="button-group mb-3">
+          <div className="button-group-label">저장/불러오기</div>
+          <div className="button-group-items">
+            <button 
+              className="btn-3d btn-compact" 
               onClick={exportRules}
               title="규칙을 JSON 파일로 내보내기"
             >
               📤 내보내기
             </button>
             <button 
-              className="btn-3d" 
+              className="btn-3d btn-compact" 
               onClick={importRules}
               title="JSON 파일에서 규칙 가져오기"
             >
               📥 가져오기
             </button>
             <button 
-              className="btn-3d" 
+              className="btn-3d btn-compact" 
               onClick={() => setShowPresetModal(true)}
               title="언어 프리셋 저장 및 불러오기"
             >

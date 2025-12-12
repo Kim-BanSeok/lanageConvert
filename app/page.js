@@ -21,8 +21,10 @@ import QuickGuideModal from "./components/QuickGuideModal";
 import BackupRestoreModal from "./components/BackupRestoreModal";
 import StorageIndicator from "./components/StorageIndicator";
 import RuleSearch from "./components/RuleSearch";
+import ShortcutsHelpModal from "./components/ShortcutsHelpModal";
 import { useCustomAlert } from "./components/CustomAlert";
 import Adsense from "./components/Adsense";
+import { useKeyboardShortcuts } from "./hooks/useKeyboardShortcuts";
 import { translateText } from "./lib/translationEngine";
 import { addSample, loadSamples } from "./lib/evolutionEngine";
 import {
@@ -48,6 +50,17 @@ export default function Home() {
   useEffect(() => {
     setupGlobalErrorHandler(showAlert);
   }, [showAlert]);
+
+  // ⌨️ 키보드 단축키 설정
+  useKeyboardShortcuts({
+    onEncode: encode,
+    onDecode: decode,
+    onSavePreset: () => setShowPresetModal(true),
+    onAddRule: addRule,
+    onSearch: () => setShowSearch(prev => !prev),
+    onHelp: () => setShowQuickGuide(true),
+    onBackup: () => setShowBackupModal(true),
+  });
   
   // 🔄 Undo/Redo 시스템 적용
   const {
@@ -108,6 +121,9 @@ export default function Home() {
   // ✏️ 프리셋 편집 State
   const [editingPresetIndex, setEditingPresetIndex] = useState(null);
   const [editingPresetName, setEditingPresetName] = useState("");
+
+  // ⌨️ 단축키 도움말 모달
+  const [showShortcutsHelp, setShowShortcutsHelp] = useState(false);
 
   // 생성된 언어 아이덴티티 저장(로컬)
   const [languageIdentity, setLanguageIdentity] = useState(null);
@@ -903,14 +919,21 @@ export default function Home() {
           <button
             className="btn-3d btn-compact"
             onClick={() => setShowBackupModal(true)}
-            title="데이터 백업 및 복원"
+            title="데이터 백업 및 복원 (Ctrl+B)"
           >
             💾 백업
           </button>
           <button
             className="btn-3d btn-compact"
+            onClick={() => setShowShortcutsHelp(true)}
+            title="키보드 단축키 보기"
+          >
+            ⌨️ 단축키
+          </button>
+          <button
+            className="btn-3d btn-compact"
             onClick={() => setShowQuickGuide(true)}
-            title="빠른 사용 가이드"
+            title="빠른 사용 가이드 (Ctrl+/)"
           >
             ❓ 사용법
           </button>
@@ -1534,6 +1557,11 @@ export default function Home() {
 
       {/* 🔧 localStorage 용량 모니터링 표시기 */}
       <StorageIndicator onClick={() => setShowBackupModal(true)} />
+
+      {/* ⌨️ 키보드 단축키 도움말 모달 */}
+      {showShortcutsHelp && (
+        <ShortcutsHelpModal onClose={() => setShowShortcutsHelp(false)} />
+      )}
       </div>
     </>
   );

@@ -729,14 +729,23 @@ export default function Home() {
           />
         </div>
 
-      {/* 갤러리 이동 버튼 */}
-      <div className="flex justify-end">
+      {/* 상단 네비게이션 바 */}
+      <div className="flex items-center justify-between mb-6 p-4 bg-slate-800/30 backdrop-blur-md rounded-2xl border border-slate-700/50">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+            <span className="text-xl">🔮</span>
+          </div>
+          <div>
+            <div className="text-sm font-semibold text-white">Language Creator</div>
+            <div className="text-xs text-slate-400">나만의 암호 언어를 만들어보세요</div>
+          </div>
+        </div>
         <button
           className="btn-3d"
           onClick={() => router.push("/gallery")}
           title="언어 갤러리 페이지로 이동"
         >
-          🖼️ 언어 갤러리
+          🖼️ 갤러리
         </button>
       </div>
 

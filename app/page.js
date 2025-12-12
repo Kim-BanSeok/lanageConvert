@@ -69,14 +69,20 @@ export default function Home() {
   const [learnToast, setLearnToast] = useState(false);
 
   // 생성된 언어 아이덴티티 저장(로컬)
-  const [languageIdentity, setLanguageIdentity] = useState(() => {
-    if (typeof window === "undefined") return null;
-    try { 
-      return JSON.parse(safeLocalStorageGet("language_identity_v1") || "null"); 
-    } catch { 
-      return null; 
+  const [languageIdentity, setLanguageIdentity] = useState(null);
+
+  // 클라이언트에서만 localStorage에서 로드 (Hydration 에러 방지)
+  useEffect(() => {
+    try {
+      const saved = safeLocalStorageGet("language_identity_v1");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        setLanguageIdentity(parsed);
+      }
+    } catch (error) {
+      console.warn("언어 아이덴티티 로드 실패:", error);
     }
-  });
+  }, []);
 
   // 자동 학습용 상태
   const [lastSourceText, setLastSourceText] = useState("");

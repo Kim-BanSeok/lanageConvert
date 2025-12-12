@@ -57,17 +57,6 @@ export default function Home() {
   useEffect(() => {
     setupGlobalErrorHandler(showAlert);
   }, [showAlert]);
-
-  // ⌨️ 키보드 단축키 설정
-  useKeyboardShortcuts({
-    onEncode: encode,
-    onDecode: decode,
-    onSavePreset: () => setShowPresetModal(true),
-    onAddRule: addRule,
-    onSearch: () => setShowSearch(prev => !prev),
-    onHelp: () => setShowQuickGuide(true),
-    onBackup: () => setShowBackupModal(true),
-  });
   
   // 🔄 Undo/Redo 시스템 적용
   const {
@@ -551,6 +540,17 @@ export default function Home() {
       await showAlert("복호화 중 오류가 발생했습니다: " + error.message, "error");
     }
   };
+
+  // ⌨️ 키보드 단축키 설정 (encode/decode 함수 정의 후)
+  useKeyboardShortcuts({
+    onEncode: encode,
+    onDecode: decode,
+    onSavePreset: () => setShowPresetModal(true),
+    onAddRule: addRule,
+    onSearch: () => setShowSearch(prev => !prev),
+    onHelp: () => setShowQuickGuide(true),
+    onBackup: () => setShowBackupModal(true),
+  });
 
   // 결과 복사
   const copyResult = async () => {

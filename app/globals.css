@@ -508,25 +508,61 @@ textarea.input-3d::-webkit-scrollbar-thumb {
 ========================================== */
 
 .button-group {
-  background: rgba(15, 23, 42, 0.4);
-  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(139, 92, 246, 0.05));
+  border: 2px solid rgba(99, 102, 241, 0.15);
+  border-radius: 16px;
   padding: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  margin-bottom: 16px;
+  transition: all 0.3s ease;
+}
+
+.button-group:hover {
+  border-color: rgba(99, 102, 241, 0.3);
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.08), rgba(139, 92, 246, 0.08));
+}
+
+.light .button-group {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.03), rgba(139, 92, 246, 0.03));
+  border-color: rgba(99, 102, 241, 0.2);
 }
 
 .button-group-label {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #94a3b8;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #a5b4fc;
   margin-bottom: 10px;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.light .button-group-label {
+  color: #6366f1;
+}
+
+.button-group-label::before {
+  content: "▸";
+  color: #818cf8;
+  font-size: 0.9rem;
 }
 
 .button-group-items {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 10px;
+}
+
+@media (max-width: 768px) {
+  .button-group-items {
+    flex-direction: column;
+  }
+
+  .button-group-items .btn-3d {
+    width: 100%;
+    justify-content: center;
+  }
 }
 
 /* ==========================================
@@ -565,38 +601,59 @@ textarea.input-3d::-webkit-scrollbar-thumb {
 }
 
 .table-3d tbody tr {
-  background: rgba(30, 41, 59, 0.5);
-  transition: all 0.2s ease;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  background: var(--card-bg);
+  transition: all 0.25s ease;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .table-3d tbody tr:hover {
-  background: rgba(30, 41, 59, 0.8);
-  transform: translateX(4px);
-  box-shadow: -2px 0 8px rgba(59, 130, 246, 0.2);
+  background: var(--bg-card-hover);
+  transform: translateX(4px) scale(1.01);
+  box-shadow: -4px 0 12px rgba(99, 102, 241, 0.2);
+}
+
+.light .table-3d tbody tr {
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.light .table-3d tbody tr:hover {
+  background: rgba(241, 245, 249, 0.95);
+  box-shadow: -4px 0 12px rgba(99, 102, 241, 0.15);
 }
 
 .table-3d tbody td {
-  padding: 14px 20px;
-  color: #e2e8f0;
+  padding: 16px 20px;
+  color: var(--text-primary);
   font-size: 0.95rem;
 }
 
 /* 테이블 내부 input 스타일 */
 .table-3d tbody td input.input-3d {
-  background: rgba(15, 23, 42, 0.8);
-  border: 2px solid rgba(59, 130, 246, 0.2);
-  color: #f1f5f9;
+  background: var(--input-bg);
+  border: 2px solid rgba(99, 102, 241, 0.2);
+  color: var(--text-primary);
   font-weight: 500;
-  padding: 10px 14px;
+  padding: 12px 16px;
+  transition: all 0.2s ease;
 }
 
 .table-3d tbody td input.input-3d:focus {
-  border-color: rgba(59, 130, 246, 0.6);
-  background: rgba(15, 23, 42, 0.95);
+  border-color: rgba(99, 102, 241, 0.6);
+  background: var(--input-bg);
   box-shadow: 
-    0 0 0 3px rgba(59, 130, 246, 0.15),
-    inset 0 2px 4px rgba(0, 0, 0, 0.3);
+    0 0 0 3px rgba(99, 102, 241, 0.15),
+    inset 0 2px 4px var(--shadow-dark);
+}
+
+.light .table-3d tbody td input.input-3d {
+  border-color: rgba(99, 102, 241, 0.25);
+}
+
+.light .table-3d tbody td input.input-3d:focus {
+  border-color: rgba(99, 102, 241, 0.5);
+  box-shadow: 
+    0 0 0 3px rgba(99, 102, 241, 0.1),
+    inset 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .table-3d tbody td input.input-3d::placeholder {

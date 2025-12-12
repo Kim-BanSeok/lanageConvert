@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import { useHistory } from "./hooks/useHistory";
 import RuleRow from "./components/RuleRow";
 import Logo3D from "./components/Logo3D";
 import AIGeneratorModal from "./components/AIGeneratorModal";
@@ -40,11 +41,27 @@ export default function Home() {
   const router = useRouter();
   const { showAlert, AlertComponent } = useCustomAlert();
   
-  const [rules, setRules] = useState([
-    { from: "사랑", to: "BODO" },
-    { from: "나", to: "DO" },
-    { from: "가", to: "BA" },
-  ]);
+  // 🔄 Undo/Redo 시스템 적용
+  const {
+    state: rules,
+    setState: setRulesWithHistory,
+    undo,
+    redo,
+    canUndo,
+    canRedo
+  } = useHistory(
+    [
+      { from: "사랑", to: "BODO" },
+      { from: "나", to: "DO" },
+      { from: "가", to: "BA" },
+    ],
+    50 // 최대 50개 히스토리
+  );
+
+  // 기존 setRules를 Wrapper로 대체
+  const setRules = useCallback((newRules, action = "규칙 변경") => {
+    setRulesWithHistory(newRules, action);
+  }, [setRulesWithHistory]);
 
   const [inputText, setInputText] = useState("");
   const [outputText, setOutputText] = useState("");
@@ -110,7 +127,7 @@ export default function Home() {
 
   // 규칙 추가
   const addRule = () => {
-    setRules([...rules, { from: "", to: "" }]);
+    setRules([...rules, { from: "", to: "" }], "➕ 규칙 추가");
     
     // 🎯 Quick Win 8: 규칙 추가 시 포커스 자동 이동
     setTimeout(() => {
@@ -126,12 +143,16 @@ export default function Home() {
   const updateRule = (index, newRule) => {
     const updated = [...rules];
     updated[index] = newRule;
-    setRules(updated);
+    setRules(updated, "✏️ 규칙 수정");
   };
 
   // 규칙 삭제
   const deleteRule = (index) => {
-    setRules(rules.filter((_, i) => i !== index));
+    const deleted = rules[index];
+    setRules(
+      rules.filter((_, i) => i !== index), 
+      `🗑️ "${deleted.from}" 규칙 삭제`
+    );
   };
 
   /* ---------------------------
@@ -434,14 +455,14 @@ export default function Home() {
       to: shuffled[index],
     }));
 
-    setRules(newRules);
+    setRules(newRules, "🎲 랜덤 생성");
     showAlert(`${newRules.length}개의 규칙이 생성되었습니다! (영어 ${alphabet.length}개 + 한글 ${koreanChars.length}개)`, "success");
   };
 
   const clearRules = async () => {
     const confirmed = window.confirm("정말 모든 규칙을 삭제할까요?");
     if (confirmed) {
-      setRules([]);
+      setRules([], "🧹 전체 삭제");
       await showAlert("모든 규칙이 삭제되었습니다.", "success");
     }
   };
@@ -645,7 +666,8 @@ export default function Home() {
       await showAlert("언어 생성 방식을 선택하세요.", "warning");
       return;
     }
-    setRules(preview.data);
+    const modeName = ["", "문자 기반", "음절 기반", "접두/접미", "난수"][preview.mode] || "AI";
+    setRules(preview.data, `🤖 ${modeName} 언어 생성`);
     setShowAIModal(false);
     setPreview({ mode: null, data: null });
     await showAlert(`🤖 AI 언어가 적용되었습니다! (${preview.data.length}개 규칙)`, "success");
@@ -660,7 +682,7 @@ export default function Home() {
 
   // 진화된 규칙 적용
   const applyEvolvedRules = (nextRules) => {
-    setRules(nextRules);
+    setRules(nextRules, "🧠 언어 진화 적용");
     resetRecommendState();
   };
 
@@ -679,7 +701,7 @@ export default function Home() {
       to: tWords[i],
     }));
 
-    setRules(learned);
+    setRules(learned, "🧠 단어 규칙 학습");
     setShowLearnModal(false);
 
     await showAlert(`🧠 단어 규칙이 자동 학습되었습니다! (${learned.length}개)`, "success");
@@ -987,6 +1009,23 @@ export default function Home() {
             </button>
             <button className="btn-3d btn-compact btn-red" onClick={clearRules} title="모든 규칙 삭제">
               🧹 삭제
+            </button>
+            {/* 🔄 Undo/Redo 버튼 */}
+            <button 
+              className="btn-3d btn-compact" 
+              onClick={undo} 
+              disabled={!canUndo}
+              title="실행 취소 (Ctrl+Z)"
+            >
+              ↶ Undo
+            </button>
+            <button 
+              className="btn-3d btn-compact" 
+              onClick={redo} 
+              disabled={!canRedo}
+              title="다시 실행 (Ctrl+Shift+Z)"
+            >
+              ↷ Redo
             </button>
           </div>
         </div>

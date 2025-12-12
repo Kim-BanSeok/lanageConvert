@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 /**
  * CustomAlert 컴포넌트
@@ -9,22 +9,22 @@ import { useState, useEffect } from "react";
 export default function CustomAlert({ message, type = "info", onClose, duration = 5000 }) {
   const [isVisible, setIsVisible] = useState(true);
 
+  const handleClose = useCallback(() => {
+    setIsVisible(false);
+    setTimeout(() => {
+      if (onClose) onClose();
+    }, 300); // 애니메이션 시간
+  }, [onClose]);
+
   useEffect(() => {
-    if (duration > 0) {
+    if (duration > 0 && duration !== Infinity) {
       const timer = setTimeout(() => {
         handleClose();
       }, duration);
 
       return () => clearTimeout(timer);
     }
-  }, [duration]);
-
-  const handleClose = () => {
-    setIsVisible(false);
-    setTimeout(() => {
-      if (onClose) onClose();
-    }, 300); // 애니메이션 시간
-  };
+  }, [duration, handleClose]);
 
   if (!isVisible) return null;
 

@@ -26,6 +26,7 @@ import { useCustomAlert } from "./components/CustomAlert";
 import Adsense from "./components/Adsense";
 import { useKeyboardShortcuts } from "./hooks/useKeyboardShortcuts";
 import { translateText } from "./lib/translationEngine";
+import { translateTextV3, clearTranslationCache, getTranslationCacheSize } from "./lib/translationEngineV3";
 import { addSample, loadSamples } from "./lib/evolutionEngine";
 import {
   shouldRecommendEvolution,

@@ -105,6 +105,10 @@ export default function Home() {
   const [filteredRules, setFilteredRules] = useState(rules);
   const [showSearch, setShowSearch] = useState(false);
 
+  // ✏️ 프리셋 편집 State
+  const [editingPresetIndex, setEditingPresetIndex] = useState(null);
+  const [editingPresetName, setEditingPresetName] = useState("");
+
   // 생성된 언어 아이덴티티 저장(로컬)
   const [languageIdentity, setLanguageIdentity] = useState(null);
 
@@ -352,6 +356,42 @@ export default function Home() {
     setPresetList(updated);
     safeLocalStorageSet("language-presets", JSON.stringify(updated));
     await showAlert("프리셋이 삭제되었습니다.", "success");
+  };
+
+  // 🎯 Phase 2-3: 프리셋 이름 변경
+  const startEditPreset = (idx) => {
+    setEditingPresetIndex(idx);
+    setEditingPresetName(presetList[idx].name);
+  };
+
+  const savePresetName = async (idx) => {
+    const newName = editingPresetName.trim();
+    
+    if (!newName) {
+      await showAlert("프리셋 이름을 입력해주세요.", "warning");
+      return;
+    }
+
+    // 중복 체크 (자신 제외)
+    const isDuplicate = presetList.some((p, i) => i !== idx && p.name === newName);
+    if (isDuplicate) {
+      await showAlert(`"${newName}" 이름은 이미 사용 중입니다.`, "warning");
+      return;
+    }
+
+    const updated = [...presetList];
+    updated[idx] = { ...updated[idx], name: newName };
+    setPresetList(updated);
+    safeLocalStorageSet("language-presets", JSON.stringify(updated));
+    
+    setEditingPresetIndex(null);
+    setEditingPresetName("");
+    await showAlert("프리셋 이름이 변경되었습니다.", "success");
+  };
+
+  const cancelEditPreset = () => {
+    setEditingPresetIndex(null);
+    setEditingPresetName("");
   };
 
   // 암호화 (v2 엔진 사용)
@@ -1365,9 +1405,38 @@ export default function Home() {
                     >
                       <div className="flex justify-between items-center gap-3">
                         <div className="flex-1 min-w-0">
-                          <div className="font-bold text-white mb-1 truncate group-hover:text-blue-300 transition-colors">
-                            {preset.name}
-                          </div>
+                          {/* ✏️ 편집 모드 */}
+                          {editingPresetIndex === idx ? (
+                            <div className="flex items-center gap-2 mb-1">
+                              <input
+                                className="input-3d flex-1 text-sm"
+                                value={editingPresetName}
+                                onChange={(e) => setEditingPresetName(e.target.value)}
+                                onKeyPress={(e) => {
+                                  if (e.key === "Enter") savePresetName(idx);
+                                  if (e.key === "Escape") cancelEditPreset();
+                                }}
+                                autoFocus
+                              />
+                              <button
+                                className="btn-3d text-xs px-2 py-1"
+                                onClick={() => savePresetName(idx)}
+                              >
+                                ✓
+                              </button>
+                              <button
+                                className="btn-3d btn-red text-xs px-2 py-1"
+                                onClick={cancelEditPreset}
+                              >
+                                ✕
+                              </button>
+                            </div>
+                          ) : (
+                            <div className="font-bold text-white mb-1 truncate group-hover:text-blue-300 transition-colors">
+                              {preset.name}
+                            </div>
+                          )}
+                          
                           <div className="flex items-center gap-2">
                             <span className="text-xs bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded-full">
                               규칙 {preset.rules?.length || 0}개
@@ -1381,18 +1450,29 @@ export default function Home() {
                         </div>
 
                         <div className="flex gap-2 flex-shrink-0">
-                          <button
-                            className="btn-3d text-sm px-3 py-1"
-                            onClick={() => loadPreset(preset)}
-                          >
-                            📥 불러오기
-                          </button>
-                          <button
-                            className="btn-3d btn-red text-sm px-3 py-1"
-                            onClick={() => deletePreset(idx)}
-                          >
-                            ✕
-                          </button>
+                          {editingPresetIndex !== idx && (
+                            <>
+                              <button
+                                className="btn-3d text-sm px-3 py-1"
+                                onClick={() => loadPreset(preset)}
+                              >
+                                📥 불러오기
+                              </button>
+                              <button
+                                className="btn-3d text-sm px-2 py-1"
+                                onClick={() => startEditPreset(idx)}
+                                title="이름 변경"
+                              >
+                                ✏️
+                              </button>
+                              <button
+                                className="btn-3d btn-red text-sm px-3 py-1"
+                                onClick={() => deletePreset(idx)}
+                              >
+                                ✕
+                              </button>
+                            </>
+                          )}
                         </div>
                       </div>
                     </div>

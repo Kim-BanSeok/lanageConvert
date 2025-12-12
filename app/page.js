@@ -1100,6 +1100,24 @@ export default function Home() {
           </div>
         </div>
       )}
+
+      {/* 언어 네이밍/세계관 모달 */}
+      {showIdentityModal && (
+        <LanguageIdentityModal
+          rules={rules}
+          onClose={() => setShowIdentityModal(false)}
+          onApply={applyIdentity}
+        />
+      )}
+
+      {/* 언어 진화 모달 */}
+      {showEvolutionModal && (
+        <EvolutionModal
+          baseRules={rules}
+          onClose={() => setShowEvolutionModal(false)}
+          onApplyRules={applyEvolvedRules}
+        />
+      )}
       </div>
     </>
   );

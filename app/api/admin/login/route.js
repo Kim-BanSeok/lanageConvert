@@ -10,7 +10,10 @@ export async function POST(req) {
     
     // 개발 환경에서만 디버깅 로그 (프로덕션에서는 제거 권장)
     if (process.env.NODE_ENV === "development") {
-      console.log("[DEBUG] Login attempt - Expected:", expected ? "설정됨" : "기본값(admin)", "Received:", password ? "입력됨" : "비어있음");
+      console.log("[DEBUG] Login attempt");
+      console.log("  - Expected password:", expected ? `"${expected}"` : "기본값(admin)");
+      console.log("  - Received password:", password ? `"${password}"` : "비어있음");
+      console.log("  - Match:", password === expected ? "✅ 일치" : "❌ 불일치");
     }
     
     if (password !== expected) {

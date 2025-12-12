@@ -55,6 +55,12 @@ export default function AdminLoginPage() {
       <p className="text-xs opacity-70">
         이 페이지는 관리자 전용입니다.
       </p>
+      
+      <div className="text-xs opacity-60 mt-2 p-2 bg-white/5 rounded">
+        💡 힌트: 기본 비밀번호는 <code className="bg-white/10 px-1 rounded">admin123</code> 입니다.
+        <br />
+        (환경 변수 이름이 아닌 실제 비밀번호를 입력하세요)
+      </div>
     </div>
   );
 }

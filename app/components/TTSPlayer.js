@@ -83,19 +83,7 @@ export default function TTSPlayer({ text, buttonText = "🔊 음성 듣기", cla
     setIsPlaying(false);
   };
 
-  if (!isSupported) {
-    return (
-      <button
-        className={`btn-3d opacity-50 cursor-not-allowed ${className}`}
-        disabled
-        title="이 브라우저는 음성 재생을 지원하지 않습니다"
-      >
-        🔇 음성 미지원
-      </button>
-    );
-  }
-
-  // 드롭다운 위치 계산 - useEffect는 항상 호출되어야 함
+  // 드롭다운 위치 계산 - useEffect는 early return 전에 항상 호출되어야 함
   useEffect(() => {
     if (!showVoiceSelector || !buttonRef.current || !dropdownRef.current) {
       return;
@@ -122,6 +110,19 @@ export default function TTSPlayer({ text, buttonText = "🔊 음성 듣기", cla
       window.removeEventListener('resize', updatePosition);
     };
   }, [showVoiceSelector]);
+
+  // early return은 모든 Hooks 호출 후에
+  if (!isSupported) {
+    return (
+      <button
+        className={`btn-3d opacity-50 cursor-not-allowed ${className}`}
+        disabled
+        title="이 브라우저는 음성 재생을 지원하지 않습니다"
+      >
+        🔇 음성 미지원
+      </button>
+    );
+  }
 
   return (
     <>

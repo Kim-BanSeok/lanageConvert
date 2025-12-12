@@ -95,35 +95,48 @@ export default function TTSPlayer({ text, buttonText = "🔊 음성 듣기", cla
       const buttonRect = buttonRef.current.getBoundingClientRect();
       const dropdown = dropdownRef.current;
       
-      // fixed positioning은 viewport 기준이므로 scrollY/scrollX 불필요
+      // fixed positioning은 viewport 기준
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+      const dropdownWidth = 280; // min-w-[280px]
+      const dropdownHeight = 250; // 예상 높이
+      
       let top = buttonRect.bottom + 8;
       let left = buttonRect.left;
       
-      // 화면 오른쪽으로 넘어가지 않도록 조정
-      const dropdownWidth = dropdown.offsetWidth || 280;
-      if (left + dropdownWidth > window.innerWidth) {
-        left = window.innerWidth - dropdownWidth - 16;
+      // 화면 오른쪽 경계 체크
+      if (left + dropdownWidth > viewportWidth - 16) {
+        left = viewportWidth - dropdownWidth - 16;
       }
       
-      // 화면 아래로 넘어가지 않도록 조정
-      const dropdownHeight = dropdown.offsetHeight || 200;
-      if (top + dropdownHeight + 8 > window.innerHeight) {
+      // 화면 왼쪽 경계 체크
+      if (left < 16) {
+        left = 16;
+      }
+      
+      // 화면 아래 경계 체크 - 위로 표시
+      if (top + dropdownHeight > viewportHeight - 16) {
         top = buttonRect.top - dropdownHeight - 8;
+        // 위로도 공간이 없으면 화면 중앙
+        if (top < 16) {
+          top = (viewportHeight - dropdownHeight) / 2;
+        }
       }
       
-      dropdown.style.top = `${top}px`;
-      dropdown.style.left = `${left}px`;
+      dropdown.style.top = `${Math.max(16, top)}px`;
+      dropdown.style.left = `${Math.max(16, left)}px`;
     };
     
-    // 약간의 지연을 두어 DOM이 완전히 렌더링된 후 위치 계산
-    const timeoutId = setTimeout(updatePosition, 0);
+    // 다음 프레임에서 실행하여 DOM이 완전히 렌더링된 후 계산
+    requestAnimationFrame(() => {
+      requestAnimationFrame(updatePosition);
+    });
     
     // 스크롤이나 리사이즈 시 위치 업데이트
     window.addEventListener('scroll', updatePosition, true);
     window.addEventListener('resize', updatePosition);
     
     return () => {
-      clearTimeout(timeoutId);
       window.removeEventListener('scroll', updatePosition, true);
       window.removeEventListener('resize', updatePosition);
     };

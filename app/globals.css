@@ -538,58 +538,6 @@
   }
 
   /* ===== 버튼 ===== */
-  /* 모바일 스타일 버튼 (웹 버전) */
-  .btn-encode {
-    background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(139, 92, 246, 0.3)) !important;
-    border: 2px solid rgba(99, 102, 241, 0.5) !important;
-    transition: all 0.2s ease !important;
-  }
-
-  .btn-encode:hover {
-    background: linear-gradient(135deg, rgba(99, 102, 241, 0.4), rgba(139, 92, 246, 0.4)) !important;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
-  }
-
-  .btn-encode:active {
-    transform: scale(0.97);
-    background: linear-gradient(135deg, rgba(99, 102, 241, 0.5), rgba(139, 92, 246, 0.5)) !important;
-  }
-
-  .btn-decode {
-    background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(16, 185, 129, 0.2)) !important;
-    border: 2px solid rgba(59, 130, 246, 0.4) !important;
-    transition: all 0.2s ease !important;
-  }
-
-  .btn-decode:hover {
-    background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(16, 185, 129, 0.3)) !important;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-  }
-
-  .btn-decode:active {
-    transform: scale(0.97);
-    background: linear-gradient(135deg, rgba(59, 130, 246, 0.4), rgba(16, 185, 129, 0.4)) !important;
-  }
-
-  .btn-korean {
-    background: linear-gradient(135deg, rgba(236, 72, 153, 0.3), rgba(219, 39, 119, 0.3)) !important;
-    border: 2px solid rgba(236, 72, 153, 0.4) !important;
-    transition: all 0.2s ease !important;
-  }
-
-  .btn-korean:hover {
-    background: linear-gradient(135deg, rgba(236, 72, 153, 0.4), rgba(219, 39, 119, 0.4)) !important;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3);
-  }
-
-  .btn-korean:active {
-    transform: scale(0.97);
-    background: linear-gradient(135deg, rgba(236, 72, 153, 0.5), rgba(219, 39, 119, 0.5)) !important;
-  }
-
   .btn-3d {
     padding: 8px 12px;
     font-size: 0.85rem;
@@ -797,7 +745,7 @@ textarea.input-3d::-webkit-scrollbar-thumb {
   justify-content: center;
   gap: 8px;
   
-  /* Glassmorphism 배경 */
+  /* Glassmorphism 배경 - 기본 스타일 */
   background: linear-gradient(135deg, rgba(99, 102, 241, 0.9), rgba(59, 130, 246, 0.8));
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
@@ -894,6 +842,58 @@ textarea.input-3d::-webkit-scrollbar-thumb {
     0 12px 40px rgba(16, 185, 129, 0.4),
     0 0 0 1px rgba(255, 255, 255, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* ==================== 모바일 스타일 버튼 (웹용) ==================== */
+/* 암호화 버튼 - 보라색 그라디언트 */
+.btn-encode {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(139, 92, 246, 0.3)) !important;
+  border: 2px solid rgba(99, 102, 241, 0.5) !important;
+}
+
+.btn-encode:hover {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.4), rgba(139, 92, 246, 0.4)) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4);
+}
+
+.btn-encode:active {
+  transform: scale(0.97);
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.5), rgba(139, 92, 246, 0.5)) !important;
+}
+
+/* 복호화 버튼 - 파랑-녹색 그라디언트 */
+.btn-decode {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(16, 185, 129, 0.2)) !important;
+  border: 2px solid rgba(59, 130, 246, 0.4) !important;
+}
+
+.btn-decode:hover {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(16, 185, 129, 0.3)) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(59, 130, 246, 0.4);
+}
+
+.btn-decode:active {
+  transform: scale(0.97);
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.4), rgba(16, 185, 129, 0.4)) !important;
+}
+
+/* 한글 자동 변환 버튼 - 핑크 그라디언트 */
+.btn-korean {
+  background: linear-gradient(135deg, rgba(236, 72, 153, 0.3), rgba(219, 39, 119, 0.3)) !important;
+  border: 2px solid rgba(236, 72, 153, 0.4) !important;
+}
+
+.btn-korean:hover {
+  background: linear-gradient(135deg, rgba(236, 72, 153, 0.4), rgba(219, 39, 119, 0.4)) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(236, 72, 153, 0.4);
+}
+
+.btn-korean:active {
+  transform: scale(0.97);
+  background: linear-gradient(135deg, rgba(236, 72, 153, 0.5), rgba(219, 39, 119, 0.5)) !important;
 }
 
 /* Disabled 상태 */

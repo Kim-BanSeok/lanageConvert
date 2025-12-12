@@ -94,6 +94,7 @@ export default function MobilePage({
             router={router}
             theme={theme}
             toggleTheme={toggleTheme}
+            showAlert={showAlert}
           />
         );
       

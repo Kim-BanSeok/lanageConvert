@@ -2,258 +2,288 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { getPresetFromURL } from "../utils/shareUtils";
-import Logo3D from "../components/Logo3D";
 import { useCustomAlert } from "../components/CustomAlert";
-import { safeLocalStorageGet, safeLocalStorageSet } from "../utils/storage";
+import { useIsMobile } from "../hooks/useMediaQuery";
+import Logo3D from "../components/Logo3D";
+import "./gallery.css";
+
+/**
+ * 🖼️ 언어 갤러리 페이지
+ * 사용자가 만든 언어 프리셋을 공유하고 탐색
+ */
+
+// 샘플 갤러리 데이터 (실제로는 백엔드 API에서 가져올 데이터)
+const SAMPLE_PRESETS = [
+  {
+    id: 1,
+    name: "엘프어",
+    description: "판타지 엘프들이 사용하는 우아한 언어",
+    author: "FantasyLover",
+    rulesCount: 26,
+    downloads: 342,
+    rating: 4.8,
+    category: "판타지",
+    tags: ["엘프", "판타지", "우아함"],
+    preview: "Hello → Hëllö, World → Wörld",
+    createdAt: "2024-12-10",
+  },
+  {
+    id: 2,
+    name: "사이버펑크 슬랭",
+    description: "미래 도시의 길거리 은어",
+    author: "CyberNinja",
+    rulesCount: 45,
+    downloads: 521,
+    rating: 4.9,
+    category: "SF",
+    tags: ["미래", "슬랭", "사이버펑크"],
+    preview: "Hello → H3ll0, Friend → Fr13nd",
+    createdAt: "2024-12-09",
+  },
+  {
+    id: 3,
+    name: "고대 룬 문자",
+    description: "북유럽 신화에서 영감을 받은 룬 문자",
+    author: "RuneMaster",
+    rulesCount: 24,
+    downloads: 287,
+    rating: 4.7,
+    category: "고대",
+    tags: ["룬", "신화", "고대"],
+    preview: "Love → ᛚᛟᚡᛖ, Power → ᛈᛟᚹᛖᚱ",
+    createdAt: "2024-12-08",
+  },
+  {
+    id: 4,
+    name: "귀여운 이모지 언어",
+    description: "모든 단어를 이모지로 변환",
+    author: "EmojiQueen",
+    rulesCount: 52,
+    downloads: 892,
+    rating: 5.0,
+    category: "재미",
+    tags: ["이모지", "귀여움", "재미"],
+    preview: "Hello → 👋😊, Love → 💖💕",
+    createdAt: "2024-12-11",
+  },
+  {
+    id: 5,
+    name: "비밀 암호",
+    description: "군사 암호에서 영감을 받은 강력한 암호 체계",
+    author: "CodeBreaker",
+    rulesCount: 89,
+    downloads: 645,
+    rating: 4.6,
+    category: "보안",
+    tags: ["암호", "보안", "군사"],
+    preview: "Secret → X3cR3t, Message → M3$$@g3",
+    createdAt: "2024-12-07",
+  },
+  {
+    id: 6,
+    name: "K-Pop 팬 언어",
+    description: "K-Pop 팬들을 위한 특별한 언어",
+    author: "KpopStan",
+    rulesCount: 31,
+    downloads: 756,
+    rating: 4.9,
+    category: "문화",
+    tags: ["K-Pop", "팬덤", "한국"],
+    preview: "Love → 사랑, Star → 별",
+    createdAt: "2024-12-12",
+  },
+];
+
+const CATEGORIES = ["전체", "판타지", "SF", "고대", "재미", "보안", "문화"];
 
 export default function GalleryPage() {
   const router = useRouter();
   const { showAlert, AlertComponent } = useCustomAlert();
-  const [sharedPreset, setSharedPreset] = useState(null);
-  const [localPresets, setLocalPresets] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const isMobile = useIsMobile();
+  
+  const [presets, setPresets] = useState(SAMPLE_PRESETS);
+  const [selectedCategory, setSelectedCategory] = useState("전체");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortBy, setSortBy] = useState("popular"); // popular, recent, rating
 
-  useEffect(() => {
-    // URL에서 공유된 프리셋 로드
-    const preset = getPresetFromURL();
-    if (preset) {
-      setSharedPreset(preset);
-    }
-
-    // localStorage에서 저장된 프리셋 로드
-    try {
-      const saved = safeLocalStorageGet("language-presets");
-      if (saved) {
-        setLocalPresets(JSON.parse(saved));
+  // 필터링 및 정렬
+  const filteredPresets = presets
+    .filter(preset => {
+      // 카테고리 필터
+      if (selectedCategory !== "전체" && preset.category !== selectedCategory) {
+        return false;
       }
-    } catch (error) {
-      console.error("프리셋 로드 실패:", error);
-    }
-
-    setLoading(false);
-  }, []);
-
-  const handleImportPreset = async (preset) => {
-    const confirmed = window.confirm(`"${preset.name}" 프리셋을 불러오시겠습니까?`);
-    if (!confirmed) return;
-
-    // 프리셋을 localStorage에 저장
-    try {
-      const saved = safeLocalStorageGet("language-presets");
-      const existing = saved ? JSON.parse(saved) : [];
       
-      // 중복 확인
-      const isDuplicate = existing.some(p => p.name === preset.name);
-      if (isDuplicate) {
-        const overwrite = window.confirm("같은 이름의 프리셋이 있습니다. 덮어쓰시겠습니까?");
-        if (!overwrite) return;
-        
-        // 기존 프리셋 제거
-        const filtered = existing.filter(p => p.name !== preset.name);
-        filtered.push({ ...preset, createdAt: new Date().toISOString() });
-        safeLocalStorageSet("language-presets", JSON.stringify(filtered));
-      } else {
-        existing.push({ ...preset, createdAt: new Date().toISOString() });
-        safeLocalStorageSet("language-presets", JSON.stringify(existing));
+      // 검색 필터
+      if (searchQuery) {
+        const query = searchQuery.toLowerCase();
+        return (
+          preset.name.toLowerCase().includes(query) ||
+          preset.description.toLowerCase().includes(query) ||
+          preset.tags.some(tag => tag.toLowerCase().includes(query))
+        );
       }
+      
+      return true;
+    })
+    .sort((a, b) => {
+      if (sortBy === "popular") return b.downloads - a.downloads;
+      if (sortBy === "rating") return b.rating - a.rating;
+      if (sortBy === "recent") return new Date(b.createdAt) - new Date(a.createdAt);
+      return 0;
+    });
 
-      await showAlert("프리셋을 가져왔습니다! 메인 페이지에서 확인하세요.", "success");
-      router.push("/");
-    } catch (error) {
-      console.error("프리셋 저장 실패:", error);
-      await showAlert("프리셋을 저장하는데 실패했습니다.", "error");
-    }
+  // 프리셋 불러오기
+  const handleImportPreset = async (preset) => {
+    await showAlert(`"${preset.name}" 프리셋을 불러오는 기능은 곧 추가됩니다!`, "info");
+    // TODO: 실제 프리셋 데이터를 가져와서 localStorage에 저장
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="text-4xl mb-4">⏳</div>
-          <div>로딩 중...</div>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <>
+    <div className="gallery-page">
       {AlertComponent}
-      <div className="max-w-5xl mx-auto p-6 space-y-6">
-        <Logo3D />
-
-      <div className="card-3d">
-        <div className="flex items-center justify-between mb-4">
-          <h1 className="text-2xl font-bold">🖼️ 언어 갤러리</h1>
-          <button
-            className="btn-3d"
+      
+      <div className="max-w-6xl mx-auto p-6 space-y-6">
+        {/* 헤더 */}
+        <div className="gallery-header">
+          <button 
+            className="btn-3d btn-secondary"
             onClick={() => router.push("/")}
           >
-            ← 메인으로
+            ← 돌아가기
           </button>
+          
+          <Logo3D 
+            title="Language Gallery"
+            subtitle="다른 사용자들이 만든 언어를 탐색하고 사용해보세요"
+          />
         </div>
 
-        <p className="text-sm opacity-80 mb-6">
-          저장된 언어 프리셋을 확인하고 공유할 수 있습니다.
-        </p>
+        {/* 검색 및 필터 */}
+        <div className="gallery-controls">
+          {/* 검색 */}
+          <div className="gallery-search">
+            <input
+              type="text"
+              className="gallery-search-input"
+              placeholder="언어 검색..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            <span className="gallery-search-icon">🔍</span>
+          </div>
 
-        {/* 공유된 프리셋 */}
-        {sharedPreset && (
-          <div className="bg-blue-500/20 border-2 border-blue-500/50 rounded-lg p-4 mb-6">
-            <div className="flex items-start justify-between gap-4">
-              <div className="flex-1">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="text-2xl">🎁</span>
-                  <h2 className="text-xl font-bold">{sharedPreset.name}</h2>
-                </div>
-                <p className="text-sm opacity-80 mb-3">
-                  규칙 {sharedPreset.rules?.length || 0}개
-                </p>
+          {/* 정렬 */}
+          <select
+            className="gallery-sort-select"
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+          >
+            <option value="popular">인기순</option>
+            <option value="recent">최신순</option>
+            <option value="rating">평점순</option>
+          </select>
+        </div>
 
-                {/* 규칙 미리보기 */}
-                <div className="bg-white/10 p-3 rounded-lg max-h-[200px] overflow-y-auto">
-                  <div className="text-xs font-semibold mb-2">규칙 미리보기:</div>
-                  <div className="space-y-1 text-sm font-mono">
-                    {sharedPreset.rules.slice(0, 10).map((rule, idx) => (
-                      <div key={idx}>
-                        {rule.from} → {rule.to}
-                      </div>
-                    ))}
-                    {sharedPreset.rules.length > 10 && (
-                      <div className="opacity-70">
-                        ... 외 {sharedPreset.rules.length - 10}개
-                      </div>
-                    )}
-                  </div>
+        {/* 카테고리 필터 */}
+        <div className="gallery-categories">
+          {CATEGORIES.map(category => (
+            <button
+              key={category}
+              className={`gallery-category-btn ${selectedCategory === category ? 'active' : ''}`}
+              onClick={() => setSelectedCategory(category)}
+            >
+              {category}
+            </button>
+          ))}
+        </div>
+
+        {/* 결과 개수 */}
+        <div className="gallery-results-count">
+          {filteredPresets.length}개의 언어를 찾았습니다
+        </div>
+
+        {/* 프리셋 그리드 */}
+        <div className="gallery-grid">
+          {filteredPresets.map(preset => (
+            <div key={preset.id} className="gallery-card">
+              <div className="gallery-card-header">
+                <div className="gallery-card-category">{preset.category}</div>
+                <div className="gallery-card-rating">
+                  ⭐ {preset.rating}
                 </div>
               </div>
 
-              <button
-                className="btn-3d"
-                onClick={() => handleImportPreset(sharedPreset)}
-              >
-                📥 가져오기
-              </button>
+              <h3 className="gallery-card-title">{preset.name}</h3>
+              <p className="gallery-card-description">{preset.description}</p>
+
+              <div className="gallery-card-preview">
+                <strong>미리보기:</strong>
+                <code>{preset.preview}</code>
+              </div>
+
+              <div className="gallery-card-tags">
+                {preset.tags.map((tag, idx) => (
+                  <span key={idx} className="gallery-tag">#{tag}</span>
+                ))}
+              </div>
+
+              <div className="gallery-card-meta">
+                <div className="gallery-meta-item">
+                  <span className="gallery-meta-icon">👤</span>
+                  <span>{preset.author}</span>
+                </div>
+                <div className="gallery-meta-item">
+                  <span className="gallery-meta-icon">📋</span>
+                  <span>{preset.rulesCount}개 규칙</span>
+                </div>
+                <div className="gallery-meta-item">
+                  <span className="gallery-meta-icon">⬇️</span>
+                  <span>{preset.downloads}</span>
+                </div>
+              </div>
+
+              <div className="gallery-card-actions">
+                <button
+                  className="btn-3d btn-primary gallery-btn"
+                  onClick={() => handleImportPreset(preset)}
+                >
+                  💾 불러오기
+                </button>
+                <button
+                  className="btn-3d gallery-btn"
+                  onClick={() => router.push(`/gallery/${preset.id}`)}
+                >
+                  👁️ 상세
+                </button>
+              </div>
             </div>
+          ))}
+        </div>
+
+        {/* 빈 상태 */}
+        {filteredPresets.length === 0 && (
+          <div className="gallery-empty">
+            <div className="gallery-empty-icon">🔍</div>
+            <h3>검색 결과가 없습니다</h3>
+            <p>다른 키워드로 검색해보세요</p>
           </div>
         )}
 
-        {/* 저장된 프리셋 목록 */}
-        <div>
-          <h2 className="text-xl font-semibold mb-4">
-            내 프리셋 ({localPresets.length})
-          </h2>
-
-          {localPresets.length === 0 ? (
-            <div className="text-center py-12 opacity-70">
-              <div className="text-5xl mb-4">📦</div>
-              <p>저장된 프리셋이 없습니다.</p>
-              <p className="text-sm mt-2">
-                메인 페이지에서 규칙을 만들고 프리셋으로 저장하세요.
-              </p>
-            </div>
-          ) : (
-            <div className="grid md:grid-cols-2 gap-4">
-              {localPresets.map((preset, idx) => (
-                <PresetCard
-                  key={idx}
-                  preset={preset}
-                  onImport={() => handleImportPreset(preset)}
-                />
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-      </div>
-    </>
-  );
-}
-
-// PresetCard 컴포넌트
-function PresetCard({ preset, onImport }) {
-  const { showAlert, AlertComponent } = useCustomAlert();
-  const [showShare, setShowShare] = useState(false);
-  const [shareURL, setShareURL] = useState("");
-
-  const handleShare = async () => {
-    const { generateShareURL } = await import("../utils/shareUtils");
-    const baseURL = window.location.origin;
-    const url = generateShareURL(preset, baseURL);
-
-    if (url) {
-      setShareURL(url);
-      setShowShare(true);
-    } else {
-      await showAlert("공유 링크 생성에 실패했습니다.", "error");
-    }
-  };
-
-  const handleCopyLink = async () => {
-    try {
-      await navigator.clipboard.writeText(shareURL);
-      await showAlert("공유 링크가 복사되었습니다!", "success", 2000);
-    } catch (error) {
-      console.error("복사 실패:", error);
-      await showAlert("복사에 실패했습니다.", "error");
-    }
-  };
-
-  return (
-    <>
-      {AlertComponent}
-      <div className="card-3d p-4 hover:scale-[1.02] transition-transform">
-      <h3 className="font-bold text-lg mb-2">{preset.name}</h3>
-      <p className="text-sm opacity-80 mb-3">
-        규칙 {preset.rules?.length || 0}개
-      </p>
-
-      {preset.createdAt && (
-        <p className="text-xs opacity-60 mb-3">
-          생성일: {new Date(preset.createdAt).toLocaleDateString()}
-        </p>
-      )}
-
-      <div className="flex gap-2 flex-wrap">
-        <button className="btn-3d text-sm px-3 py-1" onClick={onImport}>
-          📥 불러오기
-        </button>
-        <button className="btn-3d text-sm px-3 py-1" onClick={handleShare}>
-          🔗 공유
-        </button>
-      </div>
-
-      {/* 공유 링크 모달 */}
-      {showShare && (
-        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
-          <div className="card-3d p-6 w-[90%] max-w-[500px] space-y-4">
-            <h3 className="text-xl font-bold">🔗 프리셋 공유</h3>
-
-            <p className="text-sm opacity-80">
-              아래 링크를 복사해서 다른 사람과 공유하세요!
-            </p>
-
-            <div className="bg-white/10 p-3 rounded-lg">
-              <div className="text-xs font-mono break-all">{shareURL}</div>
-            </div>
-
-            <div className="flex gap-2">
-              <button className="btn-3d flex-1" onClick={handleCopyLink}>
-                📋 링크 복사
-              </button>
-              <button
-                className="btn-3d btn-red flex-1"
-                onClick={() => setShowShare(false)}
-              >
-                닫기
-              </button>
-            </div>
+        {/* 내 프리셋 공유 버튼 */}
+        <div className="gallery-share-section">
+          <div className="gallery-share-card">
+            <h3>나만의 언어를 공유하세요!</h3>
+            <p>당신이 만든 독특한 언어를 다른 사용자들과 함께 나눠보세요</p>
+            <button
+              className="btn-3d btn-primary"
+              onClick={() => showAlert("공유 기능은 곧 추가됩니다!", "info")}
+            >
+              📤 내 언어 공유하기
+            </button>
           </div>
         </div>
-      )}
       </div>
-    </>
+    </div>
   );
 }
-

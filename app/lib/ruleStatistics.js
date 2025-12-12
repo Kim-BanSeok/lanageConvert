@@ -193,6 +193,28 @@ export function getRuleStats(rule) {
 }
 
 /**
+ * 규칙 사용 통계 배열로 반환 (모바일용)
+ */
+export function getRuleUsageStats() {
+  try {
+    const stats = getStatistics();
+    return Object.values(stats).map(stat => ({
+      rule: {
+        from: stat.from,
+        to: stat.to
+      },
+      useCount: stat.useCount,
+      encodeCount: stat.encodeCount,
+      decodeCount: stat.decodeCount,
+      lastUsed: stat.lastUsed
+    }));
+  } catch (error) {
+    console.error("규칙 사용 통계 조회 실패:", error);
+    return [];
+  }
+}
+
+/**
  * 통계 초기화
  */
 export function clearStatistics() {

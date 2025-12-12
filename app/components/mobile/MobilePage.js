@@ -76,6 +76,7 @@ export default function MobilePage({
             rules={rules}
             setRules={setRules}
             showAlert={showAlert}
+            engineMode={engineMode}
           />
         );
       

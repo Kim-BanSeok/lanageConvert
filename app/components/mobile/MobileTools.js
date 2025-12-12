@@ -2,11 +2,12 @@
 
 import { useState } from "react";
 import MobileConflictChecker from "./MobileConflictChecker";
+import MobileTestTranslator from "./MobileTestTranslator";
 
 /**
  * 📱 모바일 도구 화면
  */
-export default function MobileTools({ router, rules, setRules, showAlert }) {
+export default function MobileTools({ router, rules, setRules, showAlert, engineMode }) {
   const [currentTool, setCurrentTool] = useState(null);
   const tools = [
     {
@@ -40,16 +41,18 @@ export default function MobileTools({ router, rules, setRules, showAlert }) {
       action: "stats",
     },
     {
-      icon: "📜",
-      title: "번역 히스토리",
-      desc: "과거 번역 기록 보기",
-      action: "history",
+      icon: "🧪",
+      title: "테스트 번역",
+      desc: "샘플 문장으로 테스트",
+      action: "testTranslator",
     },
   ];
 
   const handleToolClick = (action) => {
     if (action === 'conflict') {
       setCurrentTool('conflict');
+    } else if (action === 'testTranslator') {
+      setCurrentTool('testTranslator');
     } else {
       alert(`${action} 기능은 곧 추가됩니다!`);
     }
@@ -61,6 +64,18 @@ export default function MobileTools({ router, rules, setRules, showAlert }) {
       <MobileConflictChecker
         rules={rules}
         setRules={setRules}
+        showAlert={showAlert}
+        onBack={() => setCurrentTool(null)}
+      />
+    );
+  }
+
+  // 테스트 번역기 표시 중
+  if (currentTool === 'testTranslator') {
+    return (
+      <MobileTestTranslator
+        rules={rules}
+        engineMode={engineMode}
         showAlert={showAlert}
         onBack={() => setCurrentTool(null)}
       />

@@ -10,7 +10,7 @@ import MobilePage from "./components/mobile/MobilePage";
 import AIGeneratorModal from "./components/AIGeneratorModal";
 import LearnRuleModal from "./components/LearnRuleModal";
 import ConflictCheckerModal from "./components/ConflictCheckerModal";
-import TestTranslator from "./components/TestTranslator";
+import TestTranslatorModal from "./components/TestTranslatorModal";
 import TTSPlayer from "./components/TTSPlayer";
 import NameGenerator from "./components/NameGenerator";
 import PWAInstallPrompt from "./components/PWAInstallPrompt";
@@ -132,6 +132,9 @@ export default function Home() {
 
   // 🔍 충돌 검사기 모달
   const [showConflictChecker, setShowConflictChecker] = useState(false);
+
+  // 🧪 테스트 번역기 모달
+  const [showTestTranslator, setShowTestTranslator] = useState(false);
 
   // 🌓 테마
   const [theme, toggleTheme] = useTheme();
@@ -1000,6 +1003,7 @@ export default function Home() {
         onHistory={() => setShowHistory(true)}
         onStatistics={() => setShowStatistics(true)}
         onConflictCheck={() => setShowConflictChecker(true)}
+        onTestTranslator={() => setShowTestTranslator(true)}
         onShortcuts={() => setShowShortcutsHelp(true)}
         onGuide={() => setShowQuickGuide(true)}
         onGallery={() => router.push("/gallery")}
@@ -1143,8 +1147,7 @@ export default function Home() {
         onFixConflicts={(fixedRules) => setRules(fixedRules)}
       />
 
-      {/* 테스트 번역기 */}
-      <TestTranslator rules={rules} />
+      {/* 테스트 번역기는 모달로 이동 */}
 
       {/* AdSense 광고 영역 - 중간 */}
       <div className="card-3d p-3 my-4">
@@ -1659,6 +1662,16 @@ export default function Home() {
             rules={rules}
             setRules={setRules}
             onClose={() => setShowConflictChecker(false)}
+            showAlert={showAlert}
+          />
+        )}
+
+        {/* 🧪 테스트 번역기 모달 */}
+        {showTestTranslator && (
+          <TestTranslatorModal
+            rules={rules}
+            engineMode={engineMode}
+            onClose={() => setShowTestTranslator(false)}
             showAlert={showAlert}
           />
         )}

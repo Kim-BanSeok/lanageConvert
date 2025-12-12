@@ -1591,6 +1591,233 @@ hr {
   border-top: 2px solid var(--border-color);
 }
 
+/* ==========================================
+   테스트 번역기 스타일
+========================================== */
+
+.test-translator-modal {
+  max-width: 800px;
+  width: 90vw;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.test-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.test-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.test-controls {
+  display: flex;
+  gap: 12px;
+  padding: 20px;
+  background: rgba(99, 102, 241, 0.05);
+  border-bottom: 1px solid var(--border-color);
+  flex-wrap: wrap;
+}
+
+.test-control-group {
+  flex: 1;
+  min-width: 150px;
+}
+
+.test-label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+
+.test-select {
+  width: 100%;
+  padding: 8px 12px;
+  background: var(--card-bg);
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+}
+
+.test-select:focus {
+  outline: none;
+  border-color: rgba(99, 102, 241, 0.5);
+}
+
+.test-custom-input {
+  display: flex;
+  gap: 10px;
+  padding: 0 20px 20px;
+}
+
+.test-input {
+  flex: 1;
+  padding: 10px 14px;
+  background: var(--card-bg);
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  color: var(--text-primary);
+}
+
+.test-input:focus {
+  outline: none;
+  border-color: rgba(99, 102, 241, 0.5);
+}
+
+.test-samples {
+  padding: 20px;
+  max-height: 200px;
+  overflow-y: auto;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.test-section-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+}
+
+.test-sample-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.test-sample-item {
+  padding: 10px 14px;
+  background: rgba(99, 102, 241, 0.1);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: 8px;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.test-results {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+.test-results-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.test-result-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.test-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.test-stat-card {
+  background: var(--card-bg);
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+}
+
+.test-stat-card.success {
+  border-color: rgba(34, 197, 94, 0.5);
+}
+
+.test-stat-card.error {
+  border-color: rgba(239, 68, 68, 0.5);
+}
+
+.test-stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.test-stat-label {
+  font-size: 0.8rem;
+  color: var(--text-tertiary);
+}
+
+.test-result-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.test-result-item {
+  display: flex;
+  gap: 12px;
+  padding: 16px;
+  background: var(--card-bg);
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
+}
+
+.test-result-item.success {
+  border-left: 4px solid rgba(34, 197, 94, 0.8);
+}
+
+.test-result-item.error {
+  border-left: 4px solid rgba(239, 68, 68, 0.8);
+}
+
+.test-result-status {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.test-result-content {
+  flex: 1;
+}
+
+.test-result-text {
+  margin-bottom: 6px;
+  font-size: 0.9rem;
+}
+
+.test-result-label {
+  font-weight: 600;
+  color: var(--text-tertiary);
+  margin-right: 8px;
+}
+
+.test-result-value {
+  color: var(--text-primary);
+}
+
+.test-result-value.encoded {
+  color: rgba(99, 102, 241, 0.9);
+  font-weight: 600;
+}
+
+.test-result-value.error {
+  color: rgba(239, 68, 68, 0.9);
+}
+
+.test-result-meta {
+  font-size: 0.8rem;
+  color: var(--text-tertiary);
+  margin-top: 8px;
+}
+
 .animate-fade-in {
   animation: fadeIn 0.2s ease-out;
 }

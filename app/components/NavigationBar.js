@@ -14,6 +14,7 @@ export default function NavigationBar({
   onHistory,
   onStatistics,
   onConflictCheck,
+  onTestTranslator,
   onShortcuts,
   onGuide,
   onGallery,
@@ -207,6 +208,10 @@ export default function NavigationBar({
                 <button className="nav-dropdown-item" onClick={() => { onConflictCheck(); setShowToolsMenu(false); }}>
                   <span className="nav-item-icon">🔍</span>
                   <span className="nav-item-text">충돌 검사</span>
+                </button>
+                <button className="nav-dropdown-item" onClick={() => { onTestTranslator(); setShowToolsMenu(false); }}>
+                  <span className="nav-item-icon">🧪</span>
+                  <span className="nav-item-text">테스트 번역</span>
                 </button>
             <button className="nav-dropdown-item" onClick={() => { onGallery(); setShowToolsMenu(false); }}>
               <span className="nav-item-icon">🖼️</span>

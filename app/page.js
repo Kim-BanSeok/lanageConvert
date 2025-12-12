@@ -20,6 +20,7 @@ import TutorialModal from "./components/TutorialModal";
 import QuickGuideModal from "./components/QuickGuideModal";
 import BackupRestoreModal from "./components/BackupRestoreModal";
 import StorageIndicator from "./components/StorageIndicator";
+import RuleSearch from "./components/RuleSearch";
 import { useCustomAlert } from "./components/CustomAlert";
 import Adsense from "./components/Adsense";
 import { translateText } from "./lib/translationEngine";
@@ -99,6 +100,10 @@ export default function Home() {
   const [showTutorial, setShowTutorial] = useState(false);
   const [showQuickGuide, setShowQuickGuide] = useState(false);
   const [showBackupModal, setShowBackupModal] = useState(false);
+
+  // 🔍 규칙 검색/필터 State
+  const [filteredRules, setFilteredRules] = useState(rules);
+  const [showSearch, setShowSearch] = useState(false);
 
   // 생성된 언어 아이덴티티 저장(로컬)
   const [languageIdentity, setLanguageIdentity] = useState(null);
@@ -1110,8 +1115,23 @@ export default function Home() {
             >
               💾 프리셋
             </button>
+            <button 
+              className="btn-3d btn-compact" 
+              onClick={() => setShowSearch(!showSearch)}
+              title="규칙 검색 및 필터"
+            >
+              {showSearch ? "🔍 검색 닫기" : "🔍 검색"}
+            </button>
           </div>
         </div>
+
+        {/* 🔍 규칙 검색/필터 */}
+        {showSearch && (
+          <RuleSearch 
+            rules={rules}
+            onFilteredRulesChange={setFilteredRules}
+          />
+        )}
 
         <table className="table-3d">
           <thead>
@@ -1138,22 +1158,26 @@ export default function Home() {
           </thead>
 
           <tbody>
-            {rules.filter(r => r && (r.from || r.to)).length === 0 ? (
+            {(showSearch ? filteredRules : rules).filter(r => r && (r.from || r.to)).length === 0 ? (
               <tr>
                 <td colSpan="3" className="text-center py-8 opacity-60">
-                  규칙이 없습니다. 위의 버튼을 사용하여 규칙을 추가하세요.
+                  {showSearch ? "검색 결과가 없습니다." : "규칙이 없습니다. 위의 버튼을 사용하여 규칙을 추가하세요."}
                 </td>
               </tr>
             ) : (
-              rules.map((rule, index) => (
-                <RuleRow
-                  key={index}
-                  index={index}
-                  rule={rule}
-                  onChange={updateRule}
-                  onDelete={deleteRule}
-                />
-              ))
+              (showSearch ? filteredRules : rules).map((rule, index) => {
+                // 원본 인덱스 찾기
+                const originalIndex = rules.indexOf(rule);
+                return (
+                  <RuleRow
+                    key={originalIndex}
+                    index={originalIndex}
+                    rule={rule}
+                    onChange={updateRule}
+                    onDelete={deleteRule}
+                  />
+                );
+              })
             )}
           </tbody>
         </table>

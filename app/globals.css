@@ -490,11 +490,11 @@ hr {
   align-items: center;
   justify-content: center;
   text-align: center;
-  gap: 32px;
-  padding: 48px 32px;
-  margin-bottom: 32px;
+  gap: 20px;
+  padding: 32px 24px;
+  margin-bottom: 24px;
   background: linear-gradient(135deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.6));
-  border-radius: 24px;
+  border-radius: 20px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 
     0 20px 60px rgba(0, 0, 0, 0.5),
@@ -525,8 +525,8 @@ hr {
 
 .logo-3d-orbit {
   position: relative;
-  width: 120px;
-  height: 120px;
+  width: 80px;
+  height: 80px;
   flex-shrink: 0;
   animation: orbit-rotate 8s linear infinite;
 }
@@ -575,14 +575,14 @@ hr {
   top: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: 20px;
-  height: 20px;
+  width: 14px;
+  height: 14px;
   background: linear-gradient(135deg, #60a5fa, #3b82f6);
   border-radius: 50%;
   box-shadow: 
-    0 0 30px rgba(59, 130, 246, 1),
-    0 0 60px rgba(59, 130, 246, 0.6),
-    0 0 90px rgba(59, 130, 246, 0.3);
+    0 0 20px rgba(59, 130, 246, 1),
+    0 0 40px rgba(59, 130, 246, 0.6),
+    0 0 60px rgba(59, 130, 246, 0.3);
   animation: pulse-glow 2s ease-in-out infinite;
 }
 
@@ -610,11 +610,11 @@ hr {
 }
 
 .logo-3d-main {
-  font-size: 3rem;
+  font-size: 2.25rem;
   font-weight: 900;
   color: #60a5fa;
-  letter-spacing: -1.5px;
-  line-height: 1;
+  letter-spacing: -1px;
+  line-height: 1.1;
   
   /* 진짜 3D 텍스트 효과 */
   text-shadow: 
@@ -642,14 +642,14 @@ hr {
 }
 
 .logo-3d-sub {
-  font-size: 1.1rem;
+  font-size: 0.95rem;
   color: #cbd5e1;
   font-weight: 500;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
   text-shadow: 
     0 2px 4px rgba(0, 0, 0, 0.3),
     0 0 20px rgba(59, 130, 246, 0.2);
-  opacity: 0.9;
+  opacity: 0.85;
 }
 
 @media (max-width: 640px) {

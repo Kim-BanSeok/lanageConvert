@@ -11,7 +11,10 @@ import TestTranslator from "./components/TestTranslator";
 import TTSPlayer from "./components/TTSPlayer";
 import NameGenerator from "./components/NameGenerator";
 import PWAInstallPrompt from "./components/PWAInstallPrompt";
+import ServiceWorkerRegistration from "./components/ServiceWorkerRegistration";
 import { useCustomAlert } from "./components/CustomAlert";
+import Adsense from "./components/Adsense";
+import { translateText } from "./lib/translationEngine";
 import {
   encodeText,
   decodeText,
@@ -32,6 +35,9 @@ export default function Home() {
 
   const [inputText, setInputText] = useState("");
   const [outputText, setOutputText] = useState("");
+
+  // v2 번역 엔진 모드 선택
+  const [engineMode, setEngineMode] = useState("hybrid"); // 'substring' | 'word' | 'hybrid'
 
   // 프리셋 UI State
   const [showPresetModal, setShowPresetModal] = useState(false);
@@ -77,6 +83,25 @@ export default function Home() {
       }
     }
   }, []);
+
+  // 오프라인 상태 감지
+  useEffect(() => {
+    const handleOffline = () => {
+      showAlert("현재 오프라인입니다. 로컬 데이터로만 작업 가능합니다.", "info", 3000);
+    };
+
+    const handleOnline = () => {
+      showAlert("인터넷 연결이 복구되었습니다.", "success", 2000);
+    };
+
+    window.addEventListener("offline", handleOffline);
+    window.addEventListener("online", handleOnline);
+
+    return () => {
+      window.removeEventListener("offline", handleOffline);
+      window.removeEventListener("online", handleOnline);
+    };
+  }, [showAlert]);
 
   // AI 생성 미리보기 생성
   useEffect(() => {
@@ -150,7 +175,7 @@ export default function Home() {
     await showAlert("프리셋이 삭제되었습니다.", "success");
   };
 
-  // 암호화
+  // 암호화 (v2 엔진 사용)
   const encode = async () => {
     try {
       if (!inputText.trim()) {
@@ -158,32 +183,40 @@ export default function Home() {
         return;
       }
 
-      console.log("🔐 [암호화 시작]");
-      console.log("📝 원본 텍스트:", inputText);
-      console.log("📋 전체 규칙:", rules);
-
-      const { result, appliedRules } = encodeText(inputText, rules);
-
-      if (appliedRules.length === 0) {
+      const validRules = rules.filter((r) => r && r.from && r.from.trim() !== "");
+      if (validRules.length === 0) {
         await showAlert("변환할 규칙이 없습니다. 규칙을 추가해주세요.", "warning");
         return;
       }
 
-      console.log("✅ 적용된 규칙:", appliedRules.map((r, i) => `${i + 1}. ${r.from} → ${r.to}`));
+      console.log("🔐 [v2 엔진 암호화 시작]");
+      console.log("📝 원본 텍스트:", inputText);
+      console.log("🔧 엔진 모드:", engineMode);
+      console.log("📋 전체 규칙:", validRules);
+
+      // v2 번역 엔진 사용
+      const result = translateText(inputText, validRules, {
+        direction: "encode",
+        mode: engineMode,
+      });
+
       console.log("🎯 최종 암호화 결과:", result);
 
-      // 적용된 규칙을 sessionStorage에 저장 (복호화 시 사용)
-      saveLastEncodeRules(appliedRules);
+      // 하위 호환성을 위해 기존 방식도 추적 (복호화용)
+      const { appliedRules } = encodeText(inputText, validRules);
+      if (appliedRules.length > 0) {
+        saveLastEncodeRules(appliedRules);
+      }
 
       setOutputText(result);
-      await showAlert(`암호화 완료! (${appliedRules.length}개 규칙 적용)`, "success", 2000);
+      await showAlert(`암호화 완료! (${engineMode} 모드, ${validRules.length}개 규칙)`, "success", 2000);
     } catch (error) {
       console.error("암호화 중 오류 발생:", error);
       await showAlert("암호화 중 오류가 발생했습니다: " + error.message, "error");
     }
   };
 
-  // 복호화
+  // 복호화 (v2 엔진 사용)
   const decode = async () => {
     try {
       if (!inputText.trim()) {
@@ -191,8 +224,9 @@ export default function Home() {
         return;
       }
 
-      console.log("🔓 [복호화 시작]");
+      console.log("🔓 [v2 엔진 복호화 시작]");
       console.log("📝 암호화된 텍스트:", inputText);
+      console.log("🔧 엔진 모드:", engineMode);
 
       // 암호화 시 실제로 적용된 규칙 불러오기
       let appliedRules = getLastEncodeRules();
@@ -200,20 +234,26 @@ export default function Home() {
       // 저장된 규칙이 없으면 전체 규칙 사용 (하위 호환성)
       if (appliedRules.length === 0) {
         appliedRules = getEncodeOrderFromRules(rules);
-        console.log("📋 전체 규칙 사용 (from.length 기준):", appliedRules.map((r) => `${r.from} → ${r.to}`));
+        console.log("📋 전체 규칙 사용:", appliedRules.map((r) => `${r.from} → ${r.to}`));
       } else {
         console.log("📋 암호화에 사용된 규칙:", appliedRules.map((r) => `${r.from} → ${r.to}`));
       }
 
-      if (appliedRules.length === 0) {
+      const validRules = appliedRules.filter((r) => r && ((r.from && r.from.trim()) || (r.to && r.to.trim())));
+      if (validRules.length === 0) {
         await showAlert("복호화할 규칙이 없습니다. 규칙을 추가해주세요.", "warning");
         return;
       }
 
-      const result = decodeText(inputText, appliedRules);
+      // v2 번역 엔진 사용
+      const result = translateText(inputText, validRules, {
+        direction: "decode",
+        mode: engineMode,
+      });
+
       console.log("🎯 최종 복호화 결과:", result);
       setOutputText(result);
-      await showAlert(`복호화 완료! (${appliedRules.length}개 규칙 적용)`, "success", 2000);
+      await showAlert(`복호화 완료! (${engineMode} 모드, ${validRules.length}개 규칙)`, "success", 2000);
     } catch (error) {
       console.error("복호화 중 오류 발생:", error);
       await showAlert("복호화 중 오류가 발생했습니다: " + error.message, "error");
@@ -588,6 +628,7 @@ export default function Home() {
     <>
       {AlertComponent}
       <PWAInstallPrompt />
+      <ServiceWorkerRegistration />
       
       <div className="max-w-5xl mx-auto p-6 space-y-6">
         {/* 3D 로고 + 타이틀 영역 */}
@@ -615,6 +656,21 @@ export default function Home() {
             onChange={(e) => setInputText(e.target.value)}
             placeholder="여기에 문장을 입력하세요"
           />
+
+          {/* v2 번역 엔진 모드 선택 */}
+          <div className="flex items-center justify-between mt-3 text-sm">
+            <span className="opacity-80">번역 엔진 모드</span>
+            <select
+              className="input-3d px-3 py-1 text-xs"
+              value={engineMode}
+              onChange={(e) => setEngineMode(e.target.value)}
+              title="번역 방식을 선택하세요"
+            >
+              <option value="hybrid">Hybrid (단어+문자 추천)</option>
+              <option value="word">Word (단어 단위만)</option>
+              <option value="substring">Substring (부분문자열 치환)</option>
+            </select>
+          </div>
 
           <div className="flex gap-3 mt-4 flex-wrap">
             <button className="btn-3d" onClick={encode}>
@@ -663,6 +719,16 @@ export default function Home() {
 
       {/* 테스트 번역기 */}
       <TestTranslator rules={rules} />
+
+      {/* AdSense 광고 영역 */}
+      {process.env.NEXT_PUBLIC_ADSENSE_SLOT && (
+        <div className="card-3d p-3 my-4">
+          <Adsense 
+            slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT} 
+            style={{ display: "block", minHeight: "90px" }}
+          />
+        </div>
+      )}
 
       {/* 규칙 편집 카드 */}
       <div className="card-3d">

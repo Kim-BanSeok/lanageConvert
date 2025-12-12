@@ -58,6 +58,9 @@ export const viewport = {
 };
 
 export default function RootLayout({ children }) {
+  // AdSense 클라이언트 ID (환경 변수에서 가져오거나 직접 설정)
+  const adSenseClientId = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID || "";
+
   return (
     <html lang="ko">
       <head>
@@ -67,6 +70,20 @@ export default function RootLayout({ children }) {
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="언어 생성기" />
+        
+        {/* iOS Splash Screen 설정 */}
+        <link rel="apple-touch-startup-image" href="/icons/icon-512.png" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-touch-fullscreen" content="yes" />
+        
+        {/* Google AdSense */}
+        {adSenseClientId && (
+          <script
+            async
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adSenseClientId}`}
+            crossOrigin="anonymous"
+          />
+        )}
       </head>
       <body>{children}</body>
     </html>

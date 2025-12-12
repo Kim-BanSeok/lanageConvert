@@ -1049,15 +1049,15 @@ export default function Home() {
           {/* 변환 버튼 그룹 */}
           <div className="space-y-2">
             <div className="flex gap-2">
-              <button className="btn-3d flex-1" onClick={encode}>
+              <button className="btn-3d btn-encode flex-1" onClick={encode}>
                 🔐 암호화
               </button>
-              <button className="btn-3d flex-1" onClick={decode}>
+              <button className="btn-3d btn-decode flex-1" onClick={decode}>
                 🔓 복호화
               </button>
             </div>
             <button 
-              className="btn-3d btn-green w-full" 
+              className="btn-3d btn-korean w-full" 
               onClick={generateKoreanRules}
               title="입력된 텍스트의 한글을 자동으로 변환 규칙 생성"
             >

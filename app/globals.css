@@ -538,6 +538,58 @@
   }
 
   /* ===== 버튼 ===== */
+  /* 모바일 스타일 버튼 (웹 버전) */
+  .btn-encode {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(139, 92, 246, 0.3)) !important;
+    border: 2px solid rgba(99, 102, 241, 0.5) !important;
+    transition: all 0.2s ease !important;
+  }
+
+  .btn-encode:hover {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.4), rgba(139, 92, 246, 0.4)) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+  }
+
+  .btn-encode:active {
+    transform: scale(0.97);
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.5), rgba(139, 92, 246, 0.5)) !important;
+  }
+
+  .btn-decode {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(16, 185, 129, 0.2)) !important;
+    border: 2px solid rgba(59, 130, 246, 0.4) !important;
+    transition: all 0.2s ease !important;
+  }
+
+  .btn-decode:hover {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(16, 185, 129, 0.3)) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  }
+
+  .btn-decode:active {
+    transform: scale(0.97);
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.4), rgba(16, 185, 129, 0.4)) !important;
+  }
+
+  .btn-korean {
+    background: linear-gradient(135deg, rgba(236, 72, 153, 0.3), rgba(219, 39, 119, 0.3)) !important;
+    border: 2px solid rgba(236, 72, 153, 0.4) !important;
+    transition: all 0.2s ease !important;
+  }
+
+  .btn-korean:hover {
+    background: linear-gradient(135deg, rgba(236, 72, 153, 0.4), rgba(219, 39, 119, 0.4)) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3);
+  }
+
+  .btn-korean:active {
+    transform: scale(0.97);
+    background: linear-gradient(135deg, rgba(236, 72, 153, 0.5), rgba(219, 39, 119, 0.5)) !important;
+  }
+
   .btn-3d {
     padding: 8px 12px;
     font-size: 0.85rem;

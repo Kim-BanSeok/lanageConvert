@@ -16,7 +16,9 @@ export default function AdminLoginPage() {
       });
 
       if (!res.ok) {
-        alert("로그인 실패: 비밀번호를 확인하세요.");
+        const errorData = await res.json().catch(() => ({}));
+        const errorMessage = errorData.message || "로그인 실패: 비밀번호를 확인하세요.";
+        alert(errorMessage);
         setLoading(false);
         return;
       }

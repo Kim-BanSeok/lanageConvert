@@ -1,6 +1,9 @@
 "use client";
 
-export default function Logo3D() {
+export default function Logo3D({ 
+  title = "My Secret Language", 
+  subtitle = "나만의 언어 생성기 · 3D Crypto Text Lab" 
+}) {
   return (
     <div className="logo-3d-wrapper">
       {/* 회전하는 작은 구(점) */}
@@ -11,10 +14,10 @@ export default function Logo3D() {
       {/* 메인 타이틀 */}
       <div className="logo-3d-text">
         <span className="logo-3d-main">
-          My Secret Language
+          {title}
         </span>
         <span className="logo-3d-sub">
-          나만의 언어 생성기 · 3D Crypto Text Lab
+          {subtitle}
         </span>
       </div>
     </div>

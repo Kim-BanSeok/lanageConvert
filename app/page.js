@@ -12,9 +12,18 @@ import TTSPlayer from "./components/TTSPlayer";
 import NameGenerator from "./components/NameGenerator";
 import PWAInstallPrompt from "./components/PWAInstallPrompt";
 import ServiceWorkerRegistration from "./components/ServiceWorkerRegistration";
+import LanguageIdentityModal from "./components/LanguageIdentityModal";
+import EvolutionModal from "./components/EvolutionModal";
+import EvolutionRecommendBanner from "./components/EvolutionRecommendBanner";
 import { useCustomAlert } from "./components/CustomAlert";
 import Adsense from "./components/Adsense";
 import { translateText } from "./lib/translationEngine";
+import { addSample, loadSamples } from "./lib/evolutionEngine";
+import {
+  shouldRecommendEvolution,
+  markRecommended,
+  resetRecommendState,
+} from "./lib/evolutionRecommend";
 import {
   encodeText,
   decodeText,
@@ -51,6 +60,29 @@ export default function Home() {
   
   // AI 미리보기 상태
   const [preview, setPreview] = useState({ mode: null, data: null });
+
+  // 언어 진화 & 네이밍 모달 State
+  const [showIdentityModal, setShowIdentityModal] = useState(false);
+  const [showEvolutionModal, setShowEvolutionModal] = useState(false);
+  const [showEvolutionRecommend, setShowEvolutionRecommend] = useState(false);
+  const [sampleCount, setSampleCount] = useState(0);
+  const [learnToast, setLearnToast] = useState(false);
+
+  // 생성된 언어 아이덴티티 저장(로컬)
+  const [languageIdentity, setLanguageIdentity] = useState(() => {
+    if (typeof window === "undefined") return null;
+    try { 
+      return JSON.parse(safeLocalStorageGet("language_identity_v1") || "null"); 
+    } catch { 
+      return null; 
+    }
+  });
+
+  // 자동 학습용 상태
+  const [lastSourceText, setLastSourceText] = useState("");
+  const [lastAutoTranslated, setLastAutoTranslated] = useState("");
+  const [userEditedOutput, setUserEditedOutput] = useState(false);
+  const [lastSavedKey, setLastSavedKey] = useState("");
 
   // 규칙 추가
   const addRule = () => {
@@ -89,6 +121,17 @@ export default function Home() {
       console.warn("localStorage 접근 실패:", error);
     }
   }, []);
+
+  // 샘플 수 확인 및 진화 추천 체크
+  useEffect(() => {
+    const samples = loadSamples();
+    setSampleCount(samples.length);
+
+    if (shouldRecommendEvolution(samples.length, 20)) {
+      setShowEvolutionRecommend(true);
+      markRecommended(samples.length);
+    }
+  }, [outputText]); // outputText 변경 시 체크
 
   // 오프라인 상태 감지
   useEffect(() => {
@@ -215,6 +258,12 @@ export default function Home() {
       }
 
       setOutputText(result);
+
+      // 🔥 자동 학습용 기록
+      setLastSourceText(inputText.trim());
+      setLastAutoTranslated(result);
+      setUserEditedOutput(false);
+
       await showAlert(`암호화 완료! (${engineMode} 모드, ${validRules.length}개 규칙)`, "success", 2000);
     } catch (error) {
       console.error("암호화 중 오류 발생:", error);
@@ -534,6 +583,19 @@ export default function Home() {
     await showAlert(`🤖 AI 언어가 적용되었습니다! (${preview.data.length}개 규칙)`, "success");
   };
 
+  // 언어 아이덴티티 적용
+  const applyIdentity = (identity) => {
+    setLanguageIdentity(identity);
+    safeLocalStorageSet("language_identity_v1", JSON.stringify(identity));
+    showAlert("✨ 언어 이름/세계관이 저장되었습니다!", "success");
+  };
+
+  // 진화된 규칙 적용
+  const applyEvolvedRules = (nextRules) => {
+    setRules(nextRules);
+    resetRecommendState();
+  };
+
   // 단어 규칙 학습 알고리즘
   const learnWordRules = async (original, translated) => {
     const oWords = original.trim().split(/\s+/);
@@ -638,7 +700,10 @@ export default function Home() {
       
       <div className="max-w-5xl mx-auto p-6 space-y-6">
         {/* 3D 로고 + 타이틀 영역 */}
-        <Logo3D />
+        <Logo3D
+        title={languageIdentity?.name || "My Secret Language"}
+        subtitle={languageIdentity?.tagline || "나만의 언어 생성기 · 3D Crypto Text Lab"}
+      />
 
         {/* AdSense 광고 영역 - 상단 */}
         <div className="card-3d p-3 my-4">
@@ -709,7 +774,54 @@ export default function Home() {
           <textarea
             className="input-3d w-full min-h-[160px]"
             value={outputText}
-            readOnly
+            onChange={(e) => {
+              const newValue = e.target.value;
+              setOutputText(newValue);
+
+              // 사용자가 자동 번역 결과를 수정한 경우만
+              if (
+                lastSourceText &&
+                lastAutoTranslated &&
+                newValue !== lastAutoTranslated
+              ) {
+                setUserEditedOutput(true);
+              }
+            }}
+            onBlur={() => {
+              if (
+                userEditedOutput &&
+                lastSourceText &&
+                outputText.trim() &&
+                lastSourceText.split(/\s+/).length >= 2
+              ) {
+                const key = lastSourceText + "||" + outputText;
+                if (lastSavedKey !== key) {
+                  // ✅ 자동 학습 샘플 저장
+                  addSample({
+                    original: lastSourceText,
+                    translated: outputText,
+                    mode: "word",
+                  });
+
+                  console.log("🧠 학습 샘플 자동 저장됨");
+                  setLearnToast(true);
+                  setTimeout(() => setLearnToast(false), 2000);
+
+                  // 중복 저장 방지
+                  setUserEditedOutput(false);
+                  setLastSavedKey(key);
+
+                  // 샘플 수 업데이트 및 추천 체크
+                  const samples = loadSamples();
+                  setSampleCount(samples.length);
+
+                  if (shouldRecommendEvolution(samples.length, 20)) {
+                    setShowEvolutionRecommend(true);
+                    markRecommended(samples.length);
+                  }
+                }
+              }
+            }}
             placeholder="결과가 여기에 표시됩니다"
           />
 
@@ -750,6 +862,15 @@ export default function Home() {
           <div className="flex gap-2 flex-wrap">
             <button className="btn-3d" onClick={addRule}>
               ➕ 규칙 추가
+            </button>
+            <button className="btn-3d" onClick={() => setShowIdentityModal(true)}>
+              ✨ 네이밍/세계관
+            </button>
+            <button className="btn-3d" onClick={() => {
+              setShowEvolutionRecommend(false);
+              setShowEvolutionModal(true);
+            }}>
+              🧠 언어 진화
             </button>
             <button className="btn-3d" onClick={generateRandomAlphabet}>
               🎲 랜덤 생성
@@ -838,6 +959,25 @@ export default function Home() {
           style={{ display: "block", minHeight: "90px" }}
         />
       </div>
+
+      {/* 자동 학습 토스트 */}
+      {learnToast && (
+        <div className="fixed bottom-24 right-6 bg-green-500 text-white px-4 py-2 rounded-xl shadow-lg z-50 animate-pulse">
+          🧠 언어가 학습되었습니다
+        </div>
+      )}
+
+      {/* 언어 진화 추천 배너 */}
+      {showEvolutionRecommend && (
+        <EvolutionRecommendBanner
+          sampleCount={sampleCount}
+          onEvolveClick={() => {
+            setShowEvolutionRecommend(false);
+            setShowEvolutionModal(true);
+          }}
+          onDismiss={() => setShowEvolutionRecommend(false)}
+        />
+      )}
 
       {/* ------------------------
           AI 생성기 모달

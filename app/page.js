@@ -1555,8 +1555,16 @@ export default function Home() {
         />
       )}
 
-      {/* 🔧 localStorage 용량 모니터링 표시기 */}
-      <StorageIndicator onClick={() => setShowBackupModal(true)} />
+        {/* 🔧 localStorage 용량 모니터링 표시기 */}
+        <StorageIndicator onClick={() => setShowBackupModal(true)} />
+
+        {/* 🎯 Phase 2-5: 충돌 검사 표시 (규칙 저장 시 자동 확인) */}
+        <ConflictChecker 
+          rules={rules} 
+          onFixConflicts={(fixedRules) => {
+            setRules(fixedRules, "🔧 충돌 자동 수정");
+          }}
+        />
 
       {/* ⌨️ 키보드 단축키 도움말 모달 */}
       {showShortcutsHelp && (

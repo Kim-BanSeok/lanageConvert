@@ -65,6 +65,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="ko">
       <head>
+        {/* Google Search Console 사이트 소유권 확인 */}
+        <meta name="google-site-verification" content="lSJTeWuV8EZQIBkHAfSRPQlK59uyaYjsnYH_DhIv2r4" />
+        
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#60a5fa" />
         <meta name="mobile-web-app-capable" content="yes" />

@@ -753,10 +753,12 @@ export default function Home() {
           />
 
           {/* v2 번역 엔진 모드 선택 */}
-          <div className="flex items-center justify-between mt-3 text-sm">
-            <span className="opacity-80">번역 엔진 모드</span>
+          <div className="mt-4 mb-3">
+            <label className="block text-sm font-medium mb-2 opacity-90">
+              번역 엔진 모드
+            </label>
             <select
-              className="input-3d px-3 py-1 text-xs"
+              className="input-3d w-full py-2"
               value={engineMode}
               onChange={(e) => setEngineMode(e.target.value)}
               title="번역 방식을 선택하세요"
@@ -767,15 +769,18 @@ export default function Home() {
             </select>
           </div>
 
-          <div className="flex gap-3 mt-4 flex-wrap">
-            <button className="btn-3d" onClick={encode}>
-              🔐 암호화
-            </button>
-            <button className="btn-3d" onClick={decode}>
-              🔓 복호화
-            </button>
+          {/* 변환 버튼 그룹 */}
+          <div className="space-y-2">
+            <div className="flex gap-2">
+              <button className="btn-3d flex-1" onClick={encode}>
+                🔐 암호화
+              </button>
+              <button className="btn-3d flex-1" onClick={decode}>
+                🔓 복호화
+              </button>
+            </div>
             <button 
-              className="btn-3d btn-green" 
+              className="btn-3d btn-green w-full" 
               onClick={generateKoreanRules}
               title="입력된 텍스트의 한글을 자동으로 변환 규칙 생성"
             >
@@ -846,14 +851,19 @@ export default function Home() {
             placeholder="결과가 여기에 표시됩니다"
           />
 
-          <div className="flex gap-3 mt-4 flex-wrap">
-            <button className="btn-3d" onClick={copyResult}>
-              📋 복사
-            </button>
-            <button className="btn-3d" onClick={swapText}>
-              🔁 교환
-            </button>
-            <TTSPlayer text={outputText} buttonText="🔊 음성 듣기" />
+          {/* 결과 작업 버튼 그룹 */}
+          <div className="mt-4 space-y-2">
+            <div className="flex gap-2">
+              <button className="btn-3d flex-1" onClick={copyResult}>
+                📋 복사
+              </button>
+              <button className="btn-3d flex-1" onClick={swapText}>
+                🔁 교환
+              </button>
+            </div>
+            <div className="w-full">
+              <TTSPlayer text={outputText} buttonText="🔊 음성 듣기" />
+            </div>
           </div>
         </div>
       </div>

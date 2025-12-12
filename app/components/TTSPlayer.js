@@ -95,36 +95,36 @@ export default function TTSPlayer({ text, buttonText = "🔊 음성 듣기", cla
   return (
     <>
       {AlertComponent}
-      <div className="relative inline-block">
-      <div className="flex gap-2 items-center">
-        {!isPlaying ? (
-          <button
-            className={`btn-3d ${className}`}
-            onClick={handlePlay}
-            disabled={!text || !text.trim()}
-          >
-            {buttonText}
-          </button>
-        ) : (
-          <button
-            className={`btn-3d btn-red ${className}`}
-            onClick={handleStop}
-          >
-            ⏹️ 정지
-          </button>
-        )}
+      <div className="relative w-full">
+        <div className="flex gap-2 items-center">
+          {!isPlaying ? (
+            <button
+              className={`btn-3d flex-1 ${className}`}
+              onClick={handlePlay}
+              disabled={!text || !text.trim()}
+            >
+              {buttonText}
+            </button>
+          ) : (
+            <button
+              className={`btn-3d btn-red flex-1 ${className}`}
+              onClick={handleStop}
+            >
+              ⏹️ 정지
+            </button>
+          )}
 
-        {/* 음성 선택 버튼 */}
-        {voices.length > 0 && (
-          <button
-            className="btn-3d text-sm px-2 py-1"
-            onClick={() => setShowVoiceSelector(!showVoiceSelector)}
-            title="음성 선택"
-          >
-            ⚙️
-          </button>
-        )}
-      </div>
+          {/* 음성 선택 버튼 */}
+          {voices.length > 0 && (
+            <button
+              className="btn-3d px-3 py-2 flex-shrink-0"
+              onClick={() => setShowVoiceSelector(!showVoiceSelector)}
+              title="음성 선택"
+            >
+              ⚙️
+            </button>
+          )}
+        </div>
 
       {/* 음성 선택 드롭다운 */}
       {showVoiceSelector && voices.length > 0 && (

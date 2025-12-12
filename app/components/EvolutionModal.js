@@ -79,74 +79,166 @@ export default function EvolutionModal({ baseRules, onClose, onApplyRules }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
-      <div className="card-3d p-6 w-[760px] max-h-[90vh] overflow-y-auto space-y-4">
-        <h2 className="text-2xl font-bold text-center">🧠 언어 진화 시스템</h2>
+    <div 
+      className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-[9999] p-4 animate-fade-in"
+      onClick={onClose}
+    >
+      <div 
+        className="bg-gradient-to-br from-slate-800/95 to-slate-900/95 backdrop-blur-xl rounded-2xl p-8 w-full max-w-[880px] max-h-[90vh] overflow-y-auto custom-scrollbar space-y-6 shadow-2xl border-2 border-green-500/30 animate-scale-in"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* 헤더 */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="text-4xl">🧠</div>
+            <div>
+              <h2 className="text-2xl font-extrabold text-white">언어 진화 시스템</h2>
+              <p className="text-sm text-slate-400 mt-1">
+                학습 데이터로 언어를 자동으로 발전시킵니다
+              </p>
+            </div>
+          </div>
+          <button
+            className="text-slate-400 hover:text-white transition-colors text-2xl leading-none hover:rotate-90 transition-transform duration-300"
+            onClick={onClose}
+          >
+            ✕
+          </button>
+        </div>
 
         <div className="grid md:grid-cols-2 gap-6">
           {/* 샘플 추가 */}
-          <div className="space-y-2">
-            <div className="text-lg font-semibold">학습 샘플 추가</div>
-            <textarea className="input-3d w-full h-[90px]" value={original} onChange={(e) => setOriginal(e.target.value)} placeholder="원문 문장 (공백 기준 단어 수가 맞아야 학습 정확)" />
-            <textarea className="input-3d w-full h-[90px]" value={translated} onChange={(e) => setTranslated(e.target.value)} placeholder="번역문 문장" />
-            <button className="btn-3d w-full" onClick={add}>➕ 샘플 저장</button>
-
-            <div className="flex items-center gap-2">
-              <div className="text-sm opacity-80">최소 관측 횟수(minCount)</div>
-              <input className="input-3d" type="number" min={1} value={minCount} onChange={(e) => setMinCount(e.target.value)} style={{ width: 90 }} />
+          <div className="bg-slate-700/30 border-2 border-slate-600/50 rounded-xl p-5 space-y-3">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="text-2xl">📝</span>
+              <h3 className="text-lg font-bold text-white">학습 샘플 추가</h3>
             </div>
 
-            <div className="text-sm opacity-80">
-              저장된 샘플: <b>{samples.length}</b>개
+            <div>
+              <label className="text-xs text-slate-400 mb-1 block">원문 문장</label>
+              <textarea 
+                className="input-3d w-full h-[80px]" 
+                value={original} 
+                onChange={(e) => setOriginal(e.target.value)} 
+                placeholder="예: 나는 오늘 커피를 마신다" 
+              />
             </div>
 
-            <button className="btn-3d btn-red w-full" onClick={clearAllSamples}>🧹 샘플 전체 삭제</button>
+            <div>
+              <label className="text-xs text-slate-400 mb-1 block">번역된 문장</label>
+              <textarea 
+                className="input-3d w-full h-[80px]" 
+                value={translated} 
+                onChange={(e) => setTranslated(e.target.value)} 
+                placeholder="예: do rafa kema lozi" 
+              />
+            </div>
+
+            <button className="btn-3d w-full" onClick={add}>
+              ➕ 샘플 저장
+            </button>
+
+            <div className="bg-black/30 rounded-lg p-3 space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-slate-400">최소 관측 횟수</span>
+                <input 
+                  className="input-3d w-20 text-center" 
+                  type="number" 
+                  min={1} 
+                  value={minCount} 
+                  onChange={(e) => setMinCount(e.target.value)} 
+                />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-slate-400">저장된 샘플</span>
+                <span className="text-sm font-bold text-white bg-blue-500/20 px-2 py-1 rounded-full">
+                  {samples.length}개
+                </span>
+              </div>
+            </div>
+
+            <button className="btn-3d btn-red w-full" onClick={clearAllSamples}>
+              🧹 샘플 전체 삭제
+            </button>
           </div>
 
           {/* 미리보기 */}
-          <div className="space-y-2">
-            <div className="text-lg font-semibold">진화 결과 미리보기</div>
+          <div className="bg-slate-700/30 border-2 border-slate-600/50 rounded-xl p-5 space-y-3">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="text-2xl">👁️</span>
+              <h3 className="text-lg font-bold text-white">진화 결과 미리보기</h3>
+            </div>
 
-            <div className="bg-white/10 rounded-lg p-3">
-              <div className="text-sm opacity-80 mb-1">학습으로 얻은 규칙(상위 일부)</div>
-              <pre className="text-xs overflow-auto max-h-[140px]">
-{JSON.stringify(learnedRules.slice(0, 12), null, 2)}
+            <div className="bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-blue-500/30 rounded-lg p-3">
+              <div className="text-xs font-bold text-slate-300 mb-2">학습으로 얻은 규칙</div>
+              <pre className="text-xs text-slate-300 font-mono overflow-auto max-h-[120px] custom-scrollbar">
+{learnedRules.length > 0 
+  ? JSON.stringify(learnedRules.slice(0, 10), null, 2) 
+  : "학습된 규칙 없음"}
               </pre>
             </div>
 
-            <div className="bg-white/10 rounded-lg p-3">
-              <div className="text-sm opacity-80 mb-1">기존+학습 병합 후 규칙(상위 일부)</div>
-              <pre className="text-xs overflow-auto max-h-[140px]">
-{JSON.stringify(merged.slice(0, 12), null, 2)}
+            <div className="bg-gradient-to-br from-green-500/10 to-blue-500/10 border border-green-500/30 rounded-lg p-3">
+              <div className="text-xs font-bold text-slate-300 mb-2">병합 후 최종 규칙</div>
+              <pre className="text-xs text-slate-300 font-mono overflow-auto max-h-[120px] custom-scrollbar">
+{merged.length > 0 
+  ? JSON.stringify(merged.slice(0, 10), null, 2) 
+  : "규칙 없음"}
               </pre>
             </div>
 
-            <button className="btn-3d w-full" onClick={apply}>🚀 언어 진화 적용(버전 저장)</button>
+            <button className="btn-3d btn-green w-full font-bold" onClick={apply}>
+              🚀 언어 진화 적용 (버전 저장)
+            </button>
           </div>
         </div>
 
         {/* 버전 관리 */}
-        <div className="bg-white/10 rounded-lg p-4">
-          <div className="flex items-center justify-between mb-2">
-            <div className="text-lg font-semibold">버전(롤백) 관리</div>
-            <div className="text-sm opacity-70">최근 저장된 버전이 위에 표시</div>
+        <div className="bg-gradient-to-br from-purple-500/10 to-pink-500/10 border-2 border-purple-500/30 rounded-xl p-5">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <span className="text-2xl">📚</span>
+              <h3 className="text-lg font-bold text-white">버전 관리 (롤백)</h3>
+            </div>
+            <div className="text-xs text-slate-400">최근 버전이 위에 표시</div>
           </div>
 
           {!versions || versions.length === 0 ? (
-            <div className="text-sm opacity-70">저장된 버전이 없습니다.</div>
+            <div className="text-center py-8 opacity-70">
+              <div className="text-4xl mb-2">📦</div>
+              <div className="text-sm text-slate-400">저장된 버전이 없습니다</div>
+            </div>
           ) : (
-            <div className="space-y-2 max-h-[180px] overflow-auto">
-              {versions.map((v) => (
-                <div key={v.id} className="flex items-center justify-between bg-white/10 rounded-lg p-2">
-                  <div>
-                    <div className="font-semibold">{v.name}</div>
-                    <div className="text-xs opacity-70">
-                      {new Date(v.ts).toLocaleString()} · rules: {(v.rules || []).length}
+            <div className="space-y-2 max-h-[200px] overflow-auto custom-scrollbar">
+              {versions.map((v, idx) => (
+                <div key={v.id} className="bg-slate-700/50 border border-slate-600/50 rounded-lg p-3 hover:bg-slate-700/70 transition-colors">
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-xs bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded-full">
+                          v{versions.length - idx}
+                        </span>
+                        <div className="font-bold text-white truncate">{v.name}</div>
+                      </div>
+                      <div className="text-xs text-slate-400">
+                        {new Date(v.ts).toLocaleString()} · 규칙 {(v.rules || []).length}개
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex gap-2">
-                    <button className="btn-3d px-3 py-1" onClick={() => rollback(v)}>롤백</button>
-                    <button className="btn-3d btn-red px-3 py-1" onClick={() => removeVersion(v.id)}>삭제</button>
+                    <div className="flex gap-2 flex-shrink-0">
+                      <button 
+                        className="btn-3d text-sm px-3 py-1" 
+                        onClick={() => rollback(v)}
+                      >
+                        ↩️ 롤백
+                      </button>
+                      <button 
+                        className="btn-3d btn-red text-sm px-3 py-1" 
+                        onClick={() => removeVersion(v.id)}
+                      >
+                        ✕
+                      </button>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -154,7 +246,10 @@ export default function EvolutionModal({ baseRules, onClose, onApplyRules }) {
           )}
         </div>
 
-        <button className="btn-3d btn-red w-full" onClick={onClose}>닫기</button>
+        {/* 닫기 버튼 */}
+        <button className="btn-3d btn-red w-full text-lg" onClick={onClose}>
+          닫기
+        </button>
       </div>
     </div>
   );

@@ -176,13 +176,15 @@ export default function MobileTranslate({
           </div>
 
           {/* 한글 자동 변환 버튼 */}
-          <button 
-            className="mobile-btn mobile-btn-special"
-            onClick={handleGenerateKoreanRules}
-          >
-            <span className="mobile-btn-icon">✨</span>
-            <span>한글 자동 변환</span>
-          </button>
+          <div className="mobile-korean-convert-wrapper">
+            <button 
+              className="mobile-btn mobile-btn-special"
+              onClick={handleGenerateKoreanRules}
+            >
+              <span className="mobile-btn-icon">✨</span>
+              <span>한글 자동 변환</span>
+            </button>
+          </div>
 
           {/* 액션 버튼 */}
           <div className="mobile-action-buttons">

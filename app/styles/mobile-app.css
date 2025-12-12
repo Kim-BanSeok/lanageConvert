@@ -152,11 +152,19 @@
   margin-top: 8px;
 }
 
-.mobile-btn-special {
-  width: 100%;
+.mobile-korean-convert-wrapper {
+  display: flex;
+  justify-content: center;
   margin-bottom: 12px;
+}
+
+.mobile-btn-special {
+  flex: 0 1 auto;
+  min-width: 200px;
+  max-width: 280px;
   background: linear-gradient(135deg, rgba(236, 72, 153, 0.3), rgba(219, 39, 119, 0.3));
   border: 2px solid rgba(236, 72, 153, 0.4);
+  font-size: 0.95rem;
 }
 
 .mobile-btn-special:active {

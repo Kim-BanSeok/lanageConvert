@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { safeLocalStorageGet, safeLocalStorageSet } from "../utils/storage";
 
 export default function PWAInstallPrompt() {
   const [deferredPrompt, setDeferredPrompt] = useState(null);
@@ -24,7 +25,7 @@ export default function PWAInstallPrompt() {
       let dismissed = null;
       let dismissedTime = 0;
       try {
-        dismissed = localStorage.getItem('pwa-install-dismissed');
+        dismissed = safeLocalStorageGet('pwa-install-dismissed');
         dismissedTime = dismissed ? parseInt(dismissed) : 0;
       } catch (error) {
         // 스토리지 접근 불가 시 무시
@@ -82,12 +83,7 @@ export default function PWAInstallPrompt() {
   const handleDismiss = () => {
     setShowPrompt(false);
     // 닫은 시간 저장
-    try {
-      localStorage.setItem('pwa-install-dismissed', Date.now().toString());
-    } catch (error) {
-      // 스토리지 접근 불가 시 무시
-      console.warn("PWA 설치 프롬프트 상태 저장 실패:", error);
-    }
+    safeLocalStorageSet('pwa-install-dismissed', Date.now().toString());
   };
 
   // 이미 설치되었거나 프롬프트가 없으면 아무것도 표시하지 않음

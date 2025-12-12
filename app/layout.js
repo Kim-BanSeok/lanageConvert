@@ -59,7 +59,8 @@ export const viewport = {
 
 export default function RootLayout({ children }) {
   // AdSense 클라이언트 ID (환경 변수에서 가져오거나 직접 설정)
-  const adSenseClientId = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID || "";
+  // 검증을 위해 환경 변수가 없어도 기본값 사용
+  const adSenseClientId = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID || "ca-pub-7373977880685678";
 
   return (
     <html lang="ko">
@@ -76,14 +77,12 @@ export default function RootLayout({ children }) {
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-touch-fullscreen" content="yes" />
         
-        {/* Google AdSense */}
-        {adSenseClientId && (
-          <script
-            async
-            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adSenseClientId}`}
-            crossOrigin="anonymous"
-          />
-        )}
+        {/* Google AdSense - 검증을 위해 항상 렌더링 */}
+        <script
+          async
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adSenseClientId}`}
+          crossOrigin="anonymous"
+        />
       </head>
       <body>{children}</body>
     </html>

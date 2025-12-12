@@ -1176,23 +1176,24 @@ export default function Home() {
                           </div>
                         </div>
 
-                    <div className="flex gap-2 flex-shrink-0">
-                      <button
-                        className="btn-3d text-sm px-3 py-1"
-                        onClick={() => loadPreset(preset)}
-                      >
-                        📥 불러오기
-                      </button>
-                      <button
-                        className="btn-3d btn-red text-sm px-3 py-1"
-                        onClick={() => deletePreset(idx)}
-                      >
-                        ✕
-                      </button>
+                        <div className="flex gap-2 flex-shrink-0">
+                          <button
+                            className="btn-3d text-sm px-3 py-1"
+                            onClick={() => loadPreset(preset)}
+                          >
+                            📥 불러오기
+                          </button>
+                          <button
+                            className="btn-3d btn-red text-sm px-3 py-1"
+                            onClick={() => deletePreset(idx)}
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                ))
-              )}
+                  ))
+                )}
             </div>
           </div>
 

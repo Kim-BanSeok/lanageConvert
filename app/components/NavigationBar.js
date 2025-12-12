@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import ThemeToggle from "./ThemeToggle";
 
 /**
@@ -22,6 +22,24 @@ export default function NavigationBar({
 }) {
   const [showToolsMenu, setShowToolsMenu] = useState(false);
   const [showHelpMenu, setShowHelpMenu] = useState(false);
+  
+  const toolsRef = useRef(null);
+  const helpRef = useRef(null);
+
+  // 외부 클릭 감지
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (toolsRef.current && !toolsRef.current.contains(event.target)) {
+        setShowToolsMenu(false);
+      }
+      if (helpRef.current && !helpRef.current.contains(event.target)) {
+        setShowHelpMenu(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   return (
     <nav className="nav-bar">
@@ -62,10 +80,14 @@ export default function NavigationBar({
           <ThemeToggle theme={theme} onToggle={onToggleTheme} />
 
           {/* 도구 메뉴 */}
-          <div className="nav-dropdown">
+          <div className="nav-dropdown" ref={toolsRef}>
             <button
               className="nav-btn nav-btn-primary"
-              onClick={() => setShowToolsMenu(!showToolsMenu)}
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowToolsMenu(!showToolsMenu);
+                setShowHelpMenu(false);
+              }}
               title="도구"
             >
               <span className="nav-icon">🛠️</span>
@@ -97,10 +119,14 @@ export default function NavigationBar({
           </div>
 
           {/* 도움말 메뉴 */}
-          <div className="nav-dropdown">
+          <div className="nav-dropdown" ref={helpRef}>
             <button
               className="nav-btn nav-btn-secondary"
-              onClick={() => setShowHelpMenu(!showHelpMenu)}
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowHelpMenu(!showHelpMenu);
+                setShowToolsMenu(false);
+              }}
               title="도움말"
             >
               <span className="nav-icon">❓</span>

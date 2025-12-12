@@ -964,6 +964,10 @@ export default function Home() {
           router={router}
           theme={theme}
           toggleTheme={toggleTheme}
+          generateAI_CharacterMap={generateAI_CharacterMap}
+          generateAI_SyllableLanguage={generateAI_SyllableLanguage}
+          generateAI_PrefixSuffix={generateAI_PrefixSuffix}
+          generateAI_Crypto={generateAI_Crypto}
         />
       </>
     );

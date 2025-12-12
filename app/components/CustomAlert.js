@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
  * CustomAlert 컴포넌트
  * 기본 alert 대신 3D 스타일의 커스텀 알림을 표시합니다.
  */
-export default function CustomAlert({ message, type = "info", onClose, duration = 3000 }) {
+export default function CustomAlert({ message, type = "info", onClose, duration = 5000 }) {
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
@@ -84,7 +84,7 @@ export default function CustomAlert({ message, type = "info", onClose, duration 
 export function useCustomAlert() {
   const [alert, setAlert] = useState(null);
 
-  const showAlert = (message, type = "info", duration = 3000) => {
+  const showAlert = (message, type = "info", duration = 5000) => {
     return new Promise((resolve) => {
       setAlert({
         message,

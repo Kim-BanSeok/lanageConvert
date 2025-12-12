@@ -73,7 +73,7 @@ export default function TestTranslator({ rules }) {
   return (
     <>
       {AlertComponent}
-      <div className="card-3d space-y-4 relative" style={{ zIndex: 1 }}>
+      <div className="card-3d space-y-4" style={{ position: 'relative', zIndex: 1 }}>
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-xl font-semibold">🧪 테스트 번역기</h2>

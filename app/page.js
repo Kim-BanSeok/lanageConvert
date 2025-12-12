@@ -3,8 +3,10 @@
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useHistory } from "./hooks/useHistory";
+import { useIsMobile } from "./hooks/useMediaQuery";
 import RuleRow from "./components/RuleRow";
 import Logo3D from "./components/Logo3D";
+import MobileLayout from "./components/MobileLayout";
 import AIGeneratorModal from "./components/AIGeneratorModal";
 import LearnRuleModal from "./components/LearnRuleModal";
 import ConflictChecker from "./components/ConflictChecker";
@@ -52,6 +54,7 @@ import { setupGlobalErrorHandler } from "./lib/errorHandler";
 export default function Home() {
   const router = useRouter();
   const { showAlert, AlertComponent } = useCustomAlert();
+  const isMobile = useIsMobile(); // 📱 모바일 감지
 
   // 🛡️ 전역 에러 핸들러 설정
   useEffect(() => {

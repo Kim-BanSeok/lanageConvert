@@ -22,6 +22,7 @@ import {
   saveLastEncodeRules,
   getEncodeOrderFromRules,
 } from "./utils/encodeDecode";
+import { safeLocalStorageGet, safeLocalStorageSet } from "./utils/storage";
 
 export default function Home() {
   const router = useRouter();
@@ -74,13 +75,18 @@ export default function Home() {
 
   // localStorage에서 프리셋 불러오기
   useEffect(() => {
-    const saved = localStorage.getItem("language-presets");
-    if (saved) {
-      try {
-        setPresetList(JSON.parse(saved));
-      } catch (error) {
-        console.error("프리셋 불러오기 실패:", error);
+    try {
+      const saved = safeLocalStorageGet("language-presets");
+      if (saved) {
+        try {
+          setPresetList(JSON.parse(saved));
+        } catch (error) {
+          console.error("프리셋 불러오기 실패:", error);
+        }
       }
+    } catch (error) {
+      // 스토리지 접근 불가 시 무시
+      console.warn("localStorage 접근 실패:", error);
     }
   }, []);
 
@@ -146,7 +152,7 @@ export default function Home() {
 
     const updatedList = [...presetList, newPreset];
     setPresetList(updatedList);
-    localStorage.setItem("language-presets", JSON.stringify(updatedList));
+    safeLocalStorageSet("language-presets", JSON.stringify(updatedList));
 
     await showAlert("프리셋이 저장되었습니다!", "success");
     setPresetName("");
@@ -171,7 +177,7 @@ export default function Home() {
 
     const updated = presetList.filter((_, i) => i !== idx);
     setPresetList(updated);
-    localStorage.setItem("language-presets", JSON.stringify(updated));
+    safeLocalStorageSet("language-presets", JSON.stringify(updated));
     await showAlert("프리셋이 삭제되었습니다.", "success");
   };
 

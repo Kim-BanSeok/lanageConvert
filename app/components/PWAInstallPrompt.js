@@ -21,8 +21,15 @@ export default function PWAInstallPrompt() {
       setDeferredPrompt(e);
       
       // 사용자가 이전에 프롬프트를 닫았는지 확인
-      const dismissed = localStorage.getItem('pwa-install-dismissed');
-      const dismissedTime = dismissed ? parseInt(dismissed) : 0;
+      let dismissed = null;
+      let dismissedTime = 0;
+      try {
+        dismissed = localStorage.getItem('pwa-install-dismissed');
+        dismissedTime = dismissed ? parseInt(dismissed) : 0;
+      } catch (error) {
+        // 스토리지 접근 불가 시 무시
+        console.warn("PWA 설치 프롬프트 상태 확인 실패:", error);
+      }
       const now = Date.now();
       
       // 24시간(86400000ms) 이내에 닫았으면 표시하지 않음
@@ -75,7 +82,12 @@ export default function PWAInstallPrompt() {
   const handleDismiss = () => {
     setShowPrompt(false);
     // 닫은 시간 저장
-    localStorage.setItem('pwa-install-dismissed', Date.now().toString());
+    try {
+      localStorage.setItem('pwa-install-dismissed', Date.now().toString());
+    } catch (error) {
+      // 스토리지 접근 불가 시 무시
+      console.warn("PWA 설치 프롬프트 상태 저장 실패:", error);
+    }
   };
 
   // 이미 설치되었거나 프롬프트가 없으면 아무것도 표시하지 않음

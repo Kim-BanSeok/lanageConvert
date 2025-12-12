@@ -76,13 +76,15 @@ export function decodeText(text, appliedRules) {
   return result;
 }
 
+import { safeSessionStorageGet, safeSessionStorageSet } from "./storage";
+
 /**
  * sessionStorage에서 마지막 암호화 규칙을 불러옵니다.
  * @returns {Array} 적용된 규칙 배열
  */
 export function getLastEncodeRules() {
   try {
-    const saved = sessionStorage.getItem("last-encode-rules");
+    const saved = safeSessionStorageGet("last-encode-rules");
     if (saved) {
       return JSON.parse(saved);
     }
@@ -99,7 +101,7 @@ export function getLastEncodeRules() {
 export function saveLastEncodeRules(appliedRules) {
   if (appliedRules && appliedRules.length > 0) {
     try {
-      sessionStorage.setItem("last-encode-rules", JSON.stringify(appliedRules));
+      safeSessionStorageSet("last-encode-rules", JSON.stringify(appliedRules));
     } catch (error) {
       console.warn("규칙 저장 실패:", error);
     }

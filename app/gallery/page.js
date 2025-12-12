@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { getPresetFromURL } from "../utils/shareUtils";
 import Logo3D from "../components/Logo3D";
 import { useCustomAlert } from "../components/CustomAlert";
+import { safeLocalStorageGet, safeLocalStorageSet } from "../utils/storage";
 
 export default function GalleryPage() {
   const router = useRouter();
@@ -22,7 +23,7 @@ export default function GalleryPage() {
 
     // localStorage에서 저장된 프리셋 로드
     try {
-      const saved = localStorage.getItem("language-presets");
+      const saved = safeLocalStorageGet("language-presets");
       if (saved) {
         setLocalPresets(JSON.parse(saved));
       }
@@ -39,7 +40,7 @@ export default function GalleryPage() {
 
     // 프리셋을 localStorage에 저장
     try {
-      const saved = localStorage.getItem("language-presets");
+      const saved = safeLocalStorageGet("language-presets");
       const existing = saved ? JSON.parse(saved) : [];
       
       // 중복 확인
@@ -51,10 +52,10 @@ export default function GalleryPage() {
         // 기존 프리셋 제거
         const filtered = existing.filter(p => p.name !== preset.name);
         filtered.push({ ...preset, createdAt: new Date().toISOString() });
-        localStorage.setItem("language-presets", JSON.stringify(filtered));
+        safeLocalStorageSet("language-presets", JSON.stringify(filtered));
       } else {
         existing.push({ ...preset, createdAt: new Date().toISOString() });
-        localStorage.setItem("language-presets", JSON.stringify(existing));
+        safeLocalStorageSet("language-presets", JSON.stringify(existing));
       }
 
       await showAlert("프리셋을 가져왔습니다! 메인 페이지에서 확인하세요.", "success");

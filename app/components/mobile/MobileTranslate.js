@@ -6,6 +6,7 @@ import { useState } from "react";
  * 📱 모바일 번역 화면
  */
 export default function MobileTranslate({
+  rules,
   inputText,
   setInputText,
   outputText,
@@ -25,6 +26,13 @@ export default function MobileTranslate({
       await showAlert("텍스트를 입력해주세요", "warning");
       return;
     }
+    
+    const validRules = rules.filter((r) => r && r.from && r.from.trim() !== "");
+    if (validRules.length === 0) {
+      await showAlert("규칙이 없습니다. 규칙 탭에서 규칙을 추가해주세요!", "warning");
+      return;
+    }
+    
     await encode();
     setIsOutputMode(true);
   };
@@ -34,6 +42,13 @@ export default function MobileTranslate({
       await showAlert("텍스트를 입력해주세요", "warning");
       return;
     }
+    
+    const validRules = rules.filter((r) => r && r.from && r.from.trim() !== "");
+    if (validRules.length === 0) {
+      await showAlert("규칙이 없습니다. 규칙 탭에서 규칙을 추가해주세요!", "warning");
+      return;
+    }
+    
     await decode();
     setIsOutputMode(true);
   };
@@ -46,7 +61,7 @@ export default function MobileTranslate({
           <div className="mobile-section-header">
             <h2 className="mobile-section-title">원본 텍스트</h2>
             <div className="mobile-char-count">
-              {inputText.length} 자
+              {inputText.length} 자 | {rules.filter(r => r && r.from && r.from.trim()).length} 규칙
             </div>
           </div>
           

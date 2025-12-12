@@ -50,6 +50,7 @@ export default function MobilePage({
       case 'translate':
         return (
           <MobileTranslate
+            rules={rules}
             inputText={inputText}
             setInputText={setInputText}
             outputText={outputText}
@@ -99,7 +100,7 @@ export default function MobilePage({
         );
       
       default:
-        return <MobileTranslate />;
+        return null;
     }
   };
 

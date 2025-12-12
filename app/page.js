@@ -634,6 +634,14 @@ export default function Home() {
         {/* 3D 로고 + 타이틀 영역 */}
         <Logo3D />
 
+        {/* AdSense 광고 영역 - 상단 */}
+        <div className="card-3d p-3 my-4">
+          <Adsense 
+            slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT || "4329998296"} 
+            style={{ display: "block", minHeight: "90px" }}
+          />
+        </div>
+
       {/* 갤러리 이동 버튼 */}
       <div className="flex justify-end">
         <button
@@ -720,15 +728,13 @@ export default function Home() {
       {/* 테스트 번역기 */}
       <TestTranslator rules={rules} />
 
-      {/* AdSense 광고 영역 */}
-      {process.env.NEXT_PUBLIC_ADSENSE_SLOT && (
-        <div className="card-3d p-3 my-4">
-          <Adsense 
-            slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT} 
-            style={{ display: "block", minHeight: "90px" }}
-          />
-        </div>
-      )}
+      {/* AdSense 광고 영역 - 중간 */}
+      <div className="card-3d p-3 my-4">
+        <Adsense 
+          slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT || "4329998296"} 
+          style={{ display: "block", minHeight: "90px" }}
+        />
+      </div>
 
       {/* 규칙 편집 카드 */}
       <div className="card-3d">
@@ -817,6 +823,14 @@ export default function Home() {
           규칙은 위에서 아래 순서대로 적용됩니다.  
           긴 단어를 위에 두면 올바른 치환이 더 잘 일어납니다.
         </p>
+      </div>
+
+      {/* AdSense 광고 영역 - 하단 */}
+      <div className="card-3d p-3 my-4">
+        <Adsense 
+          slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT || "4329998296"} 
+          style={{ display: "block", minHeight: "90px" }}
+        />
       </div>
 
       {/* ------------------------

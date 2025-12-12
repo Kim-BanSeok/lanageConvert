@@ -18,11 +18,11 @@ export default function Adsense({ slot, style, format = "auto" }) {
     }
   }, []);
 
-  // AdSense 클라이언트 ID는 환경 변수에서 가져오거나 직접 설정
-  const adClient = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID;
+  // AdSense 클라이언트 ID는 환경 변수에서 가져오거나 기본값 사용
+  const adClient = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID || "ca-pub-7373977880685678";
 
-  if (!slot || !adClient) {
-    // 환경 변수가 설정되지 않았으면 광고를 표시하지 않음
+  if (!slot) {
+    // slot이 없으면 광고를 표시하지 않음
     return null;
   }
 

@@ -36,10 +36,16 @@ import {
   getEncodeOrderFromRules,
 } from "./utils/encodeDecode";
 import { safeLocalStorageGet, safeLocalStorageSet } from "./utils/storage";
+import { setupGlobalErrorHandler } from "./lib/errorHandler";
 
 export default function Home() {
   const router = useRouter();
   const { showAlert, AlertComponent } = useCustomAlert();
+
+  // 🛡️ 전역 에러 핸들러 설정
+  useEffect(() => {
+    setupGlobalErrorHandler(showAlert);
+  }, [showAlert]);
   
   // 🔄 Undo/Redo 시스템 적용
   const {

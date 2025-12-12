@@ -73,8 +73,7 @@ export default function RootLayout({ children }) {
         <meta name="google-site-verification" content="lSJTeWuV8EZQIBkHAfSRPQlK59uyaYjsnYH_DhIv2r4" />
         
         {/* 네이버 서치어드바이저 사이트 소유권 확인 */}
-        {/* 네이버 서치어드바이저에서 발급받은 메타 태그를 아래에 추가하세요 */}
-        {/* <meta name="naver-site-verification" content="YOUR_NAVER_VERIFICATION_CODE" /> */}
+        <meta name="naver-site-verification" content="b2e75e0ba705379e3053a92aa2ebafa224976792" />
         
         {/* ============================================
             SEO 메타 태그

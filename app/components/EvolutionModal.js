@@ -6,8 +6,12 @@ import {
   learnWordRulesFromSamples, mergeRules, normalizeRules,
   saveVersion, loadVersions, deleteVersion,
 } from "../lib/evolutionEngine";
+import { useEscapeKey } from "../hooks/useEscapeKey";
 
 export default function EvolutionModal({ baseRules, onClose, onApplyRules }) {
+  // 🎯 Quick Win 4: Esc 키로 모달 닫기
+  useEscapeKey(onClose);
+
   const [samples, setSamples] = useState([]);
   const [versions, setVersions] = useState([]);
 

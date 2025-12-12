@@ -1,11 +1,16 @@
 "use client";
 
+import { useEscapeKey } from "../hooks/useEscapeKey";
+
 export default function AIGeneratorModal({
   onClose,
   onGenerate,
   preview,
   setPreview,
 }) {
+  // 🎯 Quick Win 4: Esc 키로 모달 닫기
+  useEscapeKey(onClose);
+
   const modes = [
     { id: 1, name: "문자 기반 암호 언어", desc: "알파벳을 새롭게 재매핑", icon: "🔤" },
     { id: 2, name: "음절 기반 판타지 언어", desc: "ka-ra-ma 등 음절 조합", icon: "✨" },

@@ -2,8 +2,12 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useEscapeKey } from "../hooks/useEscapeKey";
 
 export default function TutorialModal({ onClose }) {
+  // 🎯 Quick Win 4: Esc 키로 모달 닫기
+  useEscapeKey(onClose);
+
   const [currentStep, setCurrentStep] = useState(0);
 
   const steps = [

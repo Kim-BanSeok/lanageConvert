@@ -1,6 +1,11 @@
 "use client";
 
+import { useEscapeKey } from "../hooks/useEscapeKey";
+
 export default function QuickGuideModal({ onClose }) {
+  // 🎯 Quick Win 4: Esc 키로 모달 닫기
+  useEscapeKey(onClose);
+
   const guides = [
     {
       category: "기본 사용법",

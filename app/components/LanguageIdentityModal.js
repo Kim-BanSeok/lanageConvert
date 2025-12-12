@@ -2,8 +2,12 @@
 
 import { useMemo, useState } from "react";
 import { generateLanguageIdentity } from "../lib/nameWorldEngine";
+import { useEscapeKey } from "../hooks/useEscapeKey";
 
 export default function LanguageIdentityModal({ rules, onClose, onApply }) {
+  // 🎯 Quick Win 4: Esc 키로 모달 닫기
+  useEscapeKey(onClose);
+
   const [purpose, setPurpose] = useState("diary");
   const [mood, setMood] = useState("mystery");
   const [baseName, setBaseName] = useState("");

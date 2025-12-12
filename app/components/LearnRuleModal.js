@@ -1,8 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { useEscapeKey } from "../hooks/useEscapeKey";
 
 export default function LearnRuleModal({ onClose, onLearn }) {
+  // 🎯 Quick Win 4: Esc 키로 모달 닫기
+  useEscapeKey(onClose);
+
   const [original, setOriginal] = useState("");
   const [translated, setTranslated] = useState("");
 

@@ -109,6 +109,15 @@ export default function Home() {
   // 규칙 추가
   const addRule = () => {
     setRules([...rules, { from: "", to: "" }]);
+    
+    // 🎯 Quick Win 8: 규칙 추가 시 포커스 자동 이동
+    setTimeout(() => {
+      const inputs = document.querySelectorAll('input[placeholder*="예: 사랑"], input[placeholder*="예:"]');
+      if (inputs.length > 0) {
+        const lastInput = inputs[inputs.length - 2]; // 마지막에서 두 번째 (from 필드)
+        if (lastInput) lastInput.focus();
+      }
+    }, 50);
   };
 
   // 규칙 수정
@@ -205,6 +214,14 @@ export default function Home() {
       return;
     }
 
+    // 🎯 Quick Win 1: 프리셋 이름 중복 체크
+    const trimmedName = presetName.trim();
+    const isDuplicate = presetList.some(p => p.name === trimmedName);
+    if (isDuplicate) {
+      await showAlert(`"${trimmedName}" 이름은 이미 사용 중입니다. 다른 이름을 입력해주세요.`, "warning");
+      return;
+    }
+
     // 빈 규칙 필터링
     const validRules = rules.filter(
       (rule) => rule && rule.from && rule.from.trim() !== ""
@@ -215,19 +232,40 @@ export default function Home() {
       return;
     }
 
-    const newPreset = {
-      name: presetName.trim(),
-      rules: validRules,
-      createdAt: new Date().toISOString(),
-    };
+    // 🎯 Quick Win 3: localStorage 용량 체크
+    try {
+      const newPreset = {
+        name: trimmedName,
+        rules: validRules,
+        createdAt: new Date().toISOString(),
+      };
 
-    const updatedList = [...presetList, newPreset];
-    setPresetList(updatedList);
-    safeLocalStorageSet("language-presets", JSON.stringify(updatedList));
+      const updatedList = [...presetList, newPreset];
+      const dataSize = JSON.stringify(updatedList).length;
+      const maxSize = 5 * 1024 * 1024; // 5MB
+      
+      if (dataSize > maxSize * 0.8) {
+        const usagePercent = ((dataSize / maxSize) * 100).toFixed(1);
+        await showAlert(
+          `⚠️ 저장소 사용량: ${usagePercent}%\n프리셋이 너무 많으면 데이터가 손실될 수 있습니다. 백업을 권장합니다.`, 
+          "warning",
+          5000
+        );
+      }
 
-    await showAlert("프리셋이 저장되었습니다!", "success");
-    setPresetName("");
-    setShowPresetModal(false);
+      setPresetList(updatedList);
+      safeLocalStorageSet("language-presets", JSON.stringify(updatedList));
+
+      await showAlert("프리셋이 저장되었습니다!", "success");
+      setPresetName("");
+      setShowPresetModal(false);
+    } catch (error) {
+      if (error.name === 'QuotaExceededError') {
+        await showAlert("❌ 저장 공간이 부족합니다! 일부 프리셋을 삭제하거나 백업 후 초기화하세요.", "error", 6000);
+      } else {
+        throw error;
+      }
+    }
   };
 
   // 프리셋 불러오기
@@ -922,7 +960,13 @@ export default function Home() {
       {/* 규칙 편집 카드 */}
       <div className="card-3d">
         <div className="flex justify-between items-center mb-4 flex-wrap gap-3">
-          <h2 className="text-xl font-semibold">변환 규칙</h2>
+          <div className="flex items-center gap-3">
+            <h2 className="text-xl font-semibold">변환 규칙</h2>
+            {/* 🎯 Quick Win 5: 규칙 개수 실시간 표시 */}
+            <span className="text-sm bg-blue-500/20 text-blue-300 px-3 py-1 rounded-full font-bold">
+              {rules.filter(r => r && r.from && r.from.trim()).length}개
+            </span>
+          </div>
         </div>
 
         {/* 버튼 그룹: 기본 작업 */}

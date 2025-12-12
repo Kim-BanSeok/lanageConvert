@@ -90,22 +90,40 @@ export default function TTSPlayer({ text, buttonText = "🔊 음성 듣기", cla
     }
     
     const updatePosition = () => {
+      if (!buttonRef.current || !dropdownRef.current) return;
+      
       const buttonRect = buttonRef.current.getBoundingClientRect();
       const dropdown = dropdownRef.current;
       
-      if (dropdown) {
-        dropdown.style.top = `${buttonRect.bottom + window.scrollY + 8}px`;
-        dropdown.style.left = `${buttonRect.left + window.scrollX}px`;
+      // fixed positioning은 viewport 기준이므로 scrollY/scrollX 불필요
+      let top = buttonRect.bottom + 8;
+      let left = buttonRect.left;
+      
+      // 화면 오른쪽으로 넘어가지 않도록 조정
+      const dropdownWidth = dropdown.offsetWidth || 280;
+      if (left + dropdownWidth > window.innerWidth) {
+        left = window.innerWidth - dropdownWidth - 16;
       }
+      
+      // 화면 아래로 넘어가지 않도록 조정
+      const dropdownHeight = dropdown.offsetHeight || 200;
+      if (top + dropdownHeight + 8 > window.innerHeight) {
+        top = buttonRect.top - dropdownHeight - 8;
+      }
+      
+      dropdown.style.top = `${top}px`;
+      dropdown.style.left = `${left}px`;
     };
     
-    updatePosition();
+    // 약간의 지연을 두어 DOM이 완전히 렌더링된 후 위치 계산
+    const timeoutId = setTimeout(updatePosition, 0);
     
     // 스크롤이나 리사이즈 시 위치 업데이트
     window.addEventListener('scroll', updatePosition, true);
     window.addEventListener('resize', updatePosition);
     
     return () => {
+      clearTimeout(timeoutId);
       window.removeEventListener('scroll', updatePosition, true);
       window.removeEventListener('resize', updatePosition);
     };

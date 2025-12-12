@@ -818,12 +818,17 @@ export default function Home() {
                   setLastSavedKey(key);
 
                   // 샘플 수 업데이트 및 추천 체크
-                  const samples = loadSamples();
-                  setSampleCount(samples.length);
+                  try {
+                    const samples = loadSamples();
+                    const count = Array.isArray(samples) ? samples.length : 0;
+                    setSampleCount(count);
 
-                  if (shouldRecommendEvolution(samples.length, 20)) {
-                    setShowEvolutionRecommend(true);
-                    markRecommended(samples.length);
+                    if (shouldRecommendEvolution(count, 20)) {
+                      setShowEvolutionRecommend(true);
+                      markRecommended(count);
+                    }
+                  } catch (error) {
+                    console.warn("샘플 로드 실패:", error);
                   }
                 }
               }

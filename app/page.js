@@ -9,7 +9,7 @@ import Logo3D from "./components/Logo3D";
 import MobilePage from "./components/mobile/MobilePage";
 import AIGeneratorModal from "./components/AIGeneratorModal";
 import LearnRuleModal from "./components/LearnRuleModal";
-import ConflictChecker from "./components/ConflictChecker";
+import ConflictCheckerModal from "./components/ConflictCheckerModal";
 import TestTranslator from "./components/TestTranslator";
 import TTSPlayer from "./components/TTSPlayer";
 import NameGenerator from "./components/NameGenerator";
@@ -129,6 +129,9 @@ export default function Home() {
 
   // 📊 규칙 통계 모달
   const [showStatistics, setShowStatistics] = useState(false);
+
+  // 🔍 충돌 검사기 모달
+  const [showConflictChecker, setShowConflictChecker] = useState(false);
 
   // 🌓 테마
   const [theme, toggleTheme] = useTheme();
@@ -996,6 +999,7 @@ export default function Home() {
         onBackup={() => setShowBackupModal(true)}
         onHistory={() => setShowHistory(true)}
         onStatistics={() => setShowStatistics(true)}
+        onConflictCheck={() => setShowConflictChecker(true)}
         onShortcuts={() => setShowShortcutsHelp(true)}
         onGuide={() => setShowQuickGuide(true)}
         onGallery={() => router.push("/gallery")}
@@ -1641,13 +1645,23 @@ export default function Home() {
         />
       )}
 
-      {/* 📊 규칙 통계 모달 */}
-      {showStatistics && (
-        <RuleStatistics 
-          rules={rules}
-          onClose={() => setShowStatistics(false)}
-        />
-      )}
+        {/* 📊 규칙 통계 모달 */}
+        {showStatistics && (
+          <RuleStatistics
+            rules={rules}
+            onClose={() => setShowStatistics(false)}
+          />
+        )}
+
+        {/* 🔍 충돌 검사기 모달 */}
+        {showConflictChecker && (
+          <ConflictCheckerModal
+            rules={rules}
+            setRules={setRules}
+            onClose={() => setShowConflictChecker(false)}
+            showAlert={showAlert}
+          />
+        )}
       </div>
     </>
   );

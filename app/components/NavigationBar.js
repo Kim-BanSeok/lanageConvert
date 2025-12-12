@@ -13,6 +13,7 @@ export default function NavigationBar({
   onBackup,
   onHistory,
   onStatistics,
+  onConflictCheck,
   onShortcuts,
   onGuide,
   onGallery,
@@ -199,10 +200,14 @@ export default function NavigationBar({
               <span className="nav-item-icon">📜</span>
               <span className="nav-item-text">번역 히스토리</span>
             </button>
-            <button className="nav-dropdown-item" onClick={() => { onStatistics(); setShowToolsMenu(false); }}>
-              <span className="nav-item-icon">📊</span>
-              <span className="nav-item-text">규칙 통계</span>
-            </button>
+                <button className="nav-dropdown-item" onClick={() => { onStatistics(); setShowToolsMenu(false); }}>
+                  <span className="nav-item-icon">📊</span>
+                  <span className="nav-item-text">규칙 통계</span>
+                </button>
+                <button className="nav-dropdown-item" onClick={() => { onConflictCheck(); setShowToolsMenu(false); }}>
+                  <span className="nav-item-icon">🔍</span>
+                  <span className="nav-item-text">충돌 검사</span>
+                </button>
             <button className="nav-dropdown-item" onClick={() => { onGallery(); setShowToolsMenu(false); }}>
               <span className="nav-item-icon">🖼️</span>
               <span className="nav-item-text">언어 갤러리</span>

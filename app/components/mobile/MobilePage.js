@@ -70,7 +70,14 @@ export default function MobilePage({
         );
       
       case 'tools':
-        return <MobileTools router={router} />;
+        return (
+          <MobileTools
+            router={router}
+            rules={rules}
+            setRules={setRules}
+            showAlert={showAlert}
+          />
+        );
       
       case 'more':
         return (

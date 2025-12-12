@@ -1368,6 +1368,229 @@ hr {
   }
 }
 
+/* ==========================================
+   충돌 검사기 스타일
+========================================== */
+
+.conflict-modal {
+  max-width: 700px;
+  width: 90vw;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.conflict-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.conflict-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.conflict-checking {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.conflict-checking-spinner {
+  font-size: 4rem;
+  animation: spin 2s linear infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.conflict-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 12px;
+  padding: 20px;
+  background: rgba(99, 102, 241, 0.05);
+}
+
+.conflict-stat-item {
+  text-align: center;
+  padding: 12px;
+  background: var(--card-bg);
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
+}
+
+.conflict-stat-item.critical {
+  border-color: rgba(239, 68, 68, 0.5);
+}
+
+.conflict-stat-item.warning {
+  border-color: rgba(234, 179, 8, 0.5);
+}
+
+.conflict-stat-item.info {
+  border-color: rgba(59, 130, 246, 0.5);
+}
+
+.conflict-stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.conflict-stat-label {
+  font-size: 0.85rem;
+  color: var(--text-tertiary);
+}
+
+.conflict-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+.conflict-empty {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.conflict-empty-icon {
+  font-size: 4rem;
+  margin-bottom: 16px;
+}
+
+.conflict-empty h3 {
+  font-size: 1.3rem;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.conflict-empty p {
+  color: var(--text-tertiary);
+}
+
+.conflict-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.conflict-item {
+  background: var(--card-bg);
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.conflict-item:hover {
+  border-color: rgba(99, 102, 241, 0.5);
+}
+
+.conflict-item.severity-critical {
+  border-left: 4px solid rgba(239, 68, 68, 0.8);
+}
+
+.conflict-item.severity-warning {
+  border-left: 4px solid rgba(234, 179, 8, 0.8);
+}
+
+.conflict-item.severity-info {
+  border-left: 4px solid rgba(59, 130, 246, 0.8);
+}
+
+.conflict-item-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+}
+
+.conflict-severity-icon {
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+
+.conflict-item-content {
+  flex: 1;
+}
+
+.conflict-message {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+
+.conflict-suggestion {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.conflict-expand-icon {
+  font-size: 0.9rem;
+  color: var(--text-tertiary);
+  flex-shrink: 0;
+}
+
+.conflict-item-detail {
+  padding: 0 16px 16px 16px;
+  border-top: 1px solid var(--border-color);
+  margin-top: 12px;
+  padding-top: 16px;
+}
+
+.conflict-detail-text {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 12px;
+  padding: 12px;
+  background: rgba(99, 102, 241, 0.05);
+  border-radius: 8px;
+}
+
+.conflict-rules-preview {
+  margin: 12px 0;
+  padding: 12px;
+  background: rgba(99, 102, 241, 0.05);
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+.conflict-rule-item {
+  padding: 6px 0;
+  color: var(--text-secondary);
+}
+
+.conflict-rule-from {
+  color: rgba(239, 68, 68, 0.9);
+  font-weight: 600;
+  margin: 0 6px;
+}
+
+.conflict-rule-to {
+  color: rgba(34, 197, 94, 0.9);
+  font-weight: 600;
+  margin: 0 6px;
+}
+
+.conflict-actions {
+  display: flex;
+  gap: 10px;
+  padding: 20px;
+  border-top: 2px solid var(--border-color);
+}
+
 .animate-fade-in {
   animation: fadeIn 0.2s ease-out;
 }

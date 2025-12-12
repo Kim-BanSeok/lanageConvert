@@ -1,9 +1,13 @@
 "use client";
 
+import { useState } from "react";
+import MobileConflictChecker from "./MobileConflictChecker";
+
 /**
  * 📱 모바일 도구 화면
  */
-export default function MobileTools({ router }) {
+export default function MobileTools({ router, rules, setRules, showAlert }) {
+  const [currentTool, setCurrentTool] = useState(null);
   const tools = [
     {
       icon: "🤖",
@@ -24,7 +28,7 @@ export default function MobileTools({ router }) {
       action: "random",
     },
     {
-      icon: "⚠️",
+      icon: "🔍",
       title: "충돌 검사",
       desc: "규칙 충돌 자동 확인",
       action: "conflict",
@@ -44,9 +48,24 @@ export default function MobileTools({ router }) {
   ];
 
   const handleToolClick = (action) => {
-    // TODO: 각 도구에 맞는 모달이나 페이지로 이동
-    alert(`${action} 기능은 곧 추가됩니다!`);
+    if (action === 'conflict') {
+      setCurrentTool('conflict');
+    } else {
+      alert(`${action} 기능은 곧 추가됩니다!`);
+    }
   };
+
+  // 충돌 검사기 표시 중
+  if (currentTool === 'conflict') {
+    return (
+      <MobileConflictChecker
+        rules={rules}
+        setRules={setRules}
+        showAlert={showAlert}
+        onBack={() => setCurrentTool(null)}
+      />
+    );
+  }
 
   return (
     <div className="mobile-tools-container">

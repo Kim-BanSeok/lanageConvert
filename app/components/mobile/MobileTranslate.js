@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { sanitizeText } from "../../utils/inputValidation";
 
 /**
  * 📱 모바일 번역 화면
@@ -142,7 +143,11 @@ export default function MobileTranslate({
           <textarea
             className="mobile-translate-textarea"
             value={inputText}
-            onChange={(e) => setInputText(e.target.value)}
+            onChange={(e) => {
+              // 🔒 보안: 입력 sanitization 적용
+              const sanitized = sanitizeText(e.target.value);
+              setInputText(sanitized);
+            }}
             placeholder="번역할 텍스트를 입력하세요...&#10;&#10;예시:&#10;- 나는 너를 사랑해&#10;- Hello World&#10;- 이것은 비밀 메시지입니다"
             autoFocus
           />

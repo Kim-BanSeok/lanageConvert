@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { sanitizeText } from "../utils/inputValidation";
 import {
   TEST_SAMPLES,
   CATEGORIES,

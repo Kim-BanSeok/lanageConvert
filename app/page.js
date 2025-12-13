@@ -508,7 +508,9 @@ export default function Home() {
         saveLastEncodeRules(appliedRules);
       }
 
-      setOutputText(result);
+      // 🔒 보안: 출력 sanitization 적용
+      const sanitizedResult = sanitizeText(result);
+      setOutputText(sanitizedResult);
 
       // 🔥 자동 학습용 기록
       setLastSourceText(inputText.trim());
@@ -531,7 +533,8 @@ export default function Home() {
       await showAlert(`암호화 완료! (${engineMode} 모드, ${validRules.length}개 규칙, ${engineVersion})`, "success", 2000);
     } catch (error) {
       console.error("암호화 중 오류 발생:", error);
-      await showAlert("암호화 중 오류가 발생했습니다: " + error.message, "error");
+      // 🔒 보안: 일반적인 에러 메시지 (상세 정보 숨김)
+      await showAlert("암호화 중 오류가 발생했습니다. 다시 시도해주세요.", "error");
     }
   };
 
@@ -576,7 +579,9 @@ export default function Home() {
       if (process.env.NODE_ENV === 'development') {
         console.log("🎯 최종 복호화 결과:", result);
       }
-      setOutputText(result);
+      // 🔒 보안: 출력 sanitization 적용
+      const sanitizedResult = sanitizeText(result);
+      setOutputText(sanitizedResult);
 
       // 📜 히스토리에 추가
       addToHistory({
@@ -594,7 +599,8 @@ export default function Home() {
       await showAlert(`복호화 완료! (${engineMode} 모드, ${validRules.length}개 규칙, ${engineVersion})`, "success", 2000);
     } catch (error) {
       console.error("복호화 중 오류 발생:", error);
-      await showAlert("복호화 중 오류가 발생했습니다: " + error.message, "error");
+      // 🔒 보안: 일반적인 에러 메시지 (상세 정보 숨김)
+      await showAlert("복호화 중 오류가 발생했습니다. 다시 시도해주세요.", "error");
     }
   };
 
@@ -1132,7 +1138,8 @@ export default function Home() {
             className="input-3d w-full min-h-[160px]"
             value={outputText}
             onChange={(e) => {
-              const newValue = e.target.value;
+              // 🔒 보안: 입력 sanitization 적용
+              const newValue = sanitizeText(e.target.value);
               setOutputText(newValue);
 
               // 사용자가 자동 번역 결과를 수정한 경우만

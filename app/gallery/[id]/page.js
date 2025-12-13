@@ -214,7 +214,7 @@ export default function PresetDetailPage() {
           </div>
           {testOutput && (
             <div className="gallery-test-output">
-              <strong>결과:</strong> {testOutput}
+              <strong>결과:</strong> {sanitizeText(testOutput)}
             </div>
           )}
         </div>

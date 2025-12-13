@@ -67,6 +67,20 @@ export async function verifySessionToken(token) {
   if (!token) return false;
   const parts = token.split(".");
   if (parts.length !== 3) return false;
+  
+  // 🔒 세션 타임아웃 체크 (토큰에 타임스탬프 포함)
+  const timestamp = parseInt(parts[0], 10);
+  if (isNaN(timestamp)) return false;
+  
+  const SESSION_TIMEOUT_MS = 60 * 60 * 1000; // 1시간
+  const now = Date.now();
+  const elapsed = now - timestamp;
+  
+  if (elapsed > SESSION_TIMEOUT_MS) {
+    // 세션 만료
+    return false;
+  }
+  
   const payload = `${parts[0]}.${parts[1]}`;
   const sig = parts[2];
   const expected = await hmac(payload);

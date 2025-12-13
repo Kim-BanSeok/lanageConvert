@@ -24,6 +24,15 @@ function daysAgoKey(n) {
 }
 
 export default function DashboardPage() {
+  // 🔒 세션 모니터링 시작
+  useEffect(() => {
+    const cleanup = startSessionMonitoring(() => {
+      // 세션 만료 시 로그아웃 처리
+      window.location.href = '/admin/login?expired=true';
+    });
+
+    return cleanup;
+  }, []);
   const [from, setFrom] = useState(daysAgoKey(14));
   const [to, setTo] = useState(todayKey());
   const [stats, setStats] = useState(null);

@@ -52,12 +52,13 @@ export async function POST(req) {
     const token = makeSessionTokenSync();
 
     const res = NextResponse.json({ ok: true });
+    // 🔒 보안: 세션 타임아웃 1시간으로 단축 (기존 7일에서 변경)
     res.cookies.set(ADMIN_COOKIE_NAME, token, {
       httpOnly: true,
       sameSite: "lax",
       secure: process.env.NODE_ENV === "production",
       path: "/",
-      maxAge: 60 * 60 * 24 * 7, // 7일
+      maxAge: 60 * 60, // 1시간 (세션 타임아웃과 일치)
     });
     return res;
   } catch {

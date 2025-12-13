@@ -253,16 +253,16 @@ export default function TestTranslatorModal({ rules, engineMode, onClose, showAl
                   <div className="test-result-content">
                     <div className="test-result-text">
                       <span className="test-result-label">원본:</span>
-                      <span className="test-result-value">{result.original}</span>
+                      <span className="test-result-value">{sanitizeText(result.original)}</span>
                     </div>
                     <div className="test-result-text">
                       <span className="test-result-label">암호:</span>
-                      <span className="test-result-value encoded">{result.encoded}</span>
+                      <span className="test-result-value encoded">{sanitizeText(result.encoded)}</span>
                     </div>
                     {!result.isReversible && (
                       <div className="test-result-text error">
                         <span className="test-result-label">복호:</span>
-                        <span className="test-result-value">{result.decoded}</span>
+                        <span className="test-result-value">{sanitizeText(result.decoded)}</span>
                       </div>
                     )}
                     <div className="test-result-meta">

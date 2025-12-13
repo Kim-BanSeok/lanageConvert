@@ -192,6 +192,12 @@ export default function Home() {
 
   // 규칙 수정
   const updateRule = (index, newRule) => {
+    // 🔒 규칙 검증
+    const validation = validateRule(newRule);
+    if (!validation.valid) {
+      showAlert(validation.error || '규칙이 유효하지 않습니다.', 'error');
+      return;
+    }
     const updated = [...rules];
     updated[index] = newRule;
     setRules(updated, "✏️ 규칙 수정");
@@ -413,6 +419,13 @@ export default function Home() {
   const savePresetName = async (idx) => {
     const newName = editingPresetName.trim();
     
+    // 🔒 프리셋 이름 검증
+    const nameValidation = validatePresetName(newName);
+    if (!nameValidation.valid) {
+      await showAlert(nameValidation.error || "프리셋 이름이 유효하지 않습니다.", "error");
+      return;
+    }
+    
     if (!newName) {
       await showAlert("프리셋 이름을 입력해주세요.", "warning");
       return;
@@ -443,8 +456,22 @@ export default function Home() {
   // 암호화 (v2/v3 엔진 자동 선택)
   const encode = async () => {
     try {
+      // 🔒 입력 검증
+      const inputValidation = validateTextInput(inputText);
+      if (!inputValidation.valid) {
+        await showAlert(inputValidation.error || "입력값이 유효하지 않습니다.", "error");
+        return;
+      }
+
       if (!inputText.trim()) {
         await showAlert("원본 텍스트를 입력해주세요.", "warning");
+        return;
+      }
+
+      // 🔒 규칙 검증
+      const rulesValidation = validateRules(rules);
+      if (!rulesValidation.valid) {
+        await showAlert(rulesValidation.error || "규칙이 유효하지 않습니다.", "error");
         return;
       }
 

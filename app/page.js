@@ -242,12 +242,16 @@ export default function Home() {
         try {
           setPresetList(JSON.parse(saved));
         } catch (error) {
-          console.error("프리셋 불러오기 실패:", error);
+          if (process.env.NODE_ENV === 'development') {
+            console.error("프리셋 불러오기 실패:", error);
+          }
         }
       }
     } catch (error) {
       // 스토리지 접근 불가 시 무시
-      console.warn("localStorage 접근 실패:", error);
+      if (process.env.NODE_ENV === 'development') {
+        console.warn("localStorage 접근 실패:", error);
+      }
     }
   }, []);
 
@@ -530,7 +534,9 @@ export default function Home() {
         mode: engineMode,
       });
 
-      console.log("🎯 최종 복호화 결과:", result);
+      if (process.env.NODE_ENV === 'development') {
+        console.log("🎯 최종 복호화 결과:", result);
+      }
       setOutputText(result);
 
       // 📜 히스토리에 추가

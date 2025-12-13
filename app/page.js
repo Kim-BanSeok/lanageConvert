@@ -173,6 +173,11 @@ export default function Home() {
 
   // 규칙 추가
   const addRule = () => {
+    // 🔒 규칙 개수 제한 검증
+    if (rules.length >= 1000) {
+      showAlert("규칙은 최대 1000개까지 추가할 수 있습니다.", "error");
+      return;
+    }
     setRules([...rules, { from: "", to: "" }], "➕ 규칙 추가");
     
     // 🎯 Quick Win 8: 규칙 추가 시 포커스 자동 이동
@@ -311,6 +316,13 @@ export default function Home() {
 
   // 프리셋 저장
   const savePreset = async () => {
+    // 🔒 프리셋 이름 검증
+    const nameValidation = validatePresetName(presetName);
+    if (!nameValidation.valid) {
+      await showAlert(nameValidation.error || "프리셋 이름이 유효하지 않습니다.", "error");
+      return;
+    }
+
     if (!presetName.trim()) {
       await showAlert("프리셋 이름을 입력해주세요.", "warning");
       return;
@@ -1035,8 +1047,18 @@ export default function Home() {
           <textarea
             className="input-3d w-full min-h-[160px]"
             value={inputText}
-            onChange={(e) => setInputText(e.target.value)}
+            onChange={(e) => {
+              const newValue = e.target.value;
+              // 🔒 입력 검증
+              const validation = validateTextInput(newValue);
+              if (validation.valid) {
+                setInputText(newValue);
+              } else {
+                showAlert(validation.error || '입력값이 유효하지 않습니다.', 'error');
+              }
+            }}
             placeholder="여기에 문장을 입력하세요"
+            maxLength={MAX_INPUT_LENGTH}
           />
 
           {/* v2 번역 엔진 모드 선택 */}

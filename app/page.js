@@ -50,6 +50,7 @@ import {
 } from "./utils/encodeDecode";
 import { safeLocalStorageGet, safeLocalStorageSet } from "./utils/storage";
 import { setupGlobalErrorHandler } from "./lib/errorHandler";
+import { validateTextInput, validateRules, validateRule, validatePresetName, sanitizeText, MAX_INPUT_LENGTH } from "./utils/inputValidation";
 
 export default function Home() {
   const router = useRouter();

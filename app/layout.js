@@ -59,9 +59,13 @@ export const viewport = {
 };
 
 export default function RootLayout({ children }) {
-  // AdSense 클라이언트 ID (환경 변수에서 가져오거나 직접 설정)
-  // 검증을 위해 환경 변수가 없어도 기본값 사용
-  const adSenseClientId = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID || "ca-pub-7373977880685678";
+  // AdSense 클라이언트 ID (환경 변수 필수)
+  // 보안: 기본값 제거 - 환경 변수에서만 가져오기
+  const adSenseClientId = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID;
+  
+  if (!adSenseClientId && process.env.NODE_ENV === 'production') {
+    console.warn('[AdSense] NEXT_PUBLIC_ADSENSE_CLIENT_ID 환경 변수가 설정되지 않았습니다.');
+  }
 
   return (
     <html lang="ko">

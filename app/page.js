@@ -984,6 +984,7 @@ export default function Home() {
         {/* 3D 로고 + 타이틀 영역 */}
         <Logo3D
           title="My Secret Language"
+          // 보안: AdSense slot은 환경 변수에서만 가져오기 (기본값 제거)
           subtitle={
             languageIdentity
               ? `${languageIdentity.name} · ${languageIdentity.tagline}`

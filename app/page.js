@@ -442,10 +442,13 @@ export default function Home() {
       const useV3 = validRules.length >= 100;
       const engineVersion = useV3 ? "v3 (최적화)" : "v2";
 
-      console.log(`🔐 [${engineVersion} 엔진 암호화 시작]`);
-      console.log("📝 원본 텍스트:", inputText);
-      console.log("🔧 엔진 모드:", engineMode);
-      console.log("📋 전체 규칙:", validRules.length);
+      // 보안: 프로덕션에서는 디버깅 로그 제거
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`🔐 [${engineVersion} 엔진 암호화 시작]`);
+        console.log("📝 원본 텍스트:", inputText);
+        console.log("🔧 엔진 모드:", engineMode);
+        console.log("📋 전체 규칙:", validRules.length);
+      }
 
       // v2 또는 v3 번역 엔진 사용
       const translationFn = useV3 ? translateTextV3 : translateText;
@@ -995,7 +998,7 @@ export default function Home() {
         {/* AdSense 광고 영역 - 상단 */}
         <div className="card-3d p-3 my-4">
           <Adsense 
-            slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT || "4329998296"} 
+            slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT || ""} 
             style={{ display: "block", minHeight: "90px" }}
           />
         </div>

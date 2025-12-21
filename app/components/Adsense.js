@@ -72,8 +72,13 @@ export default function Adsense({ slot, style, format = "auto" }) {
     }
   }, [adError]);
 
-  // AdSense 클라이언트 ID는 환경 변수에서 가져오거나 기본값 사용
-  const adClient = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID || "ca-pub-7373977880685678";
+  // AdSense 클라이언트 ID는 환경 변수에서만 가져오기 (보안: 기본값 제거)
+  const adClient = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID;
+  
+  // 클라이언트 ID가 없으면 광고를 표시하지 않음
+  if (!adClient) {
+    return null;
+  }
 
   if (!slot) {
     // slot이 없으면 광고를 표시하지 않음

@@ -1048,12 +1048,15 @@ export default function Home() {
         />
 
         {/* AdSense 광고 영역 - 상단 */}
-        <div className="card-3d p-3 my-4">
-          <Adsense 
-            slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT || ""} 
-            style={{ display: "block", minHeight: "90px" }}
-          />
-        </div>
+        {/* ⚠️ 구글 정책: 충분한 콘텐츠가 있는 경우에만 광고 표시 */}
+        {(inputText.trim() || outputText.trim() || rules.filter(r => r && r.from && r.from.trim()).length > 0) && (
+          <div className="card-3d p-3 my-4">
+            <Adsense 
+              slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT || ""} 
+              style={{ display: "block", minHeight: "90px" }}
+            />
+          </div>
+        )}
 
       {/* 🎨 깔끔하게 정리된 네비게이션 바 */}
       <NavigationBar
@@ -1216,12 +1219,15 @@ export default function Home() {
       {/* 테스트 번역기는 모달로 이동 */}
 
       {/* AdSense 광고 영역 - 중간 */}
-      <div className="card-3d p-3 my-4">
-        <Adsense 
-          slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT || "4329998296"} 
-          style={{ display: "block", minHeight: "90px" }}
-        />
-      </div>
+      {/* ⚠️ 구글 정책: 충분한 콘텐츠가 있는 경우에만 광고 표시 */}
+      {(inputText.trim() || outputText.trim() || rules.filter(r => r && r.from && r.from.trim()).length > 0) && (
+        <div className="card-3d p-3 my-4">
+          <Adsense 
+            slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT || ""} 
+            style={{ display: "block", minHeight: "90px" }}
+          />
+        </div>
+      )}
 
       {/* 규칙 편집 카드 */}
       <div className="card-3d">
@@ -1415,12 +1421,15 @@ export default function Home() {
       </div>
 
       {/* AdSense 광고 영역 - 하단 */}
-      <div className="card-3d p-3 my-4">
-        <Adsense 
-          slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT || "4329998296"} 
-          style={{ display: "block", minHeight: "90px" }}
-        />
-      </div>
+      {/* ⚠️ 구글 정책: 충분한 콘텐츠가 있는 경우에만 광고 표시 */}
+      {(inputText.trim() || outputText.trim() || rules.filter(r => r && r.from && r.from.trim()).length > 0) && (
+        <div className="card-3d p-3 my-4">
+          <Adsense 
+            slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT || ""} 
+            style={{ display: "block", minHeight: "90px" }}
+          />
+        </div>
+      )}
 
       {/* 자동 학습 토스트 */}
       {learnToast && (

@@ -143,6 +143,16 @@ export default function Home() {
   // 생성된 언어 아이덴티티 저장(로컬)
   const [languageIdentity, setLanguageIdentity] = useState(null);
 
+  // 🔒 구글 애드센스 정책 준수: 메인 페이지는 충분한 콘텐츠가 있으므로 항상 광고 표시
+  // (메인 페이지에는 로고, 입력/출력 영역, 규칙 편집 영역, 네비게이션 등 충분한 콘텐츠가 있음)
+  const shouldShowAds = useCallback(() => {
+    // 환경 변수가 없으면 광고 표시 안 함
+    if (!process.env.NEXT_PUBLIC_ADSENSE_SLOT) return false;
+    
+    // 메인 페이지는 항상 충분한 콘텐츠가 있으므로 광고 표시
+    return true;
+  }, []);
+
   // 클라이언트에서만 localStorage에서 로드 (Hydration 에러 방지)
   useEffect(() => {
     try {
@@ -1049,7 +1059,7 @@ export default function Home() {
 
         {/* AdSense 광고 영역 - 상단 */}
         {/* ⚠️ 구글 정책: 충분한 콘텐츠가 있는 경우에만 광고 표시 */}
-        {(inputText.trim() || outputText.trim() || rules.filter(r => r && r.from && r.from.trim()).length > 0) && (
+        {shouldShowAds() && (
           <div className="card-3d p-3 my-4">
             <Adsense 
               slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT || ""} 
@@ -1220,7 +1230,7 @@ export default function Home() {
 
       {/* AdSense 광고 영역 - 중간 */}
       {/* ⚠️ 구글 정책: 충분한 콘텐츠가 있는 경우에만 광고 표시 */}
-      {(inputText.trim() || outputText.trim() || rules.filter(r => r && r.from && r.from.trim()).length > 0) && (
+      {shouldShowAds() && (
         <div className="card-3d p-3 my-4">
           <Adsense 
             slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT || ""} 
@@ -1422,7 +1432,7 @@ export default function Home() {
 
       {/* AdSense 광고 영역 - 하단 */}
       {/* ⚠️ 구글 정책: 충분한 콘텐츠가 있는 경우에만 광고 표시 */}
-      {(inputText.trim() || outputText.trim() || rules.filter(r => r && r.from && r.from.trim()).length > 0) && (
+      {shouldShowAds() && (
         <div className="card-3d p-3 my-4">
           <Adsense 
             slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT || ""} 

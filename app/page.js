@@ -27,6 +27,9 @@ import ShortcutsHelpModal from "./components/ShortcutsHelpModal";
 import TranslationHistory from "./components/TranslationHistory";
 import RuleStatistics from "./components/RuleStatistics";
 import NavigationBar from "./components/NavigationBar";
+import Navigation from "./components/Navigation";
+import Footer from "./components/Footer";
+import ContentSection from "./components/ContentSection";
 import { useCustomAlert } from "./components/CustomAlert";
 import Adsense from "./components/Adsense";
 import { useKeyboardShortcuts } from "./hooks/useKeyboardShortcuts";
@@ -1044,6 +1047,7 @@ export default function Home() {
       {AlertComponent}
       <PWAInstallPrompt />
       <ServiceWorkerRegistration />
+      <Navigation />
       
       <div className="max-w-5xl mx-auto p-6 space-y-6">
         {/* 3D 로고 + 타이틀 영역 */}
@@ -1067,6 +1071,9 @@ export default function Home() {
             />
           </div>
         )}
+
+        {/* 콘텐츠 섹션 */}
+        <ContentSection />
 
       {/* 🎨 깔끔하게 정리된 네비게이션 바 */}
       <NavigationBar
@@ -1755,6 +1762,7 @@ export default function Home() {
           />
         )}
       </div>
+      <Footer />
     </>
   );
 }

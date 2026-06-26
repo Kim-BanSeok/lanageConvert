@@ -1,139 +1,185 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { useCustomAlert } from "../../components/CustomAlert";
-import Logo3D from "../../components/Logo3D";
 import "../gallery.css";
 
-/**
- * 🖼️ 갤러리 프리셋 상세 페이지
- */
-
-// 샘플 프리셋 데이터 (실제로는 API에서 가져올 데이터)
-const SAMPLE_PRESETS = {
-  1: {
+const CASES = [
+  {
     id: 1,
-    name: "엘프어",
-    description: "판타지 엘프들이 사용하는 우아한 언어. 모음에 특별한 변형을 주어 신비로운 느낌을 연출합니다.",
-    author: "FantasyLover",
-    authorAvatar: "🧙‍♂️",
-    rulesCount: 26,
-    downloads: 342,
-    rating: 4.8,
-    category: "판타지",
-    tags: ["엘프", "판타지", "우아함"],
-    preview: "Hello → Hëllö, World → Wörld",
-    createdAt: "2024-12-10",
+    name: "판타지 말투",
+    category: "창작",
+    purpose: "소설과 세계관 문장에 어울리는 어조를 만드는 예시",
+    description:
+      "일반적인 인사를 조금 과장된 판타지 어조로 바꾸는 방식입니다. 짧은 치환과 접미 패턴을 섞어 분위기를 유지합니다.",
     rules: [
-      { from: "a", to: "ä" },
-      { from: "e", to: "ë" },
-      { from: "i", to: "ï" },
-      { from: "o", to: "ö" },
-      { from: "u", to: "ü" },
-      { from: "Hello", to: "Hëllö" },
-      { from: "World", to: "Wörld" },
-      { from: "Love", to: "Lövë" },
-      { from: "Peace", to: "Pëäcë" },
-      { from: "Magic", to: "Mägïc" },
+      { from: "안녕하세요", to: "안녕하신가요, 여행자여" },
+      { from: "습니다", to: "옵니다" },
+      { from: "요", to: "여" },
+      { from: "친구", to: "동료" },
+      { from: "오늘", to: "이날" },
+      { from: "같이", to: "함께" },
+      { from: "가자", to: "나아가자" },
+      { from: "좋아", to: "좋도다" },
     ],
-    fullDescription: `
-이 언어는 판타지 소설 속 엘프들의 언어에서 영감을 받았습니다. 
-모든 모음에 움라우트(¨)를 추가하여 우아하고 신비로운 느낌을 줍니다.
-
-특징:
-- 모음 변형을 통한 독특한 발음
-- 읽기 쉬우면서도 이국적인 느낌
-- 판타지 RPG, 소설, 게임에 적합
-
-사용 예시:
-"안녕하세요" → "ännyëönghäsëyö"
-"사랑해요" → "säränghäëyö"
-    `,
-    reviews: [
-      {
-        author: "DragonSlayer",
-        rating: 5,
-        comment: "완벽해요! 제 판타지 소설에 딱 맞는 언어입니다.",
-        date: "2024-12-11",
-      },
-      {
-        author: "ElfFan123",
-        rating: 5,
-        comment: "정말 우아하고 아름다운 언어네요. 강력 추천!",
-        date: "2024-12-10",
-      },
-      {
-        author: "RPGMaster",
-        rating: 4,
-        comment: "좋은데 자음 변형도 있었으면 더 좋았을 것 같아요.",
-        date: "2024-12-09",
-      },
+    sampleInput: "안녕하세요 오늘 같이 가자",
+    sampleOutput: "안녕하신가요, 여행자여 이날 함께 나아가자",
+    notes: [
+      "짧은 문장 테스트에 적합",
+      "캐릭터 말투 실험용",
+      "접미 규칙과 잘 맞음",
     ],
   },
-  // 다른 프리셋들...
-};
+  {
+    id: 2,
+    name: "은어 치환",
+    category: "메신저",
+    purpose: "친구끼리만 이해할 수 있는 가벼운 표현 변형 예시",
+    description:
+      "반복되는 단어를 약어와 기호로 바꾸어 빠르게 입력할 수 있게 만드는 구조입니다.",
+    rules: [
+      { from: "오늘", to: "ㅇㄴ" },
+      { from: "저녁", to: "ㅈㄴ" },
+      { from: "만날래", to: "ㅁㄴㄹ" },
+      { from: "너", to: "ㄴ" },
+      { from: "나", to: "ㄴㅏ" },
+      { from: "같이", to: "ㄱㅊ" },
+      { from: "어때", to: "ㅇㄸ" },
+      { from: "가능", to: "ㄱㄴ" },
+    ],
+    sampleInput: "오늘 저녁에 만날래?",
+    sampleOutput: "ㅇㄴ ㅈㄴ에 ㅁㄴㄹ?",
+    notes: [
+      "메신저 문장에 적합",
+      "짧은 치환 비중이 큼",
+      "기호 규칙과 함께 쓰기 좋음",
+    ],
+  },
+  {
+    id: 3,
+    name: "암호풍 텍스트",
+    category: "보안",
+    purpose: "일부 문자만 바꿔도 낯설게 보이도록 만드는 예시",
+    description:
+      "원문을 완전히 숨기기보다, 외형을 바꾸어 메시지를 구분하기 어렵게 만드는 스타일입니다.",
+    rules: [
+      { from: "e", to: "3" },
+      { from: "a", to: "4" },
+      { from: "s", to: "5" },
+      { from: "o", to: "0" },
+      { from: "t", to: "7" },
+      { from: "i", to: "1" },
+      { from: "Secret", to: "5ecr3t" },
+      { from: "message", to: "m3ss4g3" },
+    ],
+    sampleInput: "Secret message",
+    sampleOutput: "5ecr3t m3ss4g3",
+    notes: [
+      "학습용으로 이해하기 쉬움",
+      "대체 문자 규칙 확인",
+      "가볍게 변형하는 사례",
+    ],
+  },
+  {
+    id: 4,
+    name: "이모지 룩업",
+    category: "표현",
+    purpose: "감정이나 단어를 이모지로 바꾸어 시각적 효과를 주는 예시",
+    description:
+      "텍스트를 거의 줄이지 않고도 분위기를 바꾸는 방식입니다. 읽기 쉬움과 시각적 재미를 같이 노립니다.",
+    rules: [
+      { from: "기분이 좋아", to: "기분이 😄 좋아" },
+      { from: "행복", to: "😊" },
+      { from: "축하", to: "🎉" },
+      { from: "사랑", to: "❤️" },
+      { from: "여행", to: "✈️" },
+      { from: "맛있다", to: "😋" },
+      { from: "고마워", to: "🙏" },
+      { from: "최고", to: "🌟" },
+    ],
+    sampleInput: "기분이 좋아 오늘은 여행 가자",
+    sampleOutput: "기분이 😄 좋아 오늘은 ✈️ 가자",
+    notes: [
+      "SNS 문구에 적합",
+      "시각적 변환 강조",
+      "간단한 규칙으로 구성",
+    ],
+  },
+  {
+    id: 5,
+    name: "가역 변환",
+    category: "연습",
+    purpose: "encode와 decode를 모두 확인하기 위한 연습용 예시",
+    description:
+      "변형 후 다시 원문으로 돌아오는지 확인하는 데 초점을 둡니다. 복잡한 규칙보다 역변환 가능성이 중요합니다.",
+    rules: [
+      { from: "H", to: "S" },
+      { from: "E", to: "V" },
+      { from: "L", to: "O" },
+      { from: "O", to: "L" },
+      { from: "W", to: "D" },
+      { from: "R", to: "I" },
+      { from: "D", to: "W" },
+      { from: "HELLO", to: "SVOOL" },
+    ],
+    sampleInput: "HELLO WORLD",
+    sampleOutput: "SVOOL DLIOW",
+    notes: ["되돌리기 테스트용", "규칙 순서 검증", "연습에 가장 안전함"],
+  },
+  {
+    id: 6,
+    name: "짧은 약어집",
+    category: "학습",
+    purpose: "반복 문장을 줄여 입력 시간을 아끼는 예시",
+    description:
+      "자주 쓰는 문장을 짧은 기호나 초성으로 바꾸는 구조입니다. 실사용성 측면에서 가장 많이 응용됩니다.",
+    rules: [
+      { from: "회의는 오후 3시입니다", to: "ㅎㅇ는 ㅇㅎ 3시입니다" },
+      { from: "감사합니다", to: "ㄳ" },
+      { from: "확인했습니다", to: "ㅎㅇ" },
+      { from: "잠시만요", to: "ㅈㅁ" },
+      { from: "도와주세요", to: "ㄷㅈ" },
+      { from: "가능할까요", to: "ㄱㄴ?" },
+      { from: "내일 봐요", to: "ㄴㅇ ㅂㅇ" },
+      { from: "지금 갑니다", to: "ㅈㄱ ㄱㄴ" },
+    ],
+    sampleInput: "회의는 오후 3시입니다",
+    sampleOutput: "ㅎㅇ는 ㅇㅎ 3시입니다",
+    notes: ["문장 단축용", "반복 입력에 유리", "실전 사용 예시로 보기 좋음"],
+  },
+];
 
 export default function PresetDetailPage() {
   const router = useRouter();
   const params = useParams();
   const { showAlert, AlertComponent } = useCustomAlert();
   const [preset, setPreset] = useState(null);
-  const [testInput, setTestInput] = useState("Hello World");
+  const [testInput, setTestInput] = useState("");
   const [testOutput, setTestOutput] = useState("");
 
-  useEffect(() => {
-    // ID로 프리셋 로드
-    const id = parseInt(params.id);
-    const loadedPreset = SAMPLE_PRESETS[id];
-    
-    if (loadedPreset) {
-      setPreset(loadedPreset);
-    } else {
-      showAlert("프리셋을 찾을 수 없습니다", "error");
-      router.push("/gallery");
-    }
-  }, [params.id]);
+  const id = useMemo(() => Number(params.id), [params.id]);
 
-  // 테스트 변환
+  useEffect(() => {
+    const found = CASES.find((item) => item.id === id);
+    if (!found) {
+      showAlert("사례를 찾을 수 없습니다.", "error");
+      router.push("/gallery");
+      return;
+    }
+    setPreset(found);
+    setTestInput(found.sampleInput);
+    setTestOutput(found.sampleOutput);
+  }, [id, router, showAlert]);
+
   const handleTest = () => {
-    if (!preset || !testInput.trim()) return;
-    
+    if (!preset) return;
+
     let result = testInput;
-    preset.rules.forEach(rule => {
+    preset.rules.forEach((rule) => {
       result = result.split(rule.from).join(rule.to);
     });
     setTestOutput(result);
-  };
-
-  // 프리셋 불러오기
-  const handleImport = async () => {
-    if (!preset) return;
-    
-    try {
-      // localStorage에 저장
-      const presets = JSON.parse(localStorage.getItem("language-presets") || "[]");
-      
-      const newPreset = {
-        name: `${preset.name} (갤러리)`,
-        rules: preset.rules,
-        importedFrom: "gallery",
-        importedAt: new Date().toISOString(),
-      };
-      
-      presets.push(newPreset);
-      localStorage.setItem("language-presets", JSON.stringify(presets));
-      
-      await showAlert(`"${preset.name}" 프리셋을 불러왔습니다!`, "success");
-      
-      // 메인 페이지로 이동하여 적용
-      setTimeout(() => {
-        router.push("/?preset=" + encodeURIComponent(preset.name));
-      }, 1500);
-      
-    } catch (error) {
-      await showAlert("프리셋 불러오기에 실패했습니다", "error");
-    }
   };
 
   if (!preset) {
@@ -141,7 +187,7 @@ export default function PresetDetailPage() {
       <div className="gallery-page">
         {AlertComponent}
         <div className="max-w-4xl mx-auto p-6">
-          <div className="loading-spinner">로딩 중...</div>
+          <div className="card-3d p-6">사례를 불러오는 중...</div>
         </div>
       </div>
     );
@@ -150,56 +196,35 @@ export default function PresetDetailPage() {
   return (
     <div className="gallery-page">
       {AlertComponent}
-      
+
       <div className="max-w-4xl mx-auto p-6 space-y-6">
-        {/* 헤더 */}
         <div className="gallery-detail-header">
-          <button 
-            className="btn-3d btn-secondary"
-            onClick={() => router.push("/gallery")}
-          >
-            ← 갤러리로
+          <button className="btn-3d btn-secondary" onClick={() => router.push("/gallery")}>
+            사례 목록으로
           </button>
         </div>
 
-        {/* 프리셋 정보 */}
         <div className="card-3d gallery-detail-card">
-          <div className="gallery-detail-top">
-            <div className="gallery-detail-avatar">
-              {preset.authorAvatar || "👤"}
+          <div className="gallery-detail-info">
+            <h1 className="gallery-detail-title">{preset.name}</h1>
+            <div className="gallery-detail-meta">
+              <span>{preset.category}</span>
+              <span>규칙 {preset.rules.length}개</span>
             </div>
-            <div className="gallery-detail-info">
-              <h1 className="gallery-detail-title">{preset.name}</h1>
-              <div className="gallery-detail-meta">
-                <span>by {preset.author}</span>
-                <span>•</span>
-                <span>{preset.category}</span>
-                <span>•</span>
-                <span>⭐ {preset.rating}</span>
-                <span>•</span>
-                <span>⬇️ {preset.downloads}</span>
-              </div>
-            </div>
-            <button
-              className="btn-3d btn-primary gallery-detail-import-btn"
-              onClick={handleImport}
-            >
-              💾 불러오기
-            </button>
           </div>
-
           <p className="gallery-detail-description">{preset.description}</p>
-
-          <div className="gallery-detail-tags">
-            {preset.tags.map((tag, idx) => (
-              <span key={idx} className="gallery-tag">#{tag}</span>
+          <p className="text-sm opacity-80 mt-4">{preset.purpose}</p>
+          <div className="gallery-detail-tags mt-4">
+            {preset.notes.map((note) => (
+              <span key={note} className="gallery-tag">
+                {note}
+              </span>
             ))}
           </div>
         </div>
 
-        {/* 테스트 영역 */}
-        <div className="card-3d">
-          <h2 className="section-title">🧪 미리보기 테스트</h2>
+        <div className="card-3d p-6 space-y-4">
+          <h2 className="section-title">예시 테스트</h2>
           <div className="gallery-test-area">
             <input
               type="text"
@@ -212,16 +237,13 @@ export default function PresetDetailPage() {
               변환
             </button>
           </div>
-          {testOutput && (
-            <div className="gallery-test-output">
-              <strong>결과:</strong> {sanitizeText(testOutput)}
-            </div>
-          )}
+          <div className="gallery-test-output">
+            <strong>출력:</strong> {testOutput}
+          </div>
         </div>
 
-        {/* 규칙 목록 */}
-        <div className="card-3d">
-          <h2 className="section-title">📋 변환 규칙 ({preset.rulesCount}개)</h2>
+        <div className="card-3d p-6">
+          <h2 className="section-title">규칙 목록</h2>
           <div className="gallery-rules-table">
             <table className="table-3d w-full">
               <thead>
@@ -232,8 +254,8 @@ export default function PresetDetailPage() {
                 </tr>
               </thead>
               <tbody>
-                {preset.rules.map((rule, idx) => (
-                  <tr key={idx}>
+                {preset.rules.map((rule) => (
+                  <tr key={`${rule.from}-${rule.to}`}>
                     <td>{rule.from}</td>
                     <td>→</td>
                     <td className="gallery-rule-to">{rule.to}</td>
@@ -244,56 +266,22 @@ export default function PresetDetailPage() {
           </div>
         </div>
 
-        {/* 상세 설명 */}
-        {preset.fullDescription && (
-          <div className="card-3d">
-            <h2 className="section-title">📖 상세 설명</h2>
-            <div className="gallery-full-description">
-              {preset.fullDescription.split('\n').map((line, idx) => (
-                <p key={idx}>{line}</p>
-              ))}
-            </div>
+        <div className="gallery-share-section">
+          <div className="gallery-share-card">
+            <h3>이 사례를 활용하는 방법</h3>
+            <p>
+              비슷한 예시를 직접 만들어 보려면, 먼저 3~5개의 핵심 규칙만 복사해 테스트하고, 그 다음에
+              접두/접미 규칙을 추가하는 방식이 안전합니다.
+            </p>
+            <button
+              className="btn-3d btn-primary"
+              onClick={() => showAlert("이 예시를 메인 규칙집의 출발점으로 활용해 보세요.", "info")}
+            >
+              활용 팁 보기
+            </button>
           </div>
-        )}
-
-        {/* 리뷰 */}
-        {preset.reviews && preset.reviews.length > 0 && (
-          <div className="card-3d">
-            <h2 className="section-title">💬 사용자 리뷰 ({preset.reviews.length})</h2>
-            <div className="gallery-reviews">
-              {preset.reviews.map((review, idx) => (
-                <div key={idx} className="gallery-review-item">
-                  <div className="gallery-review-header">
-                    <span className="gallery-review-author">{review.author}</span>
-                    <span className="gallery-review-rating">
-                      {"⭐".repeat(review.rating)}
-                    </span>
-                  </div>
-                  <p className="gallery-review-comment">{review.comment}</p>
-                  <span className="gallery-review-date">{review.date}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* 하단 액션 */}
-        <div className="gallery-detail-actions">
-          <button
-            className="btn-3d btn-primary btn-large"
-            onClick={handleImport}
-          >
-            💾 이 언어 불러오기
-          </button>
-          <button
-            className="btn-3d btn-large"
-            onClick={() => router.push("/gallery")}
-          >
-            ← 다른 언어 보기
-          </button>
         </div>
       </div>
     </div>
   );
 }
-

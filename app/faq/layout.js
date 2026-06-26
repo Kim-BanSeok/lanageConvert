@@ -1,5 +1,3 @@
-import { Metadata } from 'next';
-
 export const metadata = {
   title: 'FAQ - 나만의 언어 생성기',
   description: '자주 묻는 질문과 답변',

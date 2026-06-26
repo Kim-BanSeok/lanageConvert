@@ -1,321 +1,141 @@
-import { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata = {
-  title: '사용법 - 나만의 언어 생성기',
-  description: '나만의 언어 생성기 사용법, 예시, 팁 안내',
+  title: '가이드 - 나만의 언어 생성기',
+  description: '규칙을 만들고, 테스트하고, 저장하는 실제 사용 절차를 정리한 가이드 페이지',
   openGraph: {
-    title: '사용법 - 나만의 언어 생성기',
-    description: '자세한 사용법과 예시, 활용 팁',
+    title: '가이드 - 나만의 언어 생성기',
+    description: '실제 사용 흐름 중심의 단계별 가이드',
     url: 'https://lanage-convert.vercel.app/guide',
   },
 };
 
+const steps = [
+  {
+    title: '1. 기준 문장을 준비한다',
+    body: '먼저 변환 전 원문을 짧게 준비합니다. 처음에는 한 문장만 넣고 결과를 확인하는 편이 규칙 오류를 찾기 쉽습니다.',
+  },
+  {
+    title: '2. 규칙을 작은 단위로 만든다',
+    body: 'from/to를 한 쌍씩 추가한 뒤, 긴 규칙과 짧은 규칙의 순서를 확인합니다. 한 번에 너무 많은 규칙을 넣으면 충돌 원인을 찾기 어렵습니다.',
+  },
+  {
+    title: '3. encode와 decode를 모두 시험한다',
+    body: '같은 규칙이라도 인코딩과 디코딩 방향에서 결과가 달라질 수 있습니다. 양쪽을 모두 테스트해야 되돌릴 수 있는 규칙집이 됩니다.',
+  },
+  {
+    title: '4. 저장하고 다시 불러온다',
+    body: '잘 작동하는 규칙집은 프리셋으로 저장합니다. 이후 비슷한 프로젝트에서 다시 불러와 재사용하면 작업 시간이 줄어듭니다.',
+  },
+];
+
+const bestPractices = [
+  '긴 치환은 짧은 치환보다 먼저 배치합니다.',
+  '비슷한 패턴이 겹치면 충돌 검사 기능을 확인합니다.',
+  '문장 전체보다 대표 단어 몇 개로 먼저 테스트합니다.',
+  '규칙 수가 많아지면 이름을 붙여 프리셋으로 정리합니다.',
+  '변형 결과를 기록해 두면 나중에 되돌리기 쉽습니다.',
+];
+
+const scenarios = [
+  {
+    title: '비밀 메시지',
+    body: '친구끼리만 읽을 수 있는 장난스러운 암호 메시지를 만들 때 적합합니다.',
+  },
+  {
+    title: '세계관 언어',
+    body: '소설, 게임, 설정집에 들어갈 가상 언어의 말투와 문자 규칙을 실험할 수 있습니다.',
+  },
+  {
+    title: '학습용 예제',
+    body: '치환 순서, 우선순위, 예외 처리처럼 문자열 처리의 기본 개념을 익히는 데 도움을 줍니다.',
+  },
+];
+
 export default function GuidePage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100">
-      <div className="container mx-auto px-4 py-8 max-w-4xl">
-        <div className="bg-white rounded-2xl shadow-xl p-8">
-          {/* 헤더 */}
-          <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold text-gray-800 mb-4">
-              📖 사용법 가이드
-            </h1>
-            <p className="text-lg text-gray-600">
-              나만의 언어 생성기를 쉽고 효과적으로 사용하는 방법
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-blue-50">
+      <div className="container mx-auto px-4 py-10 max-w-5xl">
+        <div className="bg-white rounded-3xl shadow-xl border border-slate-200 p-8 md:p-10">
+          <header className="text-center max-w-3xl mx-auto mb-14">
+            <p className="text-sm font-semibold tracking-[0.25em] text-emerald-600 uppercase mb-3">
+              Guide
             </p>
-          </div>
+            <h1 className="text-4xl md:text-5xl font-black text-slate-900 mb-4">
+              실제 사용 흐름으로 보는 규칙 제작 가이드
+            </h1>
+            <p className="text-lg text-slate-600 leading-8">
+              이 페이지는 “무슨 버튼을 누르는지”보다 “어떤 순서로 규칙을 설계하면 좋은지”에 초점을 둡니다.
+              처음 사용하는 사람도 결과를 이해할 수 있게 절차와 실전 팁을 분리했습니다.
+            </p>
+          </header>
 
-          {/* 빠른 시작 */}
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-              <span className="text-3xl mr-3">🚀</span> 빠른 시작
-            </h2>
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 border-l-4 border-blue-500">
-              <ol className="space-y-4">
-                <li className="flex items-start">
-                  <span className="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3 mt-1">1</span>
-                  <div>
-                    <h3 className="font-semibold text-gray-800 mb-1">원본 텍스트 입력</h3>
-                    <p className="text-gray-600 text-sm">왼쪽 텍스트 상자에 변환하고 싶은 문장을 입력하세요</p>
-                  </div>
-                </li>
-                <li className="flex items-start">
-                  <span className="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3 mt-1">2</span>
-                  <div>
-                    <h3 className="font-semibold text-gray-800 mb-1">변환 규칙 설정</h3>
-                    <p className="text-gray-600 text-sm">아래 규칙 테이블에서 문자 치환 규칙을 추가하세요</p>
-                  </div>
-                </li>
-                <li className="flex items-start">
-                  <span className="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3 mt-1">3</span>
-                  <div>
-                    <h3 className="font-semibold text-gray-800 mb-1">암호화 실행</h3>
-                    <p className="text-gray-600 text-sm">"🔐 암호화" 버튼을 클릭하여 변환 결과를 확인하세요</p>
-                  </div>
-                </li>
-              </ol>
-            </div>
+          <section className="grid gap-4 md:grid-cols-2 mb-14">
+            {steps.map((step) => (
+              <article key={step.title} className="rounded-2xl border border-slate-200 bg-slate-50 p-6">
+                <h2 className="text-lg font-bold text-slate-900 mb-3">{step.title}</h2>
+                <p className="text-slate-700 leading-7">{step.body}</p>
+              </article>
+            ))}
           </section>
 
-          {/* 상세 사용법 */}
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-              <span className="text-3xl mr-3">📋</span> 상세 사용법
-            </h2>
-            
-            {/* 규칙 생성 */}
-            <div className="mb-8">
-              <h3 className="text-xl font-semibold text-gray-800 mb-4">규칙 생성하기</h3>
-              <div className="bg-gray-50 rounded-xl p-6">
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div>
-                    <h4 className="font-semibold text-gray-700 mb-3">수동 규칙 추가</h4>
-                    <ol className="space-y-2 text-sm text-gray-600">
-                      <li>1. "➕ 규칙 추가" 버튼 클릭</li>
-                      <li>2. "원래 문자열"에 변환 전 문자 입력 (예: "가")</li>
-                      <li>3. "변환 문자열"에 변환 후 문자 입력 (예: "BA")</li>
-                      <li>4. 여러 규칙을 추가하여 복잡한 언어 생성</li>
-                    </ol>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-gray-700 mb-3">자동 랜덤 생성</h4>
-                    <ol className="space-y-2 text-sm text-gray-600">
-                      <li>1. "🎲 알파벳 랜덤 언어 생성" 버튼 클릭</li>
-                      <li>2. 자동으로 26개 알파벳 규칙 생성</li>
-                      <li>3. 각 알파벳이 랜덤하게 다른 알파벳으로 매핑</li>
-                      <li>4. 기존 규칙은 모두 삭제되고 새 규칙으로 교체</li>
-                    </ol>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* 암호화/복호화 */}
-            <div className="mb-8">
-              <h3 className="text-xl font-semibold text-gray-800 mb-4">암호화와 복호화</h3>
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="bg-green-50 rounded-xl p-6 border border-green-200">
-                  <h4 className="font-semibold text-green-800 mb-3 flex items-center">
-                    <span className="mr-2">🔐</span> 암호화 (Encode)
-                  </h4>
-                  <ul className="space-y-2 text-sm text-gray-700">
-                    <li>• 원본 텍스트를 설정된 규칙에 따라 변환</li>
-                    <li>• 위에서 아래 순서로 규칙 적용</li>
-                    <li>• 일반 문장 → 비밀 언어로 변환</li>
-                    <li>• 결과는 오른쪽 텍스트 상자에 표시</li>
-                  </ul>
-                </div>
-                <div className="bg-purple-50 rounded-xl p-6 border border-purple-200">
-                  <h4 className="font-semibold text-purple-800 mb-3 flex items-center">
-                    <span className="mr-2">🔓</span> 복호화 (Decode)
-                  </h4>
-                  <ul className="space-y-2 text-sm text-gray-700">
-                    <li>• 암호화된 텍스트를 원본으로 복원</li>
-                    <li>• 아래에서 위 순서로 규칙 적용 (역순)</li>
-                    <li>• 비밀 언어 → 일반 문장으로 복원</li>
-                    <li>• 정확한 규칙이 필요함</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-
-            {/* 추가 기능 */}
-            <div className="mb-8">
-              <h3 className="text-xl font-semibold text-gray-800 mb-4">유용한 기능들</h3>
-              <div className="space-y-4">
-                <div className="flex items-start space-x-4 bg-yellow-50 rounded-lg p-4">
-                  <span className="text-2xl">📋</span>
-                  <div>
-                    <h4 className="font-semibold text-gray-800">결과 복사</h4>
-                    <p className="text-sm text-gray-600">변환된 결과를 클립보드에 복사하여 다른 곳에 붙여넣기</p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-4 bg-orange-50 rounded-lg p-4">
-                  <span className="text-2xl">🔁</span>
-                  <div>
-                    <h4 className="font-semibold text-gray-800">입력 & 결과 바꾸기</h4>
-                    <p className="text-sm text-gray-600">원본과 결과 텍스트의 위치를 서로 교환</p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-4 bg-red-50 rounded-lg p-4">
-                  <span className="text-2xl">🧹</span>
-                  <div>
-                    <h4 className="font-semibold text-gray-800">모든 규칙 삭제</h4>
-                    <p className="text-sm text-gray-600">설정된 모든 규칙을 한 번에 삭제하고 새로 시작</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* 사용 예시 */}
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-              <span className="text-3xl mr-3">💡</span> 사용 예시
-            </h2>
-            
-            <div className="space-y-6">
-              {/* 예시 1 */}
-              <div className="bg-gradient-to-r from-pink-50 to-rose-50 rounded-xl p-6 border border-pink-200">
-                <h3 className="font-semibold text-pink-800 mb-3">예시 1: 간단한 비밀 코드</h3>
-                <div className="space-y-3">
-                  <div className="bg-white rounded-lg p-3">
-                    <p className="text-sm font-semibold text-gray-700 mb-2">규칙 설정:</p>
-                    <div className="text-xs space-y-1">
-                      <div>사랑 → 💖</div>
-                      <div>행복 → 😊</div>
-                      <div>친구 → 🤝</div>
-                    </div>
-                  </div>
-                  <div className="bg-white rounded-lg p-3">
-                    <p className="text-sm font-semibold text-gray-700 mb-1">원본:</p>
-                    <p className="text-sm text-gray-600">"나는 너를 사랑하고, 우리는 행복한 친구입니다."</p>
-                  </div>
-                  <div className="bg-white rounded-lg p-3">
-                    <p className="text-sm font-semibold text-gray-700 mb-1">결과:</p>
-                    <p className="text-sm text-gray-600">"나는 너를 💖하고, 우리는 😊한 🤝입니다."</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* 예시 2 */}
-              <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-200">
-                <h3 className="font-semibold text-blue-800 mb-3">예시 2: 알파벳 암호</h3>
-                <div className="space-y-3">
-                  <div className="bg-white rounded-lg p-3">
-                    <p className="text-sm font-semibold text-gray-700 mb-2">규칙 설정 (일부):</p>
-                    <div className="text-xs space-y-1">
-                      <div>A → Z</div>
-                      <div>B → Y</div>
-                      <div>C → X</div>
-                      <div>...</div>
-                    </div>
-                  </div>
-                  <div className="bg-white rounded-lg p-3">
-                    <p className="text-sm font-semibold text-gray-700 mb-1">원본:</p>
-                    <p className="text-sm text-gray-600">"HELLO WORLD"</p>
-                  </div>
-                  <div className="bg-white rounded-lg p-3">
-                    <p className="text-sm font-semibold text-gray-700 mb-1">결과:</p>
-                    <p className="text-sm text-gray-600">"SVOOL DLIOW"</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* 예시 3 */}
-              <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-6 border border-green-200">
-                <h3 className="font-semibold text-green-800 mb-3">예시 3: 한글 변환</h3>
-                <div className="space-y-3">
-                  <div className="bg-white rounded-lg p-3">
-                    <p className="text-sm font-semibold text-gray-700 mb-2">규칙 설정:</p>
-                    <div className="text-xs space-y-1">
-                      <div>안녕 → ㅇㄴ</div>
-                      <div>하세요 → ㅎㅅㅇ</div>
-                      <div>! → !!!</div>
-                    </div>
-                  </div>
-                  <div className="bg-white rounded-lg p-3">
-                    <p className="text-sm font-semibold text-gray-700 mb-1">원본:</p>
-                    <p className="text-sm text-gray-600">"안녕하세요!"</p>
-                  </div>
-                  <div className="bg-white rounded-lg p-3">
-                    <p className="text-sm font-semibold text-gray-700 mb-1">결과:</p>
-                    <p className="text-sm text-gray-600">"ㅇㄴㅎㅅㅇ!!!"</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* 팁과 노하우 */}
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-              <span className="text-3xl mr-3">⭐</span> 팁과 노하우
-            </h2>
-            <div className="grid md:grid-cols-2 gap-6">
-              <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-6">
-                <h3 className="font-semibold text-purple-800 mb-4">효율적인 규칙 설계</h3>
-                <ul className="space-y-2 text-sm text-gray-700">
-                  <li className="flex items-start">
-                    <span className="text-purple-500 mr-2">•</span>
-                    <span>긴 단어 규칙을 위에 배치하여 예상치 못한 치환 방지</span>
+          <section className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr] mb-14">
+            <aside className="rounded-3xl bg-slate-900 text-white p-8 md:p-10">
+              <h2 className="text-2xl font-bold mb-4">실전 체크리스트</h2>
+              <ul className="space-y-4 text-slate-300 leading-7">
+                {bestPractices.map((item) => (
+                  <li key={item} className="flex gap-3">
+                    <span className="mt-2 h-2 w-2 rounded-full bg-emerald-400 flex-shrink-0" />
+                    <span>{item}</span>
                   </li>
-                  <li className="flex items-start">
-                    <span className="text-purple-500 mr-2">•</span>
-                    <span>비슷한 문자 그룹으로 규칙을 묶어 관리하기 쉽게</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-purple-500 mr-2">•</span>
-                    <span>복호화를 위해 규칙 목록을 저장해두기</span>
-                  </li>
-                </ul>
-              </div>
-              <div className="bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl p-6">
-                <h3 className="font-semibold text-blue-800 mb-4">활용 팁</h3>
-                <ul className="space-y-2 text-sm text-gray-700">
-                  <li className="flex items-start">
-                    <span className="text-blue-500 mr-2">•</span>
-                    <span>이모지를 활용하여 시각적인 비밀 코드 만들기</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-blue-500 mr-2">•</span>
-                    <span>팀원들과 규칙을 공유하여 그룹 암호 사용</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-blue-500 mr-2">•</span>
-                    <span>랜덤 생성으로 예측 불가능한 암호 만들기</span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </section>
-
-          {/* 주의사항 */}
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-              <span className="text-3xl mr-3">⚠️</span> 주의사항
-            </h2>
-            <div className="bg-red-50 rounded-xl p-6 border border-red-200">
-              <ul className="space-y-3 text-sm text-gray-700">
-                <li className="flex items-start">
-                  <span className="text-red-500 mr-2">•</span>
-                  <span>복호화 시 정확한 규칙이 필요하므로 규칙을 잘 보관하세요</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-red-500 mr-2">•</span>
-                  <span>중요한 정보는 실제 암호화 도구를 사용하세요</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-red-500 mr-2">•</span>
-                  <span>규칙이 많을수록 처리 시간이 길어질 수 있습니다</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-red-500 mr-2">•</span>
-                  <span>특수문자는 규칙에 따라 정확히 입력해야 합니다</span>
-                </li>
+                ))}
               </ul>
+            </aside>
+
+            <div className="rounded-3xl bg-white border border-slate-200 p-8 shadow-sm">
+              <div className="flex items-end justify-between gap-4 mb-6">
+                <div>
+                  <p className="text-sm font-semibold text-emerald-600 uppercase tracking-[0.2em] mb-2">
+                    Examples
+                  </p>
+                  <h2 className="text-2xl font-bold text-slate-900">어떤 상황에서 쓰는가</h2>
+                </div>
+                <Link href="/faq" className="text-sm font-semibold text-emerald-700 underline underline-offset-4">
+                  FAQ 보기
+                </Link>
+              </div>
+
+              <div className="space-y-4">
+                {scenarios.map((scenario) => (
+                  <div key={scenario.title} className="rounded-2xl bg-slate-50 border border-slate-200 p-5">
+                    <h3 className="font-bold text-slate-900 mb-2">{scenario.title}</h3>
+                    <p className="text-slate-700 leading-7">{scenario.body}</p>
+                  </div>
+                ))}
+              </div>
             </div>
           </section>
 
-          {/* CTA */}
-          <section className="text-center">
-            <div className="bg-gradient-to-r from-green-500 to-blue-600 rounded-xl p-8 text-white">
-              <h2 className="text-2xl font-bold mb-4">이제 직접 만들어볼까요?</h2>
-              <p className="mb-6">배운 내용을 바탕으로 나만의 특별한 언어를 만들어보세요</p>
-              <div className="space-x-4">
-                <Link 
-                  href="/" 
-                  className="inline-block bg-white text-green-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
-                >
-                  🏠 언어 생성기 시작
-                </Link>
-                <Link 
-                  href="/faq" 
-                  className="inline-block bg-transparent border-2 border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white hover:text-green-600 transition-colors"
-                >
-                  ❓ 더 궁금한 점
-                </Link>
+          <section className="rounded-3xl border border-emerald-200 bg-emerald-50 p-8 md:p-10">
+            <h2 className="text-2xl font-bold text-slate-900 mb-4">가장 많이 틀리는 부분</h2>
+            <div className="grid gap-4 md:grid-cols-3">
+              <div className="rounded-2xl bg-white p-5 border border-emerald-100">
+                <h3 className="font-bold text-slate-900 mb-2">규칙 순서</h3>
+                <p className="text-slate-700 leading-7">
+                  짧은 규칙이 긴 규칙을 먼저 먹어버리면 결과가 예상과 달라집니다.
+                </p>
+              </div>
+              <div className="rounded-2xl bg-white p-5 border border-emerald-100">
+                <h3 className="font-bold text-slate-900 mb-2">중복 패턴</h3>
+                <p className="text-slate-700 leading-7">
+                  비슷한 from 값이 겹치면 어떤 규칙이 적용됐는지 파악하기 어려워집니다.
+                </p>
+              </div>
+              <div className="rounded-2xl bg-white p-5 border border-emerald-100">
+                <h3 className="font-bold text-slate-900 mb-2">되돌리기</h3>
+                <p className="text-slate-700 leading-7">
+                  decode를 먼저 확인하지 않으면, 만든 규칙을 원문으로 되돌리지 못할 수 있습니다.
+                </p>
               </div>
             </div>
           </section>

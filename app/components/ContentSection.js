@@ -1,217 +1,118 @@
 import Link from 'next/link';
 
+const sections = [
+  {
+    title: '이 서비스가 해결하는 문제',
+    body:
+      '이 프로젝트는 텍스트를 규칙 기반으로 변형하는 도구입니다. 단순 치환이 아니라 순서, 예외, 문맥을 고려해 같은 입력도 다른 결과를 만들 수 있게 설계했습니다.',
+  },
+  {
+    title: '어떻게 동작하나',
+    body:
+      '사용자는 from/to 규칙을 추가하고, 입력 문장에 대해 encode 또는 decode를 실행합니다. 규칙이 많아질수록 자동 추천, 충돌 검사, 기록 저장 같은 보조 기능이 작동해 결과의 일관성을 유지합니다.',
+  },
+  {
+    title: '언제 쓰면 좋은가',
+    body:
+      '가벼운 은어 변환, 암호풍 텍스트 실험, 세계관용 가상 언어 제작, 반복되는 메시지 패턴 관리처럼 “표현 규칙을 내가 정하고 싶을 때” 특히 유용합니다.',
+  },
+];
+
+const examples = [
+  {
+    label: '예시 1',
+    input: '안녕하세요',
+    output: 'BODO... 형태의 사용자 정의 치환 결과',
+    note: '짧은 인사말을 고유 표현으로 바꾸는 가장 기본적인 활용',
+  },
+  {
+    label: '예시 2',
+    input: 'HELLO WORLD',
+    output: '규칙 순서에 따라 변형된 출력',
+    note: '영문 대문자, 접두/접미 패턴, 부분 문자열 치환을 함께 테스트',
+  },
+  {
+    label: '예시 3',
+    input: '같은 문장',
+    output: '규칙집에 따라 매번 다른 스타일',
+    note: '규칙 모드와 순서가 결과에 직접 영향을 준다는 점을 확인',
+  },
+];
+
+const tips = [
+  '긴 규칙을 짧은 규칙보다 앞에 두면 의도치 않은 선치환을 줄일 수 있습니다.',
+  'encode와 decode를 모두 시험해 보고, 결과가 되돌릴 수 있는지 확인하세요.',
+  '규칙이 많아질수록 이름을 붙여 저장하면 나중에 재사용하기 쉽습니다.',
+  '충돌 검사와 히스토리를 함께 쓰면 규칙 관리 품질이 올라갑니다.',
+];
+
 export default function ContentSection() {
-  const features = [
-    {
-      icon: '🔐',
-      title: '안전한 암호화',
-      description: '모든 데이터는 브라우저에서만 처리되어 개인정보가 안전하게 보호됩니다.'
-    },
-    {
-      icon: '⚡',
-      title: '실시간 변환',
-      description: '입력 즉시 결과를 확인할 수 있는 빠르고 직관적인 인터페이스를 제공합니다.'
-    },
-    {
-      icon: '🎲',
-      title: '랜덤 생성',
-      description: '알파벳 기반의 랜덤 암호화 규칙을 자동으로 생성하여 예측 불가능한 코드를 만들 수 있습니다.'
-    },
-    {
-      icon: '📱',
-      title: '모바일 지원',
-      description: 'PWA 기능으로 앱처럼 설치하여 언제 어디서나 편리하게 사용할 수 있습니다.'
-    }
-  ];
-
-  const useCases = [
-    {
-      icon: '💌',
-      title: '비밀 메시지',
-      description: '친구와만 아는 비밀 언어로 특별한 메시지를 교환해보세요.'
-    },
-    {
-      icon: '📚',
-      title: '언어 학습',
-      description: '새로운 언어의 구조를 이해하는 교육용 도구로 활용할 수 있습니다.'
-    },
-    {
-      icon: '🎮',
-      title: '창의적 놀이',
-      description: '팀 내부 이벤트나 게임에 활용할 수 있는 재미있는 코드를 만들어보세요.'
-    },
-    {
-      icon: '🔐',
-      title: '보안 교육',
-      description: '암호화의 원리를 배우고 이해하는 교육용 플랫폼으로 사용할 수 있습니다.'
-    }
-  ];
-
   return (
-    <div className="space-y-12">
-      {/* 소개 섹션 */}
-      <section className="text-center py-12">
-        <h2 className="text-3xl font-bold text-gray-800 mb-4">
-          🌟 나만의 언어를 만들어보세요
-        </h2>
-        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-          직접 규칙을 정의하여 개인 맞춤형 언어를 생성하고, 친구들과만 아는 비밀 코드를 만들어보세요.
-          간단한 문자 치환부터 복잡한 암호화까지 자유롭게 설정할 수 있습니다.
-        </p>
-      </section>
-
-      {/* 주요 기능 */}
-      <section>
-        <h3 className="text-2xl font-bold text-gray-800 mb-8 text-center">
-          ✨ 주요 기능
-        </h3>
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {features.map((feature, index) => (
-            <div
-              key={index}
-              className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow border border-gray-100"
-            >
-              <div className="text-3xl mb-4 text-center">{feature.icon}</div>
-              <h4 className="font-semibold text-gray-800 mb-2 text-center">
-                {feature.title}
-              </h4>
-              <p className="text-sm text-gray-600 text-center leading-relaxed">
-                {feature.description}
-              </p>
-            </div>
-          ))}
+    <section className="space-y-12">
+      <div className="rounded-3xl bg-gradient-to-br from-slate-50 via-white to-blue-50 border border-slate-200 p-8 md:p-10 shadow-sm">
+        <div className="max-w-3xl">
+          <p className="text-sm font-semibold tracking-[0.2em] text-blue-600 uppercase mb-3">
+            What this is
+          </p>
+          <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
+            단순 변환기가 아니라, 규칙을 설계하는 작업 공간
+          </h2>
+          <p className="text-slate-700 leading-8 text-base md:text-lg">
+            이 도구는 문자를 치환하는 기능만 제공하지 않습니다. 규칙의 우선순위, 저장, 검색, 되돌리기, 통계 확인까지
+            포함해 사용자가 언어 규칙 자체를 다듬을 수 있게 돕습니다. 애드센스 심사 관점에서도, 도구 설명과 사용 가이드가
+            분리되어 있는 정보형 페이지가 중요합니다.
+          </p>
         </div>
-      </section>
+      </div>
 
-      {/* 활용 사례 */}
-      <section>
-        <h3 className="text-2xl font-bold text-gray-800 mb-8 text-center">
-          🚀 활용 사례
-        </h3>
-        <div className="grid md:grid-cols-2 gap-6">
-          {useCases.map((useCase, index) => (
-            <div
-              key={index}
-              className="flex items-start space-x-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-6 border border-blue-200"
-            >
-              <span className="text-2xl flex-shrink-0">{useCase.icon}</span>
-              <div>
-                <h4 className="font-semibold text-gray-800 mb-2">
-                  {useCase.title}
-                </h4>
-                <p className="text-sm text-gray-600 leading-relaxed">
-                  {useCase.description}
+      <div className="grid gap-6 md:grid-cols-3">
+        {sections.map((item) => (
+          <article key={item.title} className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+            <h3 className="text-xl font-bold text-slate-900 mb-3">{item.title}</h3>
+            <p className="text-slate-700 leading-7">{item.body}</p>
+          </article>
+        ))}
+      </div>
+
+      <div className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
+        <article className="rounded-3xl bg-slate-900 text-white p-8 md:p-10 shadow-lg">
+          <h3 className="text-2xl font-bold mb-4">실사용 예시</h3>
+          <div className="space-y-4">
+            {examples.map((example) => (
+              <div key={example.label} className="rounded-2xl bg-white/6 border border-white/10 p-4">
+                <div className="flex items-center justify-between gap-4 mb-2">
+                  <span className="text-sm font-semibold text-cyan-300">{example.label}</span>
+                  <span className="text-xs text-slate-400">{example.note}</span>
+                </div>
+                <p className="text-sm text-slate-300 mb-2">
+                  <span className="font-semibold text-white">입력:</span> {example.input}
+                </p>
+                <p className="text-sm text-slate-300">
+                  <span className="font-semibold text-white">출력:</span> {example.output}
                 </p>
               </div>
-            </div>
-          ))}
-        </div>
-      </section>
+            ))}
+          </div>
+        </article>
 
-      {/* 기술 스택 */}
-      <section className="bg-gray-50 rounded-xl p-8">
-        <h3 className="text-2xl font-bold text-gray-800 mb-6 text-center">
-          🛠️ 기술 스택
-        </h3>
-        <div className="grid md:grid-cols-3 gap-6">
-          <div>
-            <h4 className="font-semibold text-gray-700 mb-3 text-center">Frontend</h4>
-            <div className="space-y-2">
-              <div className="flex items-center justify-center space-x-2">
-                <span className="w-3 h-3 bg-blue-500 rounded-full"></span>
-                <span className="text-sm text-gray-600">Next.js 15</span>
-              </div>
-              <div className="flex items-center justify-center space-x-2">
-                <span className="w-3 h-3 bg-cyan-500 rounded-full"></span>
-                <span className="text-sm text-gray-600">React 18</span>
-              </div>
-              <div className="flex items-center justify-center space-x-2">
-                <span className="w-3 h-3 bg-purple-500 rounded-full"></span>
-                <span className="text-sm text-gray-600">Tailwind CSS</span>
-              </div>
-            </div>
+        <aside className="rounded-3xl bg-white border border-slate-200 p-8 shadow-sm">
+          <h3 className="text-2xl font-bold text-slate-900 mb-4">사용 팁</h3>
+          <ul className="space-y-4">
+            {tips.map((tip) => (
+              <li key={tip} className="flex gap-3 text-slate-700 leading-7">
+                <span className="mt-2 h-2 w-2 rounded-full bg-blue-600 flex-shrink-0" />
+                <span>{tip}</span>
+              </li>
+            ))}
+          </ul>
+          <div className="mt-8 rounded-2xl bg-blue-50 p-5">
+            <p className="text-sm text-slate-700 leading-7">
+              더 자세한 사용 흐름은 <Link href="/guide" className="font-semibold text-blue-700 underline">가이드</Link>에서,
+              자주 묻는 질문은 <Link href="/faq" className="font-semibold text-blue-700 underline">FAQ</Link>에서 확인할 수 있습니다.
+            </p>
           </div>
-          <div>
-            <h4 className="font-semibold text-gray-700 mb-3 text-center">Features</h4>
-            <div className="space-y-2">
-              <div className="flex items-center justify-center space-x-2">
-                <span className="w-3 h-3 bg-green-500 rounded-full"></span>
-                <span className="text-sm text-gray-600">PWA 지원</span>
-              </div>
-              <div className="flex items-center justify-center space-x-2">
-                <span className="w-3 h-3 bg-orange-500 rounded-full"></span>
-                <span className="text-sm text-gray-600">반응형 디자인</span>
-              </div>
-              <div className="flex items-center justify-center space-x-2">
-                <span className="w-3 h-3 bg-pink-500 rounded-full"></span>
-                <span className="text-sm text-gray-600">SEO 최적화</span>
-              </div>
-            </div>
-          </div>
-          <div>
-            <h4 className="font-semibold text-gray-700 mb-3 text-center">Deployment</h4>
-            <div className="space-y-2">
-              <div className="flex items-center justify-center space-x-2">
-                <span className="w-3 h-3 bg-indigo-500 rounded-full"></span>
-                <span className="text-sm text-gray-600">Vercel</span>
-              </div>
-              <div className="flex items-center justify-center space-x-2">
-                <span className="w-3 h-3 bg-red-500 rounded-full"></span>
-                <span className="text-sm text-gray-600">Google AdSense</span>
-              </div>
-              <div className="flex items-center justify-center space-x-2">
-                <span className="w-3 h-3 bg-yellow-500 rounded-full"></span>
-                <span className="text-sm text-gray-600">Search Console</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA 섹션 */}
-      <section className="text-center py-12">
-        <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl p-8 text-white">
-          <h3 className="text-2xl font-bold mb-4">
-            지금 바로 시작해보세요!
-          </h3>
-          <p className="mb-6 text-lg">
-            나만의 특별한 언어를 만들고 친구들과 공유해보세요
-          </p>
-          <div className="space-x-4">
-            <Link
-              href="/guide"
-              className="inline-block bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
-            >
-              📖 사용법 보기
-            </Link>
-            <Link
-              href="/about"
-              className="inline-block bg-transparent border-2 border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition-colors"
-            >
-              📋 더 알아보기
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* 통계 정보 */}
-      <section className="grid md:grid-cols-3 gap-6 text-center">
-        <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
-          <div className="text-3xl font-bold text-blue-600 mb-2">100%</div>
-          <div className="text-sm text-gray-600">클라이언트 측 처리</div>
-          <div className="text-xs text-gray-500 mt-1">개인정보 보호</div>
-        </div>
-        <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
-          <div className="text-3xl font-bold text-green-600 mb-2">무제한</div>
-          <div className="text-sm text-gray-600">규칙 생성</div>
-          <div className="text-xs text-gray-500 mt-1">자유로운 창작</div>
-        </div>
-        <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
-          <div className="text-3xl font-bold text-purple-600 mb-2">24/7</div>
-          <div className="text-sm text-gray-600">서비스 이용</div>
-          <div className="text-xs text-gray-500 mt-1">언제든지 접근</div>
-        </div>
-      </section>
-    </div>
+        </aside>
+      </div>
+    </section>
   );
 }

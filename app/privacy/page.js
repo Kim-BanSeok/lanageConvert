@@ -1,392 +1,140 @@
-import { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata = {
   title: '개인정보처리방침 - 나만의 언어 생성기',
-  description: '개인정보처리방침 및 수집 정보 안내',
+  description: '수집 정보, 이용 목적, 보관 기간, 사용자 권리, 문의 방법을 설명하는 개인정보처리방침',
   openGraph: {
     title: '개인정보처리방침 - 나만의 언어 생성기',
-    description: '개인정보 보호 정책',
+    description: '브라우저 내부 처리 중심의 개인정보 안내',
     url: 'https://lanage-convert.vercel.app/privacy',
   },
 };
 
+const dataSections = [
+  {
+    title: '수집하는 정보',
+    items: [
+      '서비스 이용 과정에서 발생하는 기본 접속 정보',
+      '기기 및 브라우저 환경 정보',
+      '사용자가 직접 저장한 규칙과 프리셋 정보',
+    ],
+  },
+  {
+    title: '수집하지 않는 정보',
+    items: [
+      '민감한 원문 내용을 서버로 전송하는 처리',
+      '별도 계정 인증을 위한 개인정보 입력',
+      '서비스 이용과 무관한 추적용 정보',
+    ],
+  },
+  {
+    title: '이용 목적',
+    items: [
+      '오류 분석과 서비스 안정성 향상',
+      '사용자 요청에 따른 기능 제공',
+      '브라우저 내 저장 기능 제공',
+    ],
+  },
+  {
+    title: '보관 기간',
+    items: [
+      '브라우저 저장 데이터는 사용자가 직접 삭제할 때까지 유지될 수 있음',
+      '운영 로그는 필요한 최소 기간만 보관',
+      '법령상 보관 의무가 있는 경우 그 기간을 따름',
+    ],
+  },
+];
+
+const userRights = [
+  '저장된 브라우저 데이터 삭제 요청',
+  '이용 기록 열람 및 정정 요청',
+  '문의 및 불만 제기',
+  '동의 철회와 관련된 안내 요청',
+];
+
 export default function PrivacyPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
-      <div className="container mx-auto px-4 py-8 max-w-4xl">
-        <div className="bg-white rounded-2xl shadow-xl p-8">
-          {/* 헤더 */}
-          <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold text-gray-800 mb-4">
-              🔒 개인정보처리방침
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50">
+      <div className="container mx-auto px-4 py-10 max-w-5xl">
+        <div className="bg-white rounded-3xl shadow-xl border border-slate-200 p-8 md:p-10">
+          <header className="text-center max-w-3xl mx-auto mb-14">
+            <p className="text-sm font-semibold tracking-[0.25em] text-slate-600 uppercase mb-3">
+              Privacy
+            </p>
+            <h1 className="text-4xl md:text-5xl font-black text-slate-900 mb-4">
+              개인정보처리방침
             </h1>
-            <p className="text-lg text-gray-600">
-              사용자의 개인정보를 소중히 다루는 정책
+            <p className="text-lg text-slate-600 leading-8">
+              이 서비스는 대부분의 처리를 브라우저에서 수행하지만, 운영과 안정성 확보를 위해 최소한의 정보를 다룰 수 있습니다.
+              아래 내용은 어떤 데이터를 왜 다루는지 명확히 설명하기 위한 문서입니다.
             </p>
-            <p className="text-sm text-gray-500 mt-2">
-              최종 업데이트: 2024년 3월 5일
+            <p className="text-sm text-slate-500 mt-3">
+              최종 개정일: 2026-06-26
             </p>
-          </div>
+          </header>
 
-          {/* 기본 원칙 */}
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-              <span className="text-3xl mr-3">🎯</span> 기본 원칙
-            </h2>
-            <div className="bg-blue-50 rounded-xl p-6 border-l-4 border-blue-500">
-              <p className="text-gray-700 leading-relaxed mb-4">
-                <strong>나만의 언어 생성기</strong>는 사용자의 개인정보를 최우선으로 보호합니다. 
-                모든 데이터 처리는 사용자의 동의를 기반으로 하며, 관련 법규를 준수합니다.
+          <section className="grid gap-4 md:grid-cols-2 mb-14">
+            {dataSections.map((section) => (
+              <article key={section.title} className="rounded-2xl border border-slate-200 bg-slate-50 p-6">
+                <h2 className="text-xl font-bold text-slate-900 mb-4">{section.title}</h2>
+                <ul className="space-y-3 text-slate-700 leading-7">
+                  {section.items.map((item) => (
+                    <li key={item} className="flex gap-3">
+                      <span className="mt-2 h-2 w-2 rounded-full bg-slate-400 flex-shrink-0" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </article>
+            ))}
+          </section>
+
+          <section className="grid gap-6 lg:grid-cols-[1fr_0.9fr] mb-14">
+            <div className="rounded-3xl bg-slate-900 text-white p-8 md:p-10">
+              <h2 className="text-2xl font-bold mb-4">이용자 권리</h2>
+              <p className="text-slate-300 leading-8 mb-6">
+                사용자는 자신과 관련된 데이터에 대해 확인, 정정, 삭제, 제한 요청을 할 수 있습니다. 브라우저에 저장된 데이터는
+                서비스 서버가 아니라 로컬 환경에 남을 수 있으므로, 삭제는 사용자의 브라우저 설정을 함께 확인해야 합니다.
               </p>
-              <ul className="space-y-2 text-gray-700">
-                <li className="flex items-start">
-                  <span className="text-blue-500 mr-2">•</span>
-                  <span>모든 암호화/복호화 작업은 사용자의 브라우저에서만 처리됩니다</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-blue-500 mr-2">•</span>
-                  <span>입력한 텍스트나 규칙이 외부 서버로 전송되지 않습니다</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-blue-500 mr-2">•</span>
-                  <span>최소한의 정보만 수집하며, 명확한 목적만을 위해 사용합니다</span>
-                </li>
+              <ul className="space-y-4 text-slate-300 leading-8">
+                {userRights.map((right) => (
+                  <li key={right} className="flex gap-3">
+                    <span className="mt-2 h-2 w-2 rounded-full bg-blue-400 flex-shrink-0" />
+                    <span>{right}</span>
+                  </li>
+                ))}
               </ul>
             </div>
-          </section>
 
-          {/* 수집하는 정보 */}
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-              <span className="text-3xl mr-3">📊</span> 수집하는 정보
-            </h2>
-            
-            <div className="space-y-6">
-              <div className="bg-gray-50 rounded-xl p-6">
-                <h3 className="font-semibold text-gray-800 mb-3">자동 수집 정보</h3>
-                <ul className="space-y-2 text-sm text-gray-700">
-                  <li className="flex items-start">
-                    <span className="text-gray-500 mr-2">•</span>
-                    <div>
-                      <strong>서비스 이용 기록:</strong> 사이트 접속 시간, 페이지 조회 수, 브라우저 정보
-                    </div>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-gray-500 mr-2">•</span>
-                    <div>
-                      <strong>기술 정보:</strong> IP 주소, 브라우저 종류, 운영체제, 디바이스 정보
-                    </div>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-gray-500 mr-2">•</span>
-                    <div>
-                      <strong>쿠키 정보:</strong> 사이트 기능 개선을 위한 최소한의 쿠키 사용
-                    </div>
-                  </li>
-                </ul>
+            <aside className="rounded-3xl border border-slate-200 bg-blue-50 p-8">
+              <h2 className="text-2xl font-bold text-slate-900 mb-4">안내 사항</h2>
+              <div className="space-y-4 text-slate-700 leading-7">
+                <p>민감한 텍스트는 가능하면 입력하지 않는 것을 권장합니다.</p>
+                <p>규칙집과 프리셋은 브라우저 저장소를 통해 보관될 수 있습니다.</p>
+                <p>광고 및 분석 도구가 적용되는 경우, 해당 정책이 별도로 안내됩니다.</p>
               </div>
-
-              <div className="bg-yellow-50 rounded-xl p-6">
-                <h3 className="font-semibold text-gray-800 mb-3">수집하지 않는 정보</h3>
-                <ul className="space-y-2 text-sm text-gray-700">
-                  <li className="flex items-start">
-                    <span className="text-yellow-600 mr-2">✓</span>
-                    <span>입력한 텍스트 내용 (암호화/복호화 대상)</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-yellow-600 mr-2">✓</span>
-                    <span>생성한 언어 변환 규칙</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-yellow-600 mr-2">✓</span>
-                    <span>개인 식별 정보 (이름, 이메일, 전화번호 등)</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-yellow-600 mr-2">✓</span>
-                    <span>위치 정보</span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </section>
-
-          {/* 정보 사용 목적 */}
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-              <span className="text-3xl mr-3">🎯</span> 정보 사용 목적
-            </h2>
-            <div className="grid md:grid-cols-2 gap-6">
-              <div className="bg-green-50 rounded-xl p-6 border border-green-200">
-                <h3 className="font-semibold text-green-800 mb-3">허용된 목적</h3>
-                <ul className="space-y-2 text-sm text-gray-700">
-                  <li className="flex items-start">
-                    <span className="text-green-600 mr-2">✓</span>
-                    <span>서비스 개선 및 최적화</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-green-600 mr-2">✓</span>
-                    <span>기술적 문제 해결</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-green-600 mr-2">✓</span>
-                    <span>통계 분석 (익명화된 데이터)</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-green-600 mr-2">✓</span>
-                    <span>법적 의무 준수</span>
-                  </li>
-                </ul>
-              </div>
-              <div className="bg-red-50 rounded-xl p-6 border border-red-200">
-                <h3 className="font-semibold text-red-800 mb-3">금지된 목적</h3>
-                <ul className="space-y-2 text-sm text-gray-700">
-                  <li className="flex items-start">
-                    <span className="text-red-600 mr-2">✗</span>
-                    <span>개인 식별 및 추적</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-red-600 mr-2">✗</span>
-                    <span>마케팅 및 광고 타겟팅</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-red-600 mr-2">✗</span>
-                    <span>제3자에게의 정보 판매</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-red-600 mr-2">✗</span>
-                    <span>사용자 동의 없는 목적 변경</span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </section>
-
-          {/* 정보 보관 및 파기 */}
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-              <span className="text-3xl mr-3">⏰</span> 정보 보관 및 파기
-            </h2>
-            <div className="bg-purple-50 rounded-xl p-6">
-              <h3 className="font-semibold text-purple-800 mb-3">보관 기간</h3>
-              <ul className="space-y-2 text-sm text-gray-700 mb-4">
-                <li className="flex items-start">
-                  <span className="text-purple-600 mr-2">•</span>
-                  <span><strong>서비스 이용 기록:</strong> 최대 12개월 (통계 목적)</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-purple-600 mr-2">•</span>
-                  <span><strong>기술 정보:</strong> 최대 6개월 (기술 지원 목적)</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-purple-600 mr-2">•</span>
-                  <span><strong>쿠키 정보:</strong> 최대 30일 (사이트 기능 개선)</span>
-                </li>
-              </ul>
-              
-              <h3 className="font-semibold text-purple-800 mb-3">파기 절차</h3>
-              <ul className="space-y-2 text-sm text-gray-700">
-                <li className="flex items-start">
-                  <span className="text-purple-600 mr-2">•</span>
-                  <span>보관 기간 종료 시 자동 파기</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-purple-600 mr-2">•</span>
-                  <span>서비스 종료 시 모든 데이터 즉시 파기</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-purple-600 mr-2">•</span>
-                  <span>사용자 요청 시 즉시 파기 (해당 정보에 한함)</span>
-                </li>
-              </ul>
-            </div>
-          </section>
-
-          {/* 제3자 제공 */}
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-              <span className="text-3xl mr-3">🔗</span> 제3자 제공
-            </h2>
-            <div className="bg-orange-50 rounded-xl p-6 border-l-4 border-orange-500">
-              <p className="text-gray-700 leading-relaxed mb-4">
-                원칙적으로 사용자의 개인정보를 제3자에게 제공하지 않습니다. 
-                다만, 아래의 경우에는 예외적으로 제공될 수 있습니다:
-              </p>
-              <ul className="space-y-2 text-gray-700">
-                <li className="flex items-start">
-                  <span className="text-orange-500 mr-2">•</span>
-                  <span><strong>법적 요구:</strong> 법원, 수사기관 등 법적 절차에 따른 요구</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-orange-500 mr-2">•</span>
-                  <span><strong>서비스 제공:</strong> 호스팅, CDN 등 필수적인 서비스 제공업체</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-orange-500 mr-2">•</span>
-                  <span><strong>사용자 동의:</strong> 명시적인 동의를 얻은 경우</span>
-                </li>
-              </ul>
-            </div>
-          </section>
-
-          {/* 사용자 권리 */}
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-              <span className="text-3xl mr-3">👤</span> 사용자 권리
-            </h2>
-            <div className="grid md:grid-cols-2 gap-6">
-              <div className="bg-blue-50 rounded-xl p-6">
-                <h3 className="font-semibold text-blue-800 mb-3">보장되는 권리</h3>
-                <ul className="space-y-2 text-sm text-gray-700">
-                  <li className="flex items-start">
-                    <span className="text-blue-600 mr-2">•</span>
-                    <span>자신의 정보에 대한 접근권</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-blue-600 mr-2">•</span>
-                    <span>정보 정정 및 삭제 요청권</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-blue-600 mr-2">•</span>
-                    <span>처리 중지 요청권</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-blue-600 mr-2">•</span>
-                    <span>동의 철회권</span>
-                  </li>
-                </ul>
-              </div>
-              <div className="bg-indigo-50 rounded-xl p-6">
-                <h3 className="font-semibold text-indigo-800 mb-3">권리 행사 방법</h3>
-                <ul className="space-y-2 text-sm text-gray-700">
-                  <li className="flex items-start">
-                    <span className="text-indigo-600 mr-2">1</span>
-                    <span>이메일 또는 문의 폼으로 요청</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-indigo-600 mr-2">2</span>
-                    <span>신원 확인 절차 진행</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-indigo-600 mr-2">3</span>
-                    <span>10일 이내 처리 및 통보</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-indigo-600 mr-2">4</span>
-                    <span>이의가 있을 경우 재검토</span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </section>
-
-          {/* 보안 조치 */}
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-              <span className="text-3xl mr-3">🛡️</span> 보안 조치
-            </h2>
-            <div className="bg-red-50 rounded-xl p-6">
-              <h3 className="font-semibold text-red-800 mb-3">기술적 조치</h3>
-              <ul className="space-y-2 text-sm text-gray-700 mb-4">
-                <li className="flex items-start">
-                  <span className="text-red-600 mr-2">•</span>
-                  <span>SSL/TLS 암호화 통신</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-red-600 mr-2">•</span>
-                  <span>정기적인 보안 패치 및 업데이트</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-red-600 mr-2">•</span>
-                  <span>접근 제어 및 인증 시스템</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-red-600 mr-2">•</span>
-                  <span>클라이언트 측 처리 (데이터 서버 전송 방지)</span>
-                </li>
-              </ul>
-              
-              <h3 className="font-semibold text-red-800 mb-3">관리적 조치</h3>
-              <ul className="space-y-2 text-sm text-gray-700">
-                <li className="flex items-start">
-                  <span className="text-red-600 mr-2">•</span>
-                  <span>개인정보 보호 교육</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-red-600 mr-2">•</span>
-                  <span>정기적인 보안 감사</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-red-600 mr-2">•</span>
-                  <span>정보 유출 시 즉시 대응 절차</span>
-                </li>
-              </ul>
-            </div>
-          </section>
-
-          {/* 정책 변경 */}
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-              <span className="text-3xl mr-3">🔄</span> 정책 변경
-            </h2>
-            <div className="bg-gray-50 rounded-xl p-6">
-              <ul className="space-y-2 text-sm text-gray-700">
-                <li className="flex items-start">
-                  <span className="text-gray-600 mr-2">•</span>
-                  <span>정책 변경 시 사이트에 공지합니다</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-gray-600 mr-2">•</span>
-                  <span>중요한 변경은 30일 전에 미리 알립니다</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-gray-600 mr-2">•</span>
-                  <span>변경된 정책은 즉시 효력을 발휘합니다</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-gray-600 mr-2">•</span>
-                  <span>계속 사용 시 변경된 정책에 동의하는 것으로 간주합니다</span>
-                </li>
-              </ul>
-            </div>
-          </section>
-
-          {/* 연락처 */}
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-              <span className="text-3xl mr-3">📞</span> 문의 및 연락처
-            </h2>
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6">
-              <p className="text-gray-700 mb-4">
-                개인정보처리방침에 대한 궁금한 점이나 문의사항이 있으시면 아래로 연락해주세요:
-              </p>
-              <div className="space-y-2 text-sm text-gray-700">
-                <p><strong>이메일:</strong> privacy@example.com</p>
-                <p><strong>문의 폼:</strong> 사이트 내 문의하기 기능</p>
-                <p><strong>GitHub:</strong> 프로젝트 저장소 이슈 등록</p>
-                <p><strong>처리 기간:</strong> 접수 후 10일 이내</p>
-              </div>
-            </div>
-          </section>
-
-          {/* CTA */}
-          <section className="text-center">
-            <div className="bg-gradient-to-r from-gray-600 to-gray-800 rounded-xl p-8 text-white">
-              <h2 className="text-2xl font-bold mb-4">개인정보 보호를 약속드립니다</h2>
-              <p className="mb-6">사용자의 신뢰를 가장 소중하게 생각합니다</p>
-              <div className="space-x-4">
-                <Link 
-                  href="/" 
-                  className="inline-block bg-white text-gray-800 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
-                >
-                  🏠 메인으로
+              <div className="mt-8">
+                <Link href="/contact" className="inline-flex rounded-full bg-sky-600 px-5 py-3 text-sm font-semibold text-white hover:bg-sky-700 transition-colors">
+                  문의 페이지로 이동
                 </Link>
-                <Link 
-                  href="/terms" 
-                  className="inline-block bg-transparent border-2 border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white hover:text-gray-800 transition-colors"
-                >
-                  📋 이용약관
-                </Link>
+              </div>
+            </aside>
+          </section>
+
+          <section className="rounded-3xl border border-slate-200 bg-white p-8 md:p-10">
+            <h2 className="text-2xl font-bold text-slate-900 mb-4">정책의 범위</h2>
+            <div className="grid gap-4 md:grid-cols-3">
+              <div className="rounded-2xl bg-slate-50 p-5 border border-slate-200">
+                <h3 className="font-bold text-slate-900 mb-2">브라우저 저장</h3>
+                <p className="text-slate-700 leading-7">프리셋, 히스토리, 사용자 설정은 로컬 저장소에 남을 수 있습니다.</p>
+              </div>
+              <div className="rounded-2xl bg-slate-50 p-5 border border-slate-200">
+                <h3 className="font-bold text-slate-900 mb-2">운영 로그</h3>
+                <p className="text-slate-700 leading-7">오류 분석용 로그는 서비스 품질 개선 목적에 한해 최소한으로 다룹니다.</p>
+              </div>
+              <div className="rounded-2xl bg-slate-50 p-5 border border-slate-200">
+                <h3 className="font-bold text-slate-900 mb-2">제3자 도구</h3>
+                <p className="text-slate-700 leading-7">광고나 분석 도구가 사용될 경우, 해당 서비스의 정책과 함께 검토해야 합니다.</p>
               </div>
             </div>
           </section>

@@ -1,5 +1,3 @@
-import { Metadata } from 'next';
-
 export const metadata = {
   title: '문의하기 - 나만의 언어 생성기',
   description: '궁금한 점이나 문의사항을 알려주세요',

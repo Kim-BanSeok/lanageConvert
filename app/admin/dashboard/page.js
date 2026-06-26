@@ -2,9 +2,18 @@
 
 import { useEffect, useMemo, useState } from "react";
 import {
-  LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer,
-  BarChart, Bar,
+  LineChart,
+  Line,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  BarChart,
+  Bar,
 } from "recharts";
+import { startSessionMonitoring } from "../../lib/sessionManager";
 
 function todayKey() {
   const d = new Date();
@@ -24,19 +33,20 @@ function daysAgoKey(n) {
 }
 
 export default function DashboardPage() {
-  // 🔒 세션 모니터링 시작
-  useEffect(() => {
-    const cleanup = startSessionMonitoring(() => {
-      // 세션 만료 시 로그아웃 처리
-      window.location.href = '/admin/login?expired=true';
-    });
-
-    return cleanup;
-  }, []);
+  const [mounted, setMounted] = useState(false);
   const [from, setFrom] = useState(daysAgoKey(14));
   const [to, setTo] = useState(todayKey());
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    const cleanup = startSessionMonitoring(() => {
+      window.location.href = "/admin/login?expired=true";
+    });
+
+    return cleanup;
+  }, []);
 
   const fetchStats = async () => {
     setLoading(true);
@@ -67,26 +77,26 @@ export default function DashboardPage() {
   const summary = useMemo(() => {
     if (!stats) return null;
 
-    // home_ad_layout_experiment 기준 A/B만 뽑아서 요약
-    const rows = (stats.experiments || []).filter((x) => x.experiment === "home_ad_layout_experiment" && (x.variant === "A" || x.variant === "B"));
+    const rows = (stats.experiments || []).filter(
+      (x) => x.experiment === "home_ad_layout_experiment" && (x.variant === "A" || x.variant === "B")
+    );
     const byV = Object.fromEntries(rows.map((r) => [r.variant, r]));
 
     const A = byV["A"] || { page_view: 0, ad_view: 0 };
     const B = byV["B"] || { page_view: 0, ad_view: 0 };
 
-    const A_rate = A.page_view ? (A.ad_view / A.page_view) : 0;
-    const B_rate = B.page_view ? (B.ad_view / B.page_view) : 0;
+    const A_rate = A.page_view ? A.ad_view / A.page_view : 0;
+    const B_rate = B.page_view ? B.ad_view / B.page_view : 0;
 
     return { A, B, A_rate, B_rate };
   }, [stats]);
 
   const logout = async () => {
     try {
-      // 🛡️ CSRF 토큰 가져오기
       const csrfRes = await fetch("/api/csrf-token");
       const { token: csrfToken } = await csrfRes.json();
 
-      await fetch("/api/admin/logout", { 
+      await fetch("/api/admin/logout", {
         method: "POST",
         headers: {
           "X-CSRF-Token": csrfToken,
@@ -102,11 +112,12 @@ export default function DashboardPage() {
   return (
     <div className="max-w-5xl mx-auto p-6 text-white space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">📊 광고/트래픽 대시보드</h1>
-        <button className="btn-3d btn-red" onClick={logout}>로그아웃</button>
+        <h1 className="text-2xl font-bold">광고/트래픽 대시보드</h1>
+        <button className="btn-3d btn-red" onClick={logout}>
+          로그아웃
+        </button>
       </div>
 
-      {/* 날짜 필터 */}
       <div className="card-3d space-y-3">
         <div className="flex flex-wrap gap-3 items-end">
           <div>
@@ -131,11 +142,10 @@ export default function DashboardPage() {
         </div>
 
         <p className="text-xs opacity-70">
-          ⚠️ 현재 저장소가 "서버 메모리(in-memory)"면 서버 재시작/배포 시 통계가 초기화됩니다. 운영용은 DB/Redis 추천.
+          현재 저장소는 메모리 기반이라 재시작 시 통계가 초기화됩니다. 운영 환경에서는 DB나 Redis 연동을 권장합니다.
         </p>
       </div>
 
-      {/* 요약 카드 */}
       {summary && (
         <div className="grid md:grid-cols-2 gap-6">
           <div className="card-3d">
@@ -153,46 +163,56 @@ export default function DashboardPage() {
         </div>
       )}
 
-      {/* 라인차트: 일자별 페이지뷰 */}
       <div className="card-3d">
-        <h2 className="text-xl font-semibold mb-3">일자별 페이지뷰 (A/B)</h2>
+        <h2 className="text-xl font-semibold mb-3">일자별 페이지뷰(A/B)</h2>
         <div style={{ width: "100%", height: 320 }}>
-          <ResponsiveContainer>
-            <LineChart data={stats?.dailySeries || []}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="date" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Line type="monotone" dataKey="A_page" name="A 페이지뷰" stroke="#60a5fa" dot={false} />
-              <Line type="monotone" dataKey="B_page" name="B 페이지뷰" stroke="#f472b6" dot={false} />
-            </LineChart>
-          </ResponsiveContainer>
+          {mounted ? (
+            <ResponsiveContainer>
+              <LineChart data={stats?.dailySeries || []}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="date" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Line type="monotone" dataKey="A_page" name="A 페이지뷰" stroke="#60a5fa" dot={false} />
+                <Line type="monotone" dataKey="B_page" name="B 페이지뷰" stroke="#f472b6" dot={false} />
+              </LineChart>
+            </ResponsiveContainer>
+          ) : (
+            <div className="flex h-full items-center justify-center text-sm opacity-70">
+              차트 준비 중...
+            </div>
+          )}
         </div>
       </div>
 
-      {/* 바차트: 일자별 광고노출 */}
       <div className="card-3d">
         <h2 className="text-xl font-semibold mb-3">일자별 광고노출(ad_view) (A/B)</h2>
         <div style={{ width: "100%", height: 320 }}>
-          <ResponsiveContainer>
-            <BarChart data={stats?.dailySeries || []}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="date" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Bar dataKey="A_ad" name="A 광고노출" fill="#60a5fa" />
-              <Bar dataKey="B_ad" name="B 광고노출" fill="#f472b6" />
-            </BarChart>
-          </ResponsiveContainer>
+          {mounted ? (
+            <ResponsiveContainer>
+              <BarChart data={stats?.dailySeries || []}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="date" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="A_ad" name="A 광고노출" fill="#60a5fa" />
+                <Bar dataKey="B_ad" name="B 광고노출" fill="#f472b6" />
+              </BarChart>
+            </ResponsiveContainer>
+          ) : (
+            <div className="flex h-full items-center justify-center text-sm opacity-70">
+              차트 준비 중...
+            </div>
+          )}
         </div>
       </div>
 
       <div className="card-3d">
-        <h2 className="text-xl font-semibold mb-3">원시 집계 테이블</h2>
+        <h2 className="text-xl font-semibold mb-3">실험 리스트</h2>
         <p className="text-sm opacity-80 mb-3">
-          실험별·버전별 전체 이벤트 집계입니다.
+          실험별 페이지뷰, 광고노출, 변형별 성과를 확인합니다.
         </p>
 
         <div className="overflow-x-auto">
@@ -221,10 +241,9 @@ export default function DashboardPage() {
         </div>
 
         <p className="text-xs opacity-70 mt-3">
-          ✅ AdSense 정책 안전: 클릭 추적 금지. 우리는 노출/레이아웃/페이지뷰만 추적합니다.
+          광고 실험은 클릭이 아니라 노출 중심으로만 추적합니다.
         </p>
       </div>
     </div>
   );
 }
-

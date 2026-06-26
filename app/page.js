@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
@@ -58,14 +58,14 @@ import { validateTextInput, validateRules, validateRule, validatePresetName, san
 export default function Home() {
   const router = useRouter();
   const { showAlert, AlertComponent } = useCustomAlert();
-  const isMobile = useIsMobile(); // 📱 모바일 감지
+  const isMobile = useIsMobile(); // ?벑 紐⑤컮??媛먯?
 
-  // 🛡️ 전역 에러 핸들러 설정
+  // ?썳截??꾩뿭 ?먮윭 ?몃뱾???ㅼ젙
   useEffect(() => {
     setupGlobalErrorHandler(showAlert);
   }, [showAlert]);
   
-  // 🔄 Undo/Redo 시스템 적용
+  // Undo/Redo history samples
   const {
     state: rules,
     setState: setRulesWithHistory,
@@ -75,14 +75,14 @@ export default function Home() {
     canRedo
   } = useHistory(
     [
-      { from: "사랑", to: "BODO" },
+      { from: "가", to: "BODO" },
       { from: "나", to: "DO" },
-      { from: "가", to: "BA" },
+      { from: "다", to: "BA" },
     ],
-    50 // 최대 50개 히스토리
+    50 // 理쒕? 50媛??덉뒪?좊━
   );
 
-  // 기존 setRules를 Wrapper로 대체
+  // Keep history updates wrapped in one setter
   const setRules = useCallback((newRules, action = "규칙 변경") => {
     setRulesWithHistory(newRules, action);
   }, [setRulesWithHistory]);
@@ -90,73 +90,73 @@ export default function Home() {
   const [inputText, setInputText] = useState("");
   const [outputText, setOutputText] = useState("");
 
-  // v2 번역 엔진 모드 선택
+  // v2 踰덉뿭 ?붿쭊 紐⑤뱶 ?좏깮
   const [engineMode, setEngineMode] = useState("hybrid"); // 'substring' | 'word' | 'hybrid'
 
-  // 프리셋 UI State
+  // ?꾨━??UI State
   const [showPresetModal, setShowPresetModal] = useState(false);
   const [presetName, setPresetName] = useState("");
   const [presetList, setPresetList] = useState([]);
 
-  // AI 생성기 모달 State
+  // AI ?앹꽦湲?紐⑤떖 State
   const [showAIModal, setShowAIModal] = useState(false);
   const [showLearnModal, setShowLearnModal] = useState(false);
   
-  // AI 미리보기 상태
+  // AI 誘몃━蹂닿린 ?곹깭
   const [preview, setPreview] = useState({ mode: null, data: null });
 
-  // 언어 진화 & 네이밍 모달 State
+  // ?몄뼱 吏꾪솕 & ?ㅼ씠諛?紐⑤떖 State
   const [showIdentityModal, setShowIdentityModal] = useState(false);
   const [showEvolutionModal, setShowEvolutionModal] = useState(false);
   const [showEvolutionRecommend, setShowEvolutionRecommend] = useState(false);
   const [sampleCount, setSampleCount] = useState(0);
   const [learnToast, setLearnToast] = useState(false);
 
-  // 튜토리얼 모달 State
+  // ?쒗넗由ъ뼹 紐⑤떖 State
   const [showTutorial, setShowTutorial] = useState(false);
   const [showQuickGuide, setShowQuickGuide] = useState(false);
   const [showBackupModal, setShowBackupModal] = useState(false);
 
-  // 🔍 규칙 검색/필터 State
+  // ?뵇 洹쒖튃 寃???꾪꽣 State
   const [filteredRules, setFilteredRules] = useState(rules);
   const [showSearch, setShowSearch] = useState(false);
 
-  // ✏️ 프리셋 편집 State
+  // ?륅툘 ?꾨━???몄쭛 State
   const [editingPresetIndex, setEditingPresetIndex] = useState(null);
   const [editingPresetName, setEditingPresetName] = useState("");
 
-  // ⌨️ 단축키 도움말 모달
+  // ?⑨툘 ?⑥텞???꾩?留?紐⑤떖
   const [showShortcutsHelp, setShowShortcutsHelp] = useState(false);
 
-  // 📜 번역 히스토리 모달
+  // ?뱶 踰덉뿭 ?덉뒪?좊━ 紐⑤떖
   const [showHistory, setShowHistory] = useState(false);
 
-  // 📊 규칙 통계 모달
+  // ?뱤 洹쒖튃 ?듦퀎 紐⑤떖
   const [showStatistics, setShowStatistics] = useState(false);
 
-  // 🔍 충돌 검사기 모달
+  // ?뵇 異⑸룎 寃?ш린 紐⑤떖
   const [showConflictChecker, setShowConflictChecker] = useState(false);
 
-  // 🧪 테스트 번역기 모달
+  // ?㎦ ?뚯뒪??踰덉뿭湲?紐⑤떖
   const [showTestTranslator, setShowTestTranslator] = useState(false);
 
-  // 🌓 테마
+  // ?뙎 ?뚮쭏
   const [theme, toggleTheme] = useTheme();
 
-  // 생성된 언어 아이덴티티 저장(로컬)
+  // ?앹꽦???몄뼱 ?꾩씠?댄떚?????濡쒖뺄)
   const [languageIdentity, setLanguageIdentity] = useState(null);
 
-  // 🔒 구글 애드센스 정책 준수: 메인 페이지는 충분한 콘텐츠가 있으므로 항상 광고 표시
-  // (메인 페이지에는 로고, 입력/출력 영역, 규칙 편집 영역, 네비게이션 등 충분한 콘텐츠가 있음)
+  // ?뵏 援ш? ?좊뱶?쇱뒪 ?뺤콉 以?? 硫붿씤 ?섏씠吏??異⑸텇??肄섑뀗痢좉? ?덉쑝誘濡???긽 愿묎퀬 ?쒖떆
+  // (硫붿씤 ?섏씠吏?먮뒗 濡쒓퀬, ?낅젰/異쒕젰 ?곸뿭, 洹쒖튃 ?몄쭛 ?곸뿭, ?ㅻ퉬寃뚯씠????異⑸텇??肄섑뀗痢좉? ?덉쓬)
   const shouldShowAds = useCallback(() => {
-    // 환경 변수가 없으면 광고 표시 안 함
+    // ?섍꼍 蹂?섍? ?놁쑝硫?愿묎퀬 ?쒖떆 ????
     if (!process.env.NEXT_PUBLIC_ADSENSE_SLOT) return false;
     
-    // 메인 페이지는 항상 충분한 콘텐츠가 있으므로 광고 표시
+    // 硫붿씤 ?섏씠吏????긽 異⑸텇??肄섑뀗痢좉? ?덉쑝誘濡?愿묎퀬 ?쒖떆
     return true;
   }, []);
 
-  // 클라이언트에서만 localStorage에서 로드 (Hydration 에러 방지)
+  // ?대씪?댁뼵?몄뿉?쒕쭔 localStorage?먯꽌 濡쒕뱶 (Hydration ?먮윭 諛⑹?)
   useEffect(() => {
     try {
       const saved = safeLocalStorageGet("language_identity_v1");
@@ -165,13 +165,13 @@ export default function Home() {
         setLanguageIdentity(parsed);
       }
     } catch (error) {
-      console.warn("언어 아이덴티티 로드 실패:", error);
+      console.warn("?몄뼱 ?꾩씠?댄떚??濡쒕뱶 ?ㅽ뙣:", error);
     }
 
-    // 첫 방문자 체크
+    // 泥?諛⑸Ц??泥댄겕
     const hasVisited = safeLocalStorageGet("has_visited");
     if (!hasVisited) {
-      // 2초 후에 튜토리얼 표시
+      // 2珥??꾩뿉 ?쒗넗由ъ뼹 ?쒖떆
       setTimeout(() => {
         setShowTutorial(true);
         safeLocalStorageSet("has_visited", "true");
@@ -179,54 +179,54 @@ export default function Home() {
     }
   }, []);
 
-  // 자동 학습용 상태
+  // ?먮룞 ?숈뒿???곹깭
   const [lastSourceText, setLastSourceText] = useState("");
   const [lastAutoTranslated, setLastAutoTranslated] = useState("");
   const [userEditedOutput, setUserEditedOutput] = useState(false);
   const [lastSavedKey, setLastSavedKey] = useState("");
 
-  // 규칙 추가
+  // 洹쒖튃 異붽?
   const addRule = () => {
-    // 🔒 규칙 개수 제한 검증
+    // ?뵏 洹쒖튃 媛쒖닔 ?쒗븳 寃利?
     if (rules.length >= 1000) {
-      showAlert("규칙은 최대 1000개까지 추가할 수 있습니다.", "error");
+      showAlert("洹쒖튃? 理쒕? 1000媛쒓퉴吏 異붽??????덉뒿?덈떎.", "error");
       return;
     }
-    setRules([...rules, { from: "", to: "" }], "➕ 규칙 추가");
+    setRules([...rules, { from: "", to: "" }], "??洹쒖튃 異붽?");
     
-    // 🎯 Quick Win 8: 규칙 추가 시 포커스 자동 이동
+    // ?렞 Quick Win 8: 洹쒖튃 異붽? ???ъ빱???먮룞 ?대룞
     setTimeout(() => {
-      const inputs = document.querySelectorAll('input[placeholder*="예: 사랑"], input[placeholder*="예:"]');
+      const inputs = document.querySelectorAll('input[placeholder*="?? ?щ옉"], input[placeholder*="??"]');
       if (inputs.length > 0) {
-        const lastInput = inputs[inputs.length - 2]; // 마지막에서 두 번째 (from 필드)
+        const lastInput = inputs[inputs.length - 2]; // 留덉?留됱뿉????踰덉㎏ (from ?꾨뱶)
         if (lastInput) lastInput.focus();
       }
     }, 50);
   };
 
-  // 규칙 수정
+  // 洹쒖튃 ?섏젙
   const updateRule = (index, newRule) => {
-    // 🔒 규칙 검증
+    // ?뵏 洹쒖튃 寃利?
     const validation = validateRule(newRule);
     if (!validation.valid) {
-      showAlert(validation.error || '규칙이 유효하지 않습니다.', 'error');
+      showAlert(validation.error || '洹쒖튃???좏슚?섏? ?딆뒿?덈떎.', 'error');
       return;
     }
     const updated = [...rules];
     updated[index] = newRule;
-    setRules(updated, "✏️ 규칙 수정");
+    setRules(updated, "?륅툘 洹쒖튃 ?섏젙");
   };
 
-  // 규칙 삭제
+  // 洹쒖튃 ??젣
   const deleteRule = (index) => {
     const deleted = rules[index];
     setRules(
       rules.filter((_, i) => i !== index), 
-      `🗑️ "${deleted.from}" 규칙 삭제`
+      `?뿊截?"${deleted.from}" 洹쒖튃 ??젣`
     );
   };
 
-  // 🎯 Phase 2-2: 드래그 앤 드롭 정렬
+  // ?렞 Phase 2-2: ?쒕옒洹????쒕∼ ?뺣젹
   const [draggedIndex, setDraggedIndex] = useState(null);
 
   const handleDragStart = (e, index) => {
@@ -251,15 +251,15 @@ export default function Home() {
     const [draggedItem] = newRules.splice(draggedIndex, 1);
     newRules.splice(dropIndex, 0, draggedItem);
 
-    setRules(newRules, `📋 규칙 순서 변경 (${draggedIndex + 1} → ${dropIndex + 1})`);
+    setRules(newRules, `?뱥 洹쒖튃 ?쒖꽌 蹂寃?(${draggedIndex + 1} ??${dropIndex + 1})`);
     setDraggedIndex(null);
   };
 
   /* ---------------------------
-   *   localStorage 관련 처리
+   *   localStorage 愿??泥섎━
    * --------------------------- */
 
-  // localStorage에서 프리셋 불러오기
+  // localStorage?먯꽌 ?꾨━??遺덈윭?ㅺ린
   useEffect(() => {
     try {
       const saved = safeLocalStorageGet("language-presets");
@@ -268,19 +268,19 @@ export default function Home() {
           setPresetList(JSON.parse(saved));
         } catch (error) {
           if (process.env.NODE_ENV === 'development') {
-            console.error("프리셋 불러오기 실패:", error);
+            console.error("?꾨━??遺덈윭?ㅺ린 ?ㅽ뙣:", error);
           }
         }
       }
     } catch (error) {
-      // 스토리지 접근 불가 시 무시
+      // ?ㅽ넗由ъ? ?묎렐 遺덇? ??臾댁떆
       if (process.env.NODE_ENV === 'development') {
-        console.warn("localStorage 접근 실패:", error);
+        console.warn("localStorage ?묎렐 ?ㅽ뙣:", error);
       }
     }
   }, []);
 
-  // 샘플 수 확인 및 진화 추천 체크
+  // ?섑뵆 ???뺤씤 諛?吏꾪솕 異붿쿇 泥댄겕
   useEffect(() => {
     try {
       const samples = loadSamples();
@@ -292,19 +292,19 @@ export default function Home() {
         markRecommended(count);
       }
     } catch (error) {
-      console.warn("샘플 로드 실패:", error);
+      console.warn("?섑뵆 濡쒕뱶 ?ㅽ뙣:", error);
       setSampleCount(0);
     }
-  }, [outputText]); // outputText 변경 시 체크
+  }, [outputText]); // outputText 蹂寃???泥댄겕
 
-  // 오프라인 상태 감지
+  // ?ㅽ봽?쇱씤 ?곹깭 媛먯?
   useEffect(() => {
     const handleOffline = () => {
-      showAlert("현재 오프라인입니다. 로컬 데이터로만 작업 가능합니다.", "info", 3000);
+      showAlert("?꾩옱 ?ㅽ봽?쇱씤?낅땲?? 濡쒖뺄 ?곗씠?곕줈留??묒뾽 媛?ν빀?덈떎.", "info", 3000);
     };
 
     const handleOnline = () => {
-      showAlert("인터넷 연결이 복구되었습니다.", "success", 2000);
+      showAlert("?명꽣???곌껐??蹂듦뎄?섏뿀?듬땲??", "success", 2000);
     };
 
     window.addEventListener("offline", handleOffline);
@@ -316,7 +316,7 @@ export default function Home() {
     };
   }, [showAlert]);
 
-  // AI 생성 미리보기 생성
+  // AI ?앹꽦 誘몃━蹂닿린 ?앹꽦
   useEffect(() => {
     if (preview.mode === 1) {
       setPreview((p) => ({ ...p, data: generateAI_CharacterMap() }));
@@ -327,46 +327,46 @@ export default function Home() {
     } else if (preview.mode === 4) {
       setPreview((p) => ({ ...p, data: generateAI_Crypto() }));
     } else {
-      // 모드가 없거나 초기화 시 데이터 클리어
+      // 紐⑤뱶媛 ?녾굅??珥덇린?????곗씠???대━??
       if (preview.mode === null && preview.data) {
         setPreview({ mode: null, data: null });
       }
     }
   }, [preview.mode]);
 
-  // 프리셋 저장
+  // ?꾨━?????
   const savePreset = async () => {
-    // 🔒 프리셋 이름 검증
+    // ?뵏 ?꾨━???대쫫 寃利?
     const nameValidation = validatePresetName(presetName);
     if (!nameValidation.valid) {
-      await showAlert(nameValidation.error || "프리셋 이름이 유효하지 않습니다.", "error");
+      await showAlert(nameValidation.error || "?꾨━???대쫫???좏슚?섏? ?딆뒿?덈떎.", "error");
       return;
     }
 
     if (!presetName.trim()) {
-      await showAlert("프리셋 이름을 입력해주세요.", "warning");
+      await showAlert("?꾨━???대쫫???낅젰?댁＜?몄슂.", "warning");
       return;
     }
 
-    // 🎯 Quick Win 1: 프리셋 이름 중복 체크
+    // ?렞 Quick Win 1: ?꾨━???대쫫 以묐났 泥댄겕
     const trimmedName = presetName.trim();
     const isDuplicate = presetList.some(p => p.name === trimmedName);
     if (isDuplicate) {
-      await showAlert(`"${trimmedName}" 이름은 이미 사용 중입니다. 다른 이름을 입력해주세요.`, "warning");
+      await showAlert(`"${trimmedName}" ?대쫫? ?대? ?ъ슜 以묒엯?덈떎. ?ㅻⅨ ?대쫫???낅젰?댁＜?몄슂.`, "warning");
       return;
     }
 
-    // 빈 규칙 필터링
+    // 鍮?洹쒖튃 ?꾪꽣留?
     const validRules = rules.filter(
       (rule) => rule && rule.from && rule.from.trim() !== ""
     );
 
     if (validRules.length === 0) {
-      await showAlert("저장할 규칙이 없습니다.", "warning");
+      await showAlert("??ν븷 洹쒖튃???놁뒿?덈떎.", "warning");
       return;
     }
 
-    // 🎯 Quick Win 3: localStorage 용량 체크
+    // ?렞 Quick Win 3: localStorage ?⑸웾 泥댄겕
     try {
       const newPreset = {
         name: trimmedName,
@@ -381,7 +381,7 @@ export default function Home() {
       if (dataSize > maxSize * 0.8) {
         const usagePercent = ((dataSize / maxSize) * 100).toFixed(1);
         await showAlert(
-          `⚠️ 저장소 사용량: ${usagePercent}%\n프리셋이 너무 많으면 데이터가 손실될 수 있습니다. 백업을 권장합니다.`, 
+          `?좑툘 ??μ냼 ?ъ슜?? ${usagePercent}%\n?꾨━?뗭씠 ?덈Т 留롮쑝硫??곗씠?곌? ?먯떎?????덉뒿?덈떎. 諛깆뾽??沅뚯옣?⑸땲??`, 
           "warning",
           5000
         );
@@ -390,41 +390,41 @@ export default function Home() {
       setPresetList(updatedList);
       safeLocalStorageSet("language-presets", JSON.stringify(updatedList));
 
-      await showAlert("프리셋이 저장되었습니다!", "success");
+      await showAlert("?꾨━?뗭씠 ??λ릺?덉뒿?덈떎!", "success");
       setPresetName("");
       setShowPresetModal(false);
     } catch (error) {
       if (error.name === 'QuotaExceededError') {
-        await showAlert("❌ 저장 공간이 부족합니다! 일부 프리셋을 삭제하거나 백업 후 초기화하세요.", "error", 6000);
+        await showAlert("?????怨듦컙??遺議깊빀?덈떎! ?쇰? ?꾨━?뗭쓣 ??젣?섍굅??諛깆뾽 ??珥덇린?뷀븯?몄슂.", "error", 6000);
       } else {
         throw error;
       }
     }
   };
 
-  // 프리셋 불러오기
+  // ?꾨━??遺덈윭?ㅺ린
   const loadPreset = async (preset) => {
     if (preset.rules && preset.rules.length > 0) {
       setRules(preset.rules);
       setShowPresetModal(false);
-      await showAlert(`"${preset.name}" 프리셋을 불러왔습니다.`, "success");
+      await showAlert(`"${preset.name}" ?꾨━?뗭쓣 遺덈윭?붿뒿?덈떎.`, "success");
     } else {
-      await showAlert("프리셋에 규칙이 없습니다.", "warning");
+      await showAlert("?꾨━?뗭뿉 洹쒖튃???놁뒿?덈떎.", "warning");
     }
   };
 
-  // 프리셋 삭제
+  // ?꾨━????젣
   const deletePreset = async (idx) => {
-    const confirmed = window.confirm(`"${presetList[idx].name}" 프리셋을 삭제할까요?`);
+    const confirmed = window.confirm(`"${presetList[idx].name}" ?꾨━?뗭쓣 ??젣?좉퉴??`);
     if (!confirmed) return;
 
     const updated = presetList.filter((_, i) => i !== idx);
     setPresetList(updated);
     safeLocalStorageSet("language-presets", JSON.stringify(updated));
-    await showAlert("프리셋이 삭제되었습니다.", "success");
+    await showAlert("?꾨━?뗭씠 ??젣?섏뿀?듬땲??", "success");
   };
 
-  // 🎯 Phase 2-3: 프리셋 이름 변경
+  // ?렞 Phase 2-3: ?꾨━???대쫫 蹂寃?
   const startEditPreset = (idx) => {
     setEditingPresetIndex(idx);
     setEditingPresetName(presetList[idx].name);
@@ -433,22 +433,22 @@ export default function Home() {
   const savePresetName = async (idx) => {
     const newName = editingPresetName.trim();
     
-    // 🔒 프리셋 이름 검증
+    // ?뵏 ?꾨━???대쫫 寃利?
     const nameValidation = validatePresetName(newName);
     if (!nameValidation.valid) {
-      await showAlert(nameValidation.error || "프리셋 이름이 유효하지 않습니다.", "error");
+      await showAlert(nameValidation.error || "?꾨━???대쫫???좏슚?섏? ?딆뒿?덈떎.", "error");
       return;
     }
     
     if (!newName) {
-      await showAlert("프리셋 이름을 입력해주세요.", "warning");
+      await showAlert("?꾨━???대쫫???낅젰?댁＜?몄슂.", "warning");
       return;
     }
 
-    // 중복 체크 (자신 제외)
+    // 以묐났 泥댄겕 (?먯떊 ?쒖쇅)
     const isDuplicate = presetList.some((p, i) => i !== idx && p.name === newName);
     if (isDuplicate) {
-      await showAlert(`"${newName}" 이름은 이미 사용 중입니다.`, "warning");
+      await showAlert(`"${newName}" ?대쫫? ?대? ?ъ슜 以묒엯?덈떎.`, "warning");
       return;
     }
 
@@ -459,7 +459,7 @@ export default function Home() {
     
     setEditingPresetIndex(null);
     setEditingPresetName("");
-    await showAlert("프리셋 이름이 변경되었습니다.", "success");
+    await showAlert("?꾨━???대쫫??蹂寃쎈릺?덉뒿?덈떎.", "success");
   };
 
   const cancelEditPreset = () => {
@@ -467,71 +467,71 @@ export default function Home() {
     setEditingPresetName("");
   };
 
-  // 암호화 (v2/v3 엔진 자동 선택)
+  // ?뷀샇??(v2/v3 ?붿쭊 ?먮룞 ?좏깮)
   const encode = async () => {
     try {
-      // 🔒 입력 검증
+      // ?뵏 ?낅젰 寃利?
       const inputValidation = validateTextInput(inputText);
       if (!inputValidation.valid) {
-        await showAlert(inputValidation.error || "입력값이 유효하지 않습니다.", "error");
+        await showAlert(inputValidation.error || "?낅젰媛믪씠 ?좏슚?섏? ?딆뒿?덈떎.", "error");
         return;
       }
 
       if (!inputText.trim()) {
-        await showAlert("원본 텍스트를 입력해주세요.", "warning");
+        await showAlert("?먮낯 ?띿뒪?몃? ?낅젰?댁＜?몄슂.", "warning");
         return;
       }
 
-      // 🔒 규칙 검증
+      // ?뵏 洹쒖튃 寃利?
       const rulesValidation = validateRules(rules);
       if (!rulesValidation.valid) {
-        await showAlert(rulesValidation.error || "규칙이 유효하지 않습니다.", "error");
+        await showAlert(rulesValidation.error || "洹쒖튃???좏슚?섏? ?딆뒿?덈떎.", "error");
         return;
       }
 
       const validRules = rules.filter((r) => r && r.from && r.from.trim() !== "");
       if (validRules.length === 0) {
-        await showAlert("변환할 규칙이 없습니다. 규칙을 추가해주세요.", "warning");
+        await showAlert("蹂?섑븷 洹쒖튃???놁뒿?덈떎. 洹쒖튃??異붽??댁＜?몄슂.", "warning");
         return;
       }
 
-      // 🚀 100개 이상 규칙 시 v3 엔진 자동 사용
+      // ?? 100媛??댁긽 洹쒖튃 ??v3 ?붿쭊 ?먮룞 ?ъ슜
       const useV3 = validRules.length >= 100;
-      const engineVersion = useV3 ? "v3 (최적화)" : "v2";
+      const engineVersion = useV3 ? "v3 (理쒖쟻??" : "v2";
 
-      // 보안: 프로덕션에서는 디버깅 로그 제거
+      // 蹂댁븞: ?꾨줈?뺤뀡?먯꽌???붾쾭源?濡쒓렇 ?쒓굅
       if (process.env.NODE_ENV === 'development') {
-        console.log(`🔐 [${engineVersion} 엔진 암호화 시작]`);
-        console.log("📝 원본 텍스트:", inputText);
-        console.log("🔧 엔진 모드:", engineMode);
-        console.log("📋 전체 규칙:", validRules.length);
+        console.log(`?뵍 [${engineVersion} ?붿쭊 ?뷀샇???쒖옉]`);
+        console.log("?뱷 ?먮낯 ?띿뒪??", inputText);
+        console.log("?뵩 ?붿쭊 紐⑤뱶:", engineMode);
+        console.log("?뱥 ?꾩껜 洹쒖튃:", validRules.length);
       }
 
-      // v2 또는 v3 번역 엔진 사용
+      // v2 ?먮뒗 v3 踰덉뿭 ?붿쭊 ?ъ슜
       const translationFn = useV3 ? translateTextV3 : translateText;
       const result = translationFn(inputText, validRules, {
         direction: "encode",
         mode: engineMode,
       });
 
-      console.log("🎯 최종 암호화 결과:", result);
+      console.log("?렞 理쒖쥌 ?뷀샇??寃곌낵:", result);
 
-      // 하위 호환성을 위해 기존 방식도 추적 (복호화용)
+      // ?섏쐞 ?명솚?깆쓣 ?꾪빐 湲곗〈 諛⑹떇??異붿쟻 (蹂듯샇?붿슜)
       const { appliedRules } = encodeText(inputText, validRules);
       if (appliedRules.length > 0) {
         saveLastEncodeRules(appliedRules);
       }
 
-      // 🔒 보안: 출력 sanitization 적용
+      // ?뵏 蹂댁븞: 異쒕젰 sanitization ?곸슜
       const sanitizedResult = sanitizeText(result);
       setOutputText(sanitizedResult);
 
-      // 🔥 자동 학습용 기록
+      // ?뵦 ?먮룞 ?숈뒿??湲곕줉
       setLastSourceText(inputText.trim());
       setLastAutoTranslated(result);
       setUserEditedOutput(false);
 
-      // 📜 히스토리에 추가
+      // ?뱶 ?덉뒪?좊━??異붽?
       addToHistory({
         direction: 'encode',
         mode: engineMode,
@@ -541,49 +541,49 @@ export default function Home() {
         engineVersion: useV3 ? 'v3' : 'v2'
       });
 
-      // 📊 규칙 사용 통계 기록
+      // ?뱤 洹쒖튃 ?ъ슜 ?듦퀎 湲곕줉
       recordRuleUsage(validRules, 'encode');
 
-      await showAlert(`암호화 완료! (${engineMode} 모드, ${validRules.length}개 규칙, ${engineVersion})`, "success", 2000);
+      await showAlert(`?뷀샇???꾨즺! (${engineMode} 紐⑤뱶, ${validRules.length}媛?洹쒖튃, ${engineVersion})`, "success", 2000);
     } catch (error) {
-      console.error("암호화 중 오류 발생:", error);
-      // 🔒 보안: 일반적인 에러 메시지 (상세 정보 숨김)
-      await showAlert("암호화 중 오류가 발생했습니다. 다시 시도해주세요.", "error");
+      console.error("?뷀샇??以??ㅻ쪟 諛쒖깮:", error);
+      // ?뵏 蹂댁븞: ?쇰컲?곸씤 ?먮윭 硫붿떆吏 (?곸꽭 ?뺣낫 ?④?)
+      await showAlert("?뷀샇??以??ㅻ쪟媛 諛쒖깮?덉뒿?덈떎. ?ㅼ떆 ?쒕룄?댁＜?몄슂.", "error");
     }
   };
 
-  // 복호화 (v2/v3 엔진 자동 선택)
+  // 蹂듯샇??(v2/v3 ?붿쭊 ?먮룞 ?좏깮)
   const decode = async () => {
     try {
       if (!inputText.trim()) {
-        await showAlert("원본 텍스트를 입력해주세요.", "warning");
+        await showAlert("?먮낯 ?띿뒪?몃? ?낅젰?댁＜?몄슂.", "warning");
         return;
       }
 
-      // 암호화 시 실제로 적용된 규칙 불러오기
+      // ?뷀샇?????ㅼ젣濡??곸슜??洹쒖튃 遺덈윭?ㅺ린
       let appliedRules = getLastEncodeRules();
 
-      // 저장된 규칙이 없으면 전체 규칙 사용 (하위 호환성)
+      // ??λ맂 洹쒖튃???놁쑝硫??꾩껜 洹쒖튃 ?ъ슜 (?섏쐞 ?명솚??
       if (appliedRules.length === 0) {
         appliedRules = getEncodeOrderFromRules(rules);
       }
 
       const validRules = appliedRules.filter((r) => r && ((r.from && r.from.trim()) || (r.to && r.to.trim())));
       if (validRules.length === 0) {
-        await showAlert("복호화할 규칙이 없습니다. 규칙을 추가해주세요.", "warning");
+        await showAlert("蹂듯샇?뷀븷 洹쒖튃???놁뒿?덈떎. 洹쒖튃??異붽??댁＜?몄슂.", "warning");
         return;
       }
 
-      // 🚀 100개 이상 규칙 시 v3 엔진 자동 사용
+      // ?? 100媛??댁긽 洹쒖튃 ??v3 ?붿쭊 ?먮룞 ?ъ슜
       const useV3 = validRules.length >= 100;
-      const engineVersion = useV3 ? "v3 (최적화)" : "v2";
+      const engineVersion = useV3 ? "v3 (理쒖쟻??" : "v2";
 
-      console.log(`🔓 [${engineVersion} 엔진 복호화 시작]`);
-      console.log("📝 암호화된 텍스트:", inputText);
-      console.log("🔧 엔진 모드:", engineMode);
-      console.log("📋 규칙 개수:", validRules.length);
+      console.log(`?뵑 [${engineVersion} ?붿쭊 蹂듯샇???쒖옉]`);
+      console.log("?뱷 ?뷀샇?붾맂 ?띿뒪??", inputText);
+      console.log("?뵩 ?붿쭊 紐⑤뱶:", engineMode);
+      console.log("?뱥 洹쒖튃 媛쒖닔:", validRules.length);
 
-      // v2 또는 v3 번역 엔진 사용
+      // v2 ?먮뒗 v3 踰덉뿭 ?붿쭊 ?ъ슜
       const translationFn = useV3 ? translateTextV3 : translateText;
       const result = translationFn(inputText, validRules, {
         direction: "decode",
@@ -591,13 +591,13 @@ export default function Home() {
       });
 
       if (process.env.NODE_ENV === 'development') {
-        console.log("🎯 최종 복호화 결과:", result);
+        console.log("?렞 理쒖쥌 蹂듯샇??寃곌낵:", result);
       }
-      // 🔒 보안: 출력 sanitization 적용
+      // ?뵏 蹂댁븞: 異쒕젰 sanitization ?곸슜
       const sanitizedResult = sanitizeText(result);
       setOutputText(sanitizedResult);
 
-      // 📜 히스토리에 추가
+      // ?뱶 ?덉뒪?좊━??異붽?
       addToHistory({
         direction: 'decode',
         mode: engineMode,
@@ -607,18 +607,18 @@ export default function Home() {
         engineVersion: useV3 ? 'v3' : 'v2'
       });
 
-      // 📊 규칙 사용 통계 기록
+      // ?뱤 洹쒖튃 ?ъ슜 ?듦퀎 湲곕줉
       recordRuleUsage(validRules, 'decode');
 
-      await showAlert(`복호화 완료! (${engineMode} 모드, ${validRules.length}개 규칙, ${engineVersion})`, "success", 2000);
+      await showAlert(`蹂듯샇???꾨즺! (${engineMode} 紐⑤뱶, ${validRules.length}媛?洹쒖튃, ${engineVersion})`, "success", 2000);
     } catch (error) {
-      console.error("복호화 중 오류 발생:", error);
-      // 🔒 보안: 일반적인 에러 메시지 (상세 정보 숨김)
-      await showAlert("복호화 중 오류가 발생했습니다. 다시 시도해주세요.", "error");
+      console.error("蹂듯샇??以??ㅻ쪟 諛쒖깮:", error);
+      // ?뵏 蹂댁븞: ?쇰컲?곸씤 ?먮윭 硫붿떆吏 (?곸꽭 ?뺣낫 ?④?)
+      await showAlert("蹂듯샇??以??ㅻ쪟媛 諛쒖깮?덉뒿?덈떎. ?ㅼ떆 ?쒕룄?댁＜?몄슂.", "error");
     }
   };
 
-  // ⌨️ 키보드 단축키 설정 (encode/decode 함수 정의 후)
+  // ?⑨툘 ?ㅻ낫???⑥텞???ㅼ젙 (encode/decode ?⑥닔 ?뺤쓽 ??
   useKeyboardShortcuts({
     onEncode: encode,
     onDecode: decode,
@@ -629,46 +629,45 @@ export default function Home() {
     onBackup: () => setShowBackupModal(true),
   });
 
-  // 결과 복사
+  // 寃곌낵 蹂듭궗
   const copyResult = async () => {
     if (!outputText.trim()) {
-      await showAlert("복사할 결과가 없습니다.", "warning");
+      await showAlert("蹂듭궗??寃곌낵媛 ?놁뒿?덈떎.", "warning");
       return;
     }
     try {
       await navigator.clipboard.writeText(outputText);
-      await showAlert("결과가 복사되었습니다!", "success", 2000);
+      await showAlert("寃곌낵媛 蹂듭궗?섏뿀?듬땲??", "success", 2000);
     } catch (error) {
-      console.error("복사 실패:", error);
-      await showAlert("복사에 실패했습니다. 브라우저 권한을 확인해주세요.", "error");
+      console.error("蹂듭궗 ?ㅽ뙣:", error);
+      await showAlert("蹂듭궗???ㅽ뙣?덉뒿?덈떎. 釉뚮씪?곗? 沅뚰븳???뺤씤?댁＜?몄슂.", "error");
     }
   };
 
-  // 텍스트 swap
+  // ?띿뒪??swap
   const swapText = () => {
     setInputText(outputText);
     setOutputText(inputText);
   };
 
-  // 랜덤 언어 생성 (영어 + 한글)
+  // ?쒕뜡 ?몄뼱 ?앹꽦 (?곸뼱 + ?쒓?)
   const generateRandomAlphabet = () => {
-    // 영어 알파벳
+    // ?곸뼱 ?뚰뙆踰?
     const alphabet = "abcdefghijklmnopqrstuvwxyz".split("");
     
-    // 자주 쓰는 한글 글자들 (가나다순)
+    // 자주 쓰는 기본 한글 음절
     const koreanChars = [
       "가", "나", "다", "라", "마", "바", "사", "아", "자", "차", "카", "타", "파", "하",
       "거", "너", "더", "러", "머", "버", "서", "어", "저", "처", "커", "터", "퍼", "허",
       "고", "노", "도", "로", "모", "보", "소", "오", "조", "초", "코", "토", "포", "호",
       "구", "누", "두", "루", "무", "부", "수", "우", "주", "추", "쿠", "투", "푸", "후",
-      "그", "느", "드", "르", "므", "브", "스", "으", "즈", "츠", "크", "트", "프", "흐",
       "기", "니", "디", "리", "미", "비", "시", "이", "지", "치", "키", "티", "피", "히",
     ];
 
-    // 전체 문자 목록
+    // ?꾩껜 臾몄옄 紐⑸줉
     const allChars = [...alphabet, ...koreanChars];
     
-    // 피셔–예이츠 셔플
+    // ?쇱뀛?볦삁?댁툩 ?뷀뵆
     const shuffled = [...allChars];
     for (let i = shuffled.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -680,26 +679,26 @@ export default function Home() {
       to: shuffled[index],
     }));
 
-    setRules(newRules, "🎲 랜덤 생성");
-    showAlert(`${newRules.length}개의 규칙이 생성되었습니다! (영어 ${alphabet.length}개 + 한글 ${koreanChars.length}개)`, "success");
+    setRules(newRules, "?렡 ?쒕뜡 ?앹꽦");
+    showAlert(`${newRules.length}媛쒖쓽 洹쒖튃???앹꽦?섏뿀?듬땲?? (?곸뼱 ${alphabet.length}媛?+ ?쒓? ${koreanChars.length}媛?`, "success");
   };
 
   const clearRules = async () => {
-    const confirmed = window.confirm("정말 모든 규칙을 삭제할까요?");
+    const confirmed = window.confirm("?뺣쭚 紐⑤뱺 洹쒖튃????젣?좉퉴??");
     if (confirmed) {
-      setRules([], "🧹 전체 삭제");
-      await showAlert("모든 규칙이 삭제되었습니다.", "success");
+      setRules([], "?㏏ ?꾩껜 ??젣");
+      await showAlert("紐⑤뱺 洹쒖튃????젣?섏뿀?듬땲??", "success");
     }
   };
 
-  // 규칙 내보내기
+  // 洹쒖튃 ?대낫?닿린
   const exportRules = async () => {
     const validRules = rules.filter(
       (rule) => rule && rule.from && rule.from.trim() !== ""
     );
 
     if (validRules.length === 0) {
-      await showAlert("내보낼 규칙이 없습니다.", "warning");
+      await showAlert("?대낫??洹쒖튃???놁뒿?덈떎.", "warning");
       return;
     }
 
@@ -723,10 +722,10 @@ export default function Home() {
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
 
-    await showAlert(`${validRules.length}개의 규칙이 내보내졌습니다!`, "success");
+    await showAlert(`${validRules.length}媛쒖쓽 洹쒖튃???대낫?댁죱?듬땲??`, "success");
   };
 
-  // 규칙 가져오기
+  // 洹쒖튃 媛?몄삤湲?
   const importRules = async () => {
     const input = document.createElement("input");
     input.type = "file";
@@ -740,7 +739,7 @@ export default function Home() {
         const data = JSON.parse(text);
 
         if (!data.rules || !Array.isArray(data.rules)) {
-          await showAlert("잘못된 파일 형식입니다.", "error");
+          await showAlert("?섎せ???뚯씪 ?뺤떇?낅땲??", "error");
           return;
         }
 
@@ -749,21 +748,21 @@ export default function Home() {
         );
 
         if (validRules.length === 0) {
-          await showAlert("가져올 규칙이 없습니다.", "warning");
+          await showAlert("媛?몄삱 洹쒖튃???놁뒿?덈떎.", "warning");
           return;
         }
 
         const confirmed = window.confirm(
-          `${validRules.length}개의 규칙을 가져오시겠습니까?\n기존 규칙은 유지되고 추가됩니다.`
+          `${validRules.length}媛쒖쓽 洹쒖튃??媛?몄삤?쒓쿋?듬땲源?\n湲곗〈 洹쒖튃? ?좎??섍퀬 異붽??⑸땲??`
         );
 
         if (confirmed) {
           setRules([...rules, ...validRules]);
-          await showAlert(`${validRules.length}개의 규칙이 가져와졌습니다!`, "success");
+          await showAlert(`${validRules.length}媛쒖쓽 洹쒖튃??媛?몄?議뚯뒿?덈떎!`, "success");
         }
       } catch (error) {
-        console.error("파일 읽기 실패:", error);
-        await showAlert("파일을 읽는 중 오류가 발생했습니다.", "error");
+        console.error("?뚯씪 ?쎄린 ?ㅽ뙣:", error);
+        await showAlert("?뚯씪???쎈뒗 以??ㅻ쪟媛 諛쒖깮?덉뒿?덈떎.", "error");
       }
     };
 
@@ -771,26 +770,29 @@ export default function Home() {
   };
 
   // ========================================
-  // AI 언어 생성 알고리즘
+  // AI ?몄뼱 ?앹꽦 ?뚭퀬由ъ쬁
   // ========================================
 
-  // A) 문자 기반 암호 언어 생성
+  // A) 臾몄옄 湲곕컲 ?뷀샇 ?몄뼱 ?앹꽦
   const generateAI_CharacterMap = () => {
-    // 영어 알파벳
+    // ?곸뼱 ?뚰뙆踰?
     const alphabet = "abcdefghijklmnopqrstuvwxyz".split("");
     
-    // 자주 쓰는 한글 글자들
+    // ?먯＜ ?곕뒗 ?쒓? 湲?먮뱾
     const koreanChars = [
-      "가", "나", "다", "라", "마", "바", "사", "아", "자", "차", "카", "타", "파", "하",
-      "거", "너", "더", "러", "머", "버", "서", "어", "저", "처", "커", "터", "퍼", "허",
-      "고", "노", "도", "로", "모", "보", "소", "오", "조", "초", "코", "토", "포", "호",
-      "구", "누", "두", "루", "무", "부", "수", "우", "주", "추", "쿠", "투", "푸", "후",
+      "가", "나", "다", "라", "마", "바", "사", "아", "자", "차",
+      "카", "타", "파", "하", "거", "너", "더", "러", "머", "버",
+      "서", "어", "저", "처", "커", "터", "퍼", "허", "고", "노",
+      "도", "로", "모", "보", "소", "오", "조", "초", "코", "토",
+      "포", "호", "구", "누", "두", "루", "무", "부", "수", "우",
+      "주", "추", "쿠", "투", "푸", "후", "기", "니", "디", "리",
+      "미", "비", "시", "이", "지", "치", "키", "티", "피", "히",
     ];
     
     const allChars = [...alphabet, ...koreanChars];
     const shuffled = [...allChars];
 
-    // 피셔–예이츠 셔플
+    // ?쇱뀛?볦삁?댁툩 ?뷀뵆
     for (let i = shuffled.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
@@ -798,24 +800,27 @@ export default function Home() {
 
     return allChars.map((c, i) => ({
       from: c,
-      to: shuffled[i] + (Math.random() > 0.7 ? shuffled[(i + 3) % allChars.length] : ""), // 약간 확장
+      to: shuffled[i] + (Math.random() > 0.7 ? shuffled[(i + 3) % allChars.length] : ""), // ?쎄컙 ?뺤옣
     }));
   };
 
-  // B) 음절 기반 판타지 언어 생성
+  // B) ?뚯젅 湲곕컲 ?먰?吏 ?몄뼱 ?앹꽦
   const generateAI_SyllableLanguage = () => {
     const syllables = [
       "ka", "ra", "ma", "ta", "sha", "lo", "fi", "ze", "nu", "ki",
       "ba", "da", "ga", "la", "na", "sa", "wa", "ya", "ha", "pa",
     ];
     
-    // 영어 + 한글
+    // ?곸뼱 + ?쒓?
     const alphabet = "abcdefghijklmnopqrstuvwxyz".split("");
     const koreanChars = [
-      "가", "나", "다", "라", "마", "바", "사", "아", "자", "차", "카", "타", "파", "하",
-      "거", "너", "더", "러", "머", "버", "서", "어", "저", "처", "커", "터", "퍼", "허",
-      "고", "노", "도", "로", "모", "보", "소", "오", "조", "초", "코", "토", "포", "호",
-      "구", "누", "두", "루", "무", "부", "수", "우", "주", "추", "쿠", "투", "푸", "후",
+      "가", "나", "다", "라", "마", "바", "사", "아", "자", "차",
+      "카", "타", "파", "하", "거", "너", "더", "러", "머", "버",
+      "서", "어", "저", "처", "커", "터", "퍼", "허", "고", "노",
+      "도", "로", "모", "보", "소", "오", "조", "초", "코", "토",
+      "포", "호", "구", "누", "두", "루", "무", "부", "수", "우",
+      "주", "추", "쿠", "투", "푸", "후", "기", "니", "디", "리",
+      "미", "비", "시", "이", "지", "치", "키", "티", "피", "히",
     ];
     
     const allChars = [...alphabet, ...koreanChars];
@@ -830,18 +835,21 @@ export default function Home() {
     }));
   };
 
-  // C) 접두사/접미사 규칙 언어 생성
+  // C) ?묐몢???묐???洹쒖튃 ?몄뼱 ?앹꽦
   const generateAI_PrefixSuffix = () => {
     const prefixes = ["xo", "va", "zi", "re", "mo", "qu", "fy", "lo"];
     const suffixes = ["-en", "-ar", "-um", "-iq", "-al", "-is", "-ox", "-yn"];
 
-    // 영어 + 한글
+    // ?곸뼱 + ?쒓?
     const alphabet = "abcdefghijklmnopqrstuvwxyz".split("");
     const koreanChars = [
-      "가", "나", "다", "라", "마", "바", "사", "아", "자", "차", "카", "타", "파", "하",
-      "거", "너", "더", "러", "머", "버", "서", "어", "저", "처", "커", "터", "퍼", "허",
-      "고", "노", "도", "로", "모", "보", "소", "오", "조", "초", "코", "토", "포", "호",
-      "구", "누", "두", "루", "무", "부", "수", "우", "주", "추", "쿠", "투", "푸", "후",
+      "가", "나", "다", "라", "마", "바", "사", "아", "자", "차",
+      "카", "타", "파", "하", "거", "너", "더", "러", "머", "버",
+      "서", "어", "저", "처", "커", "터", "퍼", "허", "고", "노",
+      "도", "로", "모", "보", "소", "오", "조", "초", "코", "토",
+      "포", "호", "구", "누", "두", "루", "무", "부", "수", "우",
+      "주", "추", "쿠", "투", "푸", "후", "기", "니", "디", "리",
+      "미", "비", "시", "이", "지", "치", "키", "티", "피", "히",
     ];
     
     const allChars = [...alphabet, ...koreanChars];
@@ -855,21 +863,24 @@ export default function Home() {
     }));
   };
 
-  // D) 난수 기반 암호 언어 생성
+  // D) ?쒖닔 湲곕컲 ?뷀샇 ?몄뼱 ?앹꽦
   const generateAI_Crypto = () => {
-    // 영어 + 한글
+    // ?곸뼱 + ?쒓?
     const alphabet = "abcdefghijklmnopqrstuvwxyz".split("");
     const koreanChars = [
-      "가", "나", "다", "라", "마", "바", "사", "아", "자", "차", "카", "타", "파", "하",
-      "거", "너", "더", "러", "머", "버", "서", "어", "저", "처", "커", "터", "퍼", "허",
-      "고", "노", "도", "로", "모", "보", "소", "오", "조", "초", "코", "토", "포", "호",
-      "구", "누", "두", "루", "무", "부", "수", "우", "주", "추", "쿠", "투", "푸", "후",
+      "가", "나", "다", "라", "마", "바", "사", "아", "자", "차",
+      "카", "타", "파", "하", "거", "너", "더", "러", "머", "버",
+      "서", "어", "저", "처", "커", "터", "퍼", "허", "고", "노",
+      "도", "로", "모", "보", "소", "오", "조", "초", "코", "토",
+      "포", "호", "구", "누", "두", "루", "무", "부", "수", "우",
+      "주", "추", "쿠", "투", "푸", "후", "기", "니", "디", "리",
+      "미", "비", "시", "이", "지", "치", "키", "티", "피", "히",
     ];
     
     const allChars = [...alphabet, ...koreanChars];
 
     const randomChunk = () => {
-      const length = Math.floor(Math.random() * 3) + 2; // 2~4글자
+      const length = Math.floor(Math.random() * 3) + 2; // 2~4湲??
       return Array(length)
         .fill(0)
         .map(() => String.fromCharCode(97 + Math.floor(Math.random() * 26)))
@@ -882,42 +893,42 @@ export default function Home() {
     }));
   };
 
-  // AI 언어 생성 메인 함수는 제거되었습니다.
-  // 대신 AIGeneratorModal 컴포넌트를 사용하세요.
+  // AI ?몄뼱 ?앹꽦 硫붿씤 ?⑥닔???쒓굅?섏뿀?듬땲??
+  // ???AIGeneratorModal 而댄룷?뚰듃瑜??ъ슜?섏꽭??
 
-  // AI 생성 적용
+  // AI ?앹꽦 ?곸슜
   const applyAIGeneration = async () => {
     if (!preview.data || preview.data.length === 0) {
-      await showAlert("언어 생성 방식을 선택하세요.", "warning");
+      await showAlert("?몄뼱 ?앹꽦 諛⑹떇???좏깮?섏꽭??", "warning");
       return;
     }
-    const modeName = ["", "문자 기반", "음절 기반", "접두/접미", "난수"][preview.mode] || "AI";
-    setRules(preview.data, `🤖 ${modeName} 언어 생성`);
+    const modeName = ["", "臾몄옄 湲곕컲", "?뚯젅 湲곕컲", "?묐몢/?묐?", "?쒖닔"][preview.mode] || "AI";
+    setRules(preview.data, `?쨼 ${modeName} ?몄뼱 ?앹꽦`);
     setShowAIModal(false);
     setPreview({ mode: null, data: null });
-    await showAlert(`🤖 AI 언어가 적용되었습니다! (${preview.data.length}개 규칙)`, "success");
+    await showAlert(`?쨼 AI ?몄뼱媛 ?곸슜?섏뿀?듬땲?? (${preview.data.length}媛?洹쒖튃)`, "success");
   };
 
-  // 언어 아이덴티티 적용
+  // ?몄뼱 ?꾩씠?댄떚???곸슜
   const applyIdentity = (identity) => {
     setLanguageIdentity(identity);
     safeLocalStorageSet("language_identity_v1", JSON.stringify(identity));
-    showAlert("✨ 언어 이름/세계관이 저장되었습니다!", "success");
+    showAlert("???몄뼱 ?대쫫/?멸퀎愿????λ릺?덉뒿?덈떎!", "success");
   };
 
-  // 진화된 규칙 적용
+  // 吏꾪솕??洹쒖튃 ?곸슜
   const applyEvolvedRules = (nextRules) => {
-    setRules(nextRules, "🧠 언어 진화 적용");
+    setRules(nextRules, "?쭬 ?몄뼱 吏꾪솕 ?곸슜");
     resetRecommendState();
   };
 
-  // 단어 규칙 학습 알고리즘
+  // ?⑥뼱 洹쒖튃 ?숈뒿 ?뚭퀬由ъ쬁
   const learnWordRules = async (original, translated) => {
     const oWords = original.trim().split(/\s+/);
     const tWords = translated.trim().split(/\s+/);
 
     if (oWords.length !== tWords.length) {
-      await showAlert("두 문장의 단어 개수가 일치해야 합니다.", "warning");
+      await showAlert("??臾몄옣???⑥뼱 媛쒖닔媛 ?쇱튂?댁빞 ?⑸땲??", "warning");
       return;
     }
 
@@ -926,69 +937,69 @@ export default function Home() {
       to: tWords[i],
     }));
 
-    setRules(learned, "🧠 단어 규칙 학습");
+    setRules(learned, "?쭬 ?⑥뼱 洹쒖튃 ?숈뒿");
     setShowLearnModal(false);
 
-    await showAlert(`🧠 단어 규칙이 자동 학습되었습니다! (${learned.length}개)`, "success");
+    await showAlert(`?쭬 ?⑥뼱 洹쒖튃???먮룞 ?숈뒿?섏뿀?듬땲?? (${learned.length}媛?`, "success");
   };
 
-  // 한글 자동 변환 규칙 생성
+  // ?쒓? ?먮룞 蹂??洹쒖튃 ?앹꽦
   const generateKoreanRules = async () => {
     if (!inputText.trim()) {
-      await showAlert("먼저 원본 텍스트를 입력해주세요.", "warning");
+      await showAlert("癒쇱? ?먮낯 ?띿뒪?몃? ?낅젰?댁＜?몄슂.", "warning");
       return;
     }
 
-    // 한글 문자 추출 (가-힣 범위)
+    // ?쒓? 臾몄옄 異붿텧 (媛-??踰붿쐞)
     const koreanChars = new Set();
     const text = inputText;
     
     for (let i = 0; i < text.length; i++) {
       const char = text[i];
-      // 한글 유니코드 범위: 가(0xAC00) ~ 힣(0xD7A3)
+      // ?쒓? ?좊땲肄붾뱶 踰붿쐞: 媛(0xAC00) ~ ??0xD7A3)
       if (char >= "\uAC00" && char <= "\uD7A3") {
         koreanChars.add(char);
       }
     }
 
     if (koreanChars.size === 0) {
-      await showAlert("입력된 텍스트에 한글이 없습니다.", "warning");
+      await showAlert("?낅젰???띿뒪?몄뿉 ?쒓????놁뒿?덈떎.", "warning");
       return;
     }
 
-    // 기존 규칙에서 이미 사용된 변환 문자열 확인
+    // 湲곗〈 洹쒖튃?먯꽌 ?대? ?ъ슜??蹂??臾몄옄???뺤씤
     const usedToValues = new Set(rules.map((r) => r.to).filter((t) => t));
     
-    // 각 한글 문자에 대해 랜덤 변환 문자열 생성
+    // 媛??쒓? 臾몄옄??????쒕뜡 蹂??臾몄옄???앹꽦
     const newRules = [];
     const charsArray = Array.from(koreanChars);
     
     charsArray.forEach((char) => {
-      // 이미 규칙이 있는지 확인
+      // ?대? 洹쒖튃???덈뒗吏 ?뺤씤
       const existingRule = rules.find((r) => r.from === char);
       if (existingRule) {
-        return; // 이미 규칙이 있으면 스킵
+        return; // ?대? 洹쒖튃???덉쑝硫??ㅽ궢
       }
 
-      // 랜덤 문자열 생성 (대문자 알파벳 2-4자)
+      // ?쒕뜡 臾몄옄???앹꽦 (?臾몄옄 ?뚰뙆踰?2-4??
       let randomStr;
       let attempts = 0;
-      const maxAttempts = 100; // 무한 루프 방지
+      const maxAttempts = 100; // 臾댄븳 猷⑦봽 諛⑹?
       
       do {
-        const length = Math.floor(Math.random() * 3) + 2; // 2-4자
+        const length = Math.floor(Math.random() * 3) + 2; // 2-4??
         randomStr = Array.from({ length }, () => {
           return String.fromCharCode(65 + Math.floor(Math.random() * 26)); // A-Z
         }).join("");
         attempts++;
         
-        // 충돌이 너무 많으면 숫자 추가
+        // 異⑸룎???덈Т 留롮쑝硫??レ옄 異붽?
         if (attempts > 50 && !usedToValues.has(randomStr + "1")) {
           randomStr = randomStr + "1";
         }
       } while (usedToValues.has(randomStr) && attempts < maxAttempts);
       
-      // 최대 시도 횟수 초과 시 타임스탬프 추가
+      // 理쒕? ?쒕룄 ?잛닔 珥덇낵 ????꾩뒪?ы봽 異붽?
       if (attempts >= maxAttempts) {
         randomStr = randomStr + Date.now().toString().slice(-3);
       }
@@ -998,16 +1009,16 @@ export default function Home() {
     });
 
     if (newRules.length === 0) {
-      await showAlert("모든 한글 문자에 대한 규칙이 이미 존재합니다.", "info");
+      await showAlert("紐⑤뱺 ?쒓? 臾몄옄?????洹쒖튃???대? 議댁옱?⑸땲??", "info");
       return;
     }
 
-    // 기존 규칙에 추가
+    // 湲곗〈 洹쒖튃??異붽?
     setRules([...rules, ...newRules]);
-    await showAlert(`${newRules.length}개의 한글 변환 규칙이 추가되었습니다.`, "success");
+    await showAlert(`${newRules.length}媛쒖쓽 ?쒓? 蹂??洹쒖튃??異붽??섏뿀?듬땲??`, "success");
   };
 
-  // 📱 모바일 vs 💻 데스크톱 분기
+  // ?벑 紐⑤컮??vs ?뮲 ?곗뒪?ы넲 遺꾧린
   if (isMobile) {
     return (
       <>
@@ -1041,7 +1052,7 @@ export default function Home() {
     );
   }
 
-  // 💻 데스크톱 UI
+  // ?뮲 ?곗뒪?ы넲 UI
   return (
     <>
       {AlertComponent}
@@ -1050,19 +1061,75 @@ export default function Home() {
       <Navigation />
       
       <div className="max-w-5xl mx-auto p-6 space-y-6">
-        {/* 3D 로고 + 타이틀 영역 */}
+        {/* 3D 濡쒓퀬 + ??댄? ?곸뿭 */}
         <Logo3D
           title="My Secret Language"
-          // 보안: AdSense slot은 환경 변수에서만 가져오기 (기본값 제거)
+          // 蹂댁븞: AdSense slot? ?섍꼍 蹂?섏뿉?쒕쭔 媛?몄삤湲?(湲곕낯媛??쒓굅)
           subtitle={
             languageIdentity
-              ? `${languageIdentity.name} · ${languageIdentity.tagline}`
+              ? `${languageIdentity.name} 쨌 ${languageIdentity.tagline}`
               : "나만의 언어 생성기 · 3D Crypto Text Lab"
           }
         />
 
-        {/* AdSense 광고 영역 - 상단 */}
-        {/* ⚠️ 구글 정책: 충분한 콘텐츠가 있는 경우에만 광고 표시 */}
+        <section className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 p-6 md:p-8 shadow-2xl">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(96,165,250,0.18),transparent_38%),radial-gradient(circle_at_bottom_left,rgba(16,185,129,0.16),transparent_34%)]" />
+          <div className="relative grid gap-4 md:grid-cols-3">
+            {[
+              {
+                title: "짧은 인사말",
+                input: "안녕하세요",
+                output: "규칙에 따라 변형된 인사말",
+                note: "가장 먼저 확인하기 좋은 기본 테스트",
+              },
+              {
+                title: "메신저 문장",
+                input: "오늘 저녁에 만날래?",
+                output: "ㅇㄴ ㅈㄴ에 ㅁㄴㄹ?",
+                note: "짧은 치환과 약어 규칙을 함께 점검",
+              },
+              {
+                title: "가역 변환",
+                input: "HELLO WORLD",
+                output: "SVOOL DLIOW",
+                note: "encode와 decode를 함께 시험하기 좋음",
+              },
+            ].map((example, index) => (
+              <article
+                key={example.title}
+                className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/8 backdrop-blur-xl p-5 md:p-6 shadow-[0_20px_60px_rgba(0,0,0,0.35)] transition-transform duration-300 hover:-translate-y-1"
+              >
+                <div
+                  className={`absolute inset-x-0 top-0 h-1 ${
+                    index === 0
+                      ? "bg-gradient-to-r from-sky-400 to-cyan-300"
+                      : index === 1
+                        ? "bg-gradient-to-r from-emerald-400 to-teal-300"
+                        : "bg-gradient-to-r from-violet-400 to-fuchsia-300"
+                  }`}
+                />
+                <p className="text-xs uppercase tracking-[0.2em] text-slate-400 mb-2">
+                  Example
+                </p>
+                <h3 className="text-lg font-bold text-white mb-3">{example.title}</h3>
+                <div className="space-y-2 text-sm text-slate-300">
+                  <p>
+                    <span className="font-semibold text-white">입력:</span>{" "}
+                    {example.input}
+                  </p>
+                  <p>
+                    <span className="font-semibold text-white">출력:</span>{" "}
+                    {example.output}
+                  </p>
+                  <p className="pt-2 text-slate-400 leading-6">{example.note}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        {/* AdSense 愿묎퀬 ?곸뿭 - ?곷떒 */}
+        {/* ?좑툘 援ш? ?뺤콉: 異⑸텇??肄섑뀗痢좉? ?덈뒗 寃쎌슦?먮쭔 愿묎퀬 ?쒖떆 */}
         {shouldShowAds() && (
           <div className="card-3d p-3 my-4">
             <Adsense 
@@ -1072,10 +1139,10 @@ export default function Home() {
           </div>
         )}
 
-        {/* 콘텐츠 섹션 */}
+        {/* 肄섑뀗痢??뱀뀡 */}
         <ContentSection />
 
-      {/* 🎨 깔끔하게 정리된 네비게이션 바 */}
+      {/* ?렓 源붾걫?섍쾶 ?뺣━???ㅻ퉬寃뚯씠??諛?*/}
       <NavigationBar
         theme={theme}
         onToggleTheme={toggleTheme}
@@ -1097,57 +1164,57 @@ export default function Home() {
       <div className="grid md:grid-cols-2 gap-6">
         {/* 입력 카드 */}
         <div className="card-3d">
-          <h2 className="text-xl font-semibold mb-3">원본 텍스트</h2>
+          <h2 className="text-xl font-semibold mb-3">텍스트 입력</h2>
           <textarea
             className="input-3d w-full min-h-[160px]"
             value={inputText}
             onChange={(e) => {
               const newValue = e.target.value;
-              // 🔒 입력 검증
+              // 입력 검증
               const validation = validateTextInput(newValue);
               if (validation.valid) {
                 setInputText(newValue);
               } else {
-                showAlert(validation.error || '입력값이 유효하지 않습니다.', 'error');
+                showAlert(validation.error || "입력값이 유효하지 않습니다.", "error");
               }
             }}
             placeholder="여기에 문장을 입력하세요"
             maxLength={MAX_INPUT_LENGTH}
           />
 
-          {/* v2 번역 엔진 모드 선택 */}
+          {/* 변환 엔진 선택 */}
           <div className="mt-4 mb-3">
             <label className="block text-sm font-medium mb-2 opacity-90">
-              번역 엔진 모드
+              변환 모드
             </label>
             <select
               className="input-3d w-full py-2"
               value={engineMode}
               onChange={(e) => setEngineMode(e.target.value)}
-              title="번역 방식을 선택하세요"
+              title="변환 방식을 선택하세요"
             >
-              <option value="hybrid">Hybrid (단어+문자 추천)</option>
-              <option value="word">Word (단어 단위만)</option>
-              <option value="substring">Substring (부분문자열 치환)</option>
+              <option value="hybrid">Hybrid (단어 + 문자 추천)</option>
+              <option value="word">Word (단어 단위)</option>
+              <option value="substring">Substring (부분 문자열 치환)</option>
             </select>
           </div>
 
-          {/* 변환 버튼 그룹 */}
+          {/* 蹂??踰꾪듉 洹몃９ */}
           <div className="space-y-2">
             <div className="flex gap-2">
               <button className="btn-3d btn-encode flex-1" onClick={encode}>
-                🔐 암호화
+                ?뵍 ?뷀샇??
               </button>
               <button className="btn-3d btn-decode flex-1" onClick={decode}>
-                🔓 복호화
+                ?뵑 蹂듯샇??
               </button>
             </div>
             <button 
               className="btn-3d btn-korean w-full" 
               onClick={generateKoreanRules}
-              title="입력된 텍스트의 한글을 자동으로 변환 규칙 생성"
+              title="?낅젰???띿뒪?몄쓽 ?쒓????먮룞?쇰줈 蹂??洹쒖튃 ?앹꽦"
             >
-              ✨ 한글 자동 변환
+              ???쒓? ?먮룞 蹂??
             </button>
           </div>
         </div>
@@ -1159,11 +1226,11 @@ export default function Home() {
             className="input-3d w-full min-h-[160px]"
             value={outputText}
             onChange={(e) => {
-              // 🔒 보안: 입력 sanitization 적용
+              // 입력 sanitization 적용
               const newValue = sanitizeText(e.target.value);
               setOutputText(newValue);
 
-              // 사용자가 자동 번역 결과를 수정한 경우만
+              // 사용자가 직접 수정한 경우만 학습 샘플로 기록
               if (
                 lastSourceText &&
                 lastAutoTranslated &&
@@ -1181,14 +1248,14 @@ export default function Home() {
               ) {
                 const key = lastSourceText + "||" + outputText;
                 if (lastSavedKey !== key) {
-                  // ✅ 자동 학습 샘플 저장
+                  // 학습 샘플 자동 저장
                   addSample({
                     original: lastSourceText,
                     translated: outputText,
                     mode: "word",
                   });
 
-                  console.log("🧠 학습 샘플 자동 저장됨");
+                  console.log("자동 학습 샘플 저장 완료");
                   setLearnToast(true);
                   setTimeout(() => setLearnToast(false), 2000);
 
@@ -1196,7 +1263,7 @@ export default function Home() {
                   setUserEditedOutput(false);
                   setLastSavedKey(key);
 
-                  // 샘플 수 업데이트 및 추천 체크
+                  // 샘플 업데이트 및 추천 체크
                   try {
                     const samples = loadSamples();
                     const count = Array.isArray(samples) ? samples.length : 0;
@@ -1219,24 +1286,24 @@ export default function Home() {
           <div className="mt-4 space-y-2">
             <div className="flex gap-2">
               <button className="btn-3d btn-copy flex-1" onClick={copyResult}>
-                📋 복사
+                복사
               </button>
               <button className="btn-3d btn-swap flex-1" onClick={swapText}>
-                🔁 교환
+                교환
               </button>
             </div>
             <div className="w-full">
-              <TTSPlayer text={outputText} buttonText="🔊 음성 듣기" />
+              <TTSPlayer text={outputText} buttonText="음성 듣기" />
             </div>
           </div>
         </div>
       </div>
 
-      {/* 충돌 검사기는 모달로 이동 */}
-      {/* 테스트 번역기는 모달로 이동 */}
+      {/* 異⑸룎 寃?ш린??紐⑤떖濡??대룞 */}
+      {/* ?뚯뒪??踰덉뿭湲곕뒗 紐⑤떖濡??대룞 */}
 
-      {/* AdSense 광고 영역 - 중간 */}
-      {/* ⚠️ 구글 정책: 충분한 콘텐츠가 있는 경우에만 광고 표시 */}
+      {/* AdSense 愿묎퀬 ?곸뿭 - 以묎컙 */}
+      {/* ?좑툘 援ш? ?뺤콉: 異⑸텇??肄섑뀗痢좉? ?덈뒗 寃쎌슦?먮쭔 愿묎퀬 ?쒖떆 */}
       {shouldShowAds() && (
         <div className="card-3d p-3 my-4">
           <Adsense 
@@ -1246,82 +1313,82 @@ export default function Home() {
         </div>
       )}
 
-      {/* 규칙 편집 카드 */}
+      {/* 洹쒖튃 ?몄쭛 移대뱶 */}
       <div className="card-3d">
         <div className="flex justify-between items-center mb-4 flex-wrap gap-3">
           <div className="flex items-center gap-3">
-            <h2 className="text-xl font-semibold">변환 규칙</h2>
-            {/* 🎯 Quick Win 5: 규칙 개수 실시간 표시 */}
+            <h2 className="text-xl font-semibold">蹂??洹쒖튃</h2>
+            {/* ?렞 Quick Win 5: 洹쒖튃 媛쒖닔 ?ㅼ떆媛??쒖떆 */}
             <span className="text-sm bg-blue-500/20 text-blue-300 px-3 py-1 rounded-full font-bold">
-              {rules.filter(r => r && r.from && r.from.trim()).length}개
+              {rules.filter(r => r && r.from && r.from.trim()).length}媛?
             </span>
           </div>
         </div>
 
-        {/* 버튼 그룹: 기본 작업 */}
+        {/* 踰꾪듉 洹몃９: 湲곕낯 ?묒뾽 */}
         <div className="button-group mb-3">
-          <div className="button-group-label">기본 작업</div>
+          <div className="button-group-label">湲곕낯 ?묒뾽</div>
           <div className="button-group-items">
-            <button className="btn-3d btn-compact btn-add" onClick={addRule} title="새 규칙 추가">
-              ➕ 규칙 추가
+            <button className="btn-3d btn-compact btn-add" onClick={addRule} title="??洹쒖튃 異붽?">
+              ??洹쒖튃 異붽?
             </button>
-            <button className="btn-3d btn-compact btn-red" onClick={clearRules} title="모든 규칙 삭제">
-              🧹 삭제
+            <button className="btn-3d btn-compact btn-red" onClick={clearRules} title="紐⑤뱺 洹쒖튃 ??젣">
+              ?㏏ ??젣
             </button>
-            {/* 🔄 Undo/Redo 버튼 */}
+            {/* ?봽 Undo/Redo 踰꾪듉 */}
             <button 
               className="btn-3d btn-compact btn-undo" 
               onClick={undo} 
               disabled={!canUndo}
-              title="실행 취소 (Ctrl+Z)"
+              title="?ㅽ뻾 痍⑥냼 (Ctrl+Z)"
             >
-              ↶ Undo
+              ??Undo
             </button>
             <button 
               className="btn-3d btn-compact btn-redo" 
               onClick={redo} 
               disabled={!canRedo}
-              title="다시 실행 (Ctrl+Shift+Z)"
+              title="?ㅼ떆 ?ㅽ뻾 (Ctrl+Shift+Z)"
             >
-              ↷ Redo
+              ??Redo
             </button>
           </div>
         </div>
 
-        {/* 버튼 그룹: AI 생성 */}
+        {/* 踰꾪듉 洹몃９: AI ?앹꽦 */}
         <div className="button-group mb-3">
-          <div className="button-group-label">AI 생성</div>
+          <div className="button-group-label">AI ?앹꽦</div>
           <div className="button-group-items">
             <button 
               className="btn-3d btn-compact btn-ai" 
               onClick={() => setShowAIModal(true)}
-              title="AI 알고리즘으로 다양한 언어 패턴 자동 생성"
+              title="AI ?뚭퀬由ъ쬁?쇰줈 ?ㅼ뼇???몄뼱 ?⑦꽩 ?먮룞 ?앹꽦"
             >
-              🤖 AI 언어 생성
+              ?쨼 AI ?몄뼱 ?앹꽦
             </button>
             <button 
               className="btn-3d btn-compact btn-learn" 
               onClick={() => setShowLearnModal(true)}
-              title="원문과 변환문으로부터 단어 규칙 자동 학습"
+              title="?먮Ц怨?蹂?섎Ц?쇰줈遺???⑥뼱 洹쒖튃 ?먮룞 ?숈뒿"
             >
-              🧠 단어 규칙 학습
+              ?쭬 ?⑥뼱 洹쒖튃 ?숈뒿
             </button>
-            <button className="btn-3d btn-compact btn-random" onClick={generateRandomAlphabet} title="랜덤 알파벳 규칙 생성">
-              🎲 랜덤 생성
+            <button className="btn-3d btn-compact btn-random" onClick={generateRandomAlphabet} title="?쒕뜡 ?뚰뙆踰?洹쒖튃 ?앹꽦">
+              ?렡 ?쒕뜡 ?앹꽦
             </button>
           </div>
         </div>
 
-        {/* 버튼 그룹: 고급 기능 */}
+        {/* 踰꾪듉 洹몃９: 怨좉툒 湲곕뒫 */}
         <div className="button-group mb-3">
-          <div className="button-group-label">고급 기능</div>
+          <div className="button-group-label">怨좉툒 湲곕뒫</div>
           <div className="button-group-items">
             <button 
               className="btn-3d btn-compact btn-naming" 
               onClick={() => setShowIdentityModal(true)}
-              title="언어 이름 및 세계관 생성"
+              title="?몄뼱 ?대쫫 諛??멸퀎愿 ?앹꽦"
             >
-              ✨ 네이밍/세계관
+              ???ㅼ씠諛??멸퀎愿
             </button>
             <button 
               className="btn-3d btn-compact btn-evolution" 
@@ -1329,49 +1396,49 @@ export default function Home() {
                 setShowEvolutionRecommend(false);
                 setShowEvolutionModal(true);
               }}
-              title="학습 샘플 기반 언어 진화"
+              title="?숈뒿 ?섑뵆 湲곕컲 ?몄뼱 吏꾪솕"
             >
-              🧬 언어 진화
+              ?㎚ ?몄뼱 吏꾪솕
             </button>
           </div>
         </div>
 
-        {/* 버튼 그룹: 저장/불러오기 */}
+        {/* 踰꾪듉 洹몃９: ???遺덈윭?ㅺ린 */}
         <div className="button-group mb-3">
-          <div className="button-group-label">저장/불러오기</div>
+          <div className="button-group-label">???遺덈윭?ㅺ린</div>
           <div className="button-group-items">
             <button 
               className="btn-3d btn-compact" 
               onClick={exportRules}
-              title="규칙을 JSON 파일로 내보내기"
+              title="洹쒖튃??JSON ?뚯씪濡??대낫?닿린"
             >
-              📤 내보내기
+              ?뱾 ?대낫?닿린
             </button>
             <button 
               className="btn-3d btn-compact" 
               onClick={importRules}
               title="JSON 파일에서 규칙 가져오기"
             >
-              📥 가져오기
+              파일 가져오기
             </button>
             <button 
               className="btn-3d btn-compact btn-preset" 
               onClick={() => setShowPresetModal(true)}
-              title="언어 프리셋 저장 및 불러오기"
+              title="언어 프리셋 선택하기"
             >
-              💾 프리셋
+              프리셋
             </button>
             <button 
               className="btn-3d btn-compact btn-search" 
               onClick={() => setShowSearch(!showSearch)}
-              title="규칙 검색 및 필터"
+              title="규칙 검색 토글"
             >
-              {showSearch ? "🔍 검색 닫기" : "🔍 검색"}
+              {showSearch ? "검색 닫기" : "검색 열기"}
             </button>
           </div>
         </div>
 
-        {/* 🔍 규칙 검색/필터 */}
+        {/* 규칙 검색 필터 */}
         {showSearch && (
           <RuleSearch 
             rules={rules}
@@ -1384,20 +1451,20 @@ export default function Home() {
             <tr>
               <th className="text-left">
                 <div className="flex items-center gap-2">
-                  <span className="text-lg">📝</span>
-                  <span>원본 (From)</span>
+                  <span className="text-lg">입</span>
+                  <span>원문 (From)</span>
                 </div>
               </th>
               <th className="text-left">
                 <div className="flex items-center gap-2">
-                  <span className="text-lg">🔄</span>
-                  <span>변환 (To)</span>
+                  <span className="text-lg">출</span>
+                  <span>변환 결과 (To)</span>
                 </div>
               </th>
               <th className="text-center">
                 <div className="flex items-center justify-center gap-2">
-                  <span className="text-lg">🗑️</span>
-                  <span>작업</span>
+                  <span className="text-lg">작</span>
+                  <span>동작</span>
                 </div>
               </th>
             </tr>
@@ -1407,12 +1474,12 @@ export default function Home() {
             {(showSearch ? filteredRules : rules).filter(r => r && (r.from || r.to)).length === 0 ? (
               <tr>
                 <td colSpan="3" className="text-center py-8 opacity-60">
-                  {showSearch ? "검색 결과가 없습니다." : "규칙이 없습니다. 위의 버튼을 사용하여 규칙을 추가하세요."}
+                  {showSearch ? "검색 결과가 없습니다." : "규칙이 없습니다. 위의 버튼을 사용해 규칙을 추가하세요."}
                 </td>
               </tr>
             ) : (
               (showSearch ? filteredRules : rules).map((rule, index) => {
-                // 원본 인덱스 찾기
+                // ?먮낯 ?몃뜳??李얘린
                 const originalIndex = rules.indexOf(rule);
                 return (
                   <RuleRow
@@ -1432,13 +1499,13 @@ export default function Home() {
         </table>
 
         <p className="text-gray-400 text-sm mt-4 opacity-80">
-          규칙은 위에서 아래 순서대로 적용됩니다.  
-          긴 단어를 위에 두면 올바른 치환이 더 잘 일어납니다.
+          洹쒖튃? ?꾩뿉???꾨옒 ?쒖꽌?濡??곸슜?⑸땲??  
+          湲??⑥뼱瑜??꾩뿉 ?먮㈃ ?щ컮瑜?移섑솚???????쇱뼱?⑸땲??
         </p>
       </div>
 
-      {/* AdSense 광고 영역 - 하단 */}
-      {/* ⚠️ 구글 정책: 충분한 콘텐츠가 있는 경우에만 광고 표시 */}
+      {/* AdSense 愿묎퀬 ?곸뿭 - ?섎떒 */}
+      {/* ?좑툘 援ш? ?뺤콉: 異⑸텇??肄섑뀗痢좉? ?덈뒗 寃쎌슦?먮쭔 愿묎퀬 ?쒖떆 */}
       {shouldShowAds() && (
         <div className="card-3d p-3 my-4">
           <Adsense 
@@ -1448,14 +1515,14 @@ export default function Home() {
         </div>
       )}
 
-      {/* 자동 학습 토스트 */}
+      {/* ?먮룞 ?숈뒿 ?좎뒪??*/}
       {learnToast && (
         <div className="fixed bottom-24 right-6 bg-green-500 text-white px-4 py-2 rounded-xl shadow-lg z-50 animate-pulse">
-          🧠 언어가 학습되었습니다
+          ?쭬 ?몄뼱媛 ?숈뒿?섏뿀?듬땲??
         </div>
       )}
 
-      {/* 언어 진화 추천 배너 */}
+      {/* ?몄뼱 吏꾪솕 異붿쿇 諛곕꼫 */}
       {showEvolutionRecommend && (
         <EvolutionRecommendBanner
           sampleCount={sampleCount}
@@ -1468,7 +1535,7 @@ export default function Home() {
       )}
 
       {/* ------------------------
-          AI 생성기 모달
+          AI ?앹꽦湲?紐⑤떖
       ------------------------- */}
       {showAIModal && (
         <AIGeneratorModal
@@ -1483,7 +1550,7 @@ export default function Home() {
       )}
 
       {/* ------------------------
-          단어 규칙 학습 모달
+          ?⑥뼱 洹쒖튃 ?숈뒿 紐⑤떖
       ------------------------- */}
       {showLearnModal && (
         <LearnRuleModal
@@ -1493,7 +1560,7 @@ export default function Home() {
       )}
 
       {/* ------------------------
-          프리셋 모달
+          ?꾨━??紐⑤떖
       ------------------------- */}
       {showPresetModal && (
         <div 
@@ -1507,11 +1574,11 @@ export default function Home() {
             {/* 헤더 */}
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="text-4xl">💾</div>
+                <div className="text-4xl">언</div>
                 <div>
                   <h2 className="text-2xl font-extrabold text-white">언어 프리셋</h2>
                   <p className="text-sm text-slate-400 mt-1">
-                    언어를 저장하고 불러오세요
+                    저장한 프리셋을 불러오거나 새로 저장하세요.
                   </p>
                 </div>
               </div>
@@ -1519,15 +1586,15 @@ export default function Home() {
                 className="text-slate-400 hover:text-white transition-colors text-2xl leading-none hover:rotate-90 transition-transform duration-300"
                 onClick={() => setShowPresetModal(false)}
               >
-                ✕
+                ×
               </button>
             </div>
 
             {/* 프리셋 저장 섹션 */}
             <div className="bg-slate-700/30 border-2 border-slate-600/50 rounded-xl p-5 space-y-3">
               <div className="flex items-center gap-2 mb-2">
-                <span className="text-xl">✨</span>
-                <h3 className="font-bold text-white">새 프리셋 저장</h3>
+                <span className="text-xl">저</span>
+                <h3 className="font-bold text-white">프리셋 저장</h3>
               </div>
               
               <div className="flex gap-2">
@@ -1550,18 +1617,18 @@ export default function Home() {
               </div>
 
               <button className="btn-3d w-full" onClick={savePreset}>
-                💾 저장하기
+                프리셋 저장
               </button>
             </div>
 
             <hr />
 
-            {/* 프리셋 리스트 */}
+            {/* 프리셋 목록 */}
             <div>
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
-                  <span className="text-xl">📚</span>
-                  <h3 className="font-bold text-white">저장된 프리셋</h3>
+                  <span className="text-xl">목</span>
+                  <h3 className="font-bold text-white">저장한 프리셋</h3>
                 </div>
                 <span className="text-xs bg-indigo-500/20 text-indigo-300 px-3 py-1 rounded-full">
                   {presetList.length}개
@@ -1571,10 +1638,10 @@ export default function Home() {
               <div className="space-y-2 max-h-[350px] overflow-y-auto custom-scrollbar">
                 {presetList.length === 0 ? (
                   <div className="text-center py-12 opacity-70">
-                    <div className="text-5xl mb-3">📦</div>
-                    <p className="text-sm text-slate-400">저장된 프리셋이 없습니다</p>
+                    <div className="text-5xl mb-3">비</div>
+                    <p className="text-sm text-slate-400">저장한 프리셋이 없습니다</p>
                     <p className="text-xs text-slate-500 mt-1">
-                      위에서 프리셋을 저장해보세요
+                      위에서 프리셋을 저장해보세요.
                     </p>
                   </div>
                 ) : (
@@ -1585,7 +1652,7 @@ export default function Home() {
                     >
                       <div className="flex justify-between items-center gap-3">
                         <div className="flex-1 min-w-0">
-                          {/* ✏️ 편집 모드 */}
+                          {/* 이름 편집 모드 */}
                           {editingPresetIndex === idx ? (
                             <div className="flex items-center gap-2 mb-1">
                               <input
@@ -1602,13 +1669,13 @@ export default function Home() {
                                 className="btn-3d text-xs px-2 py-1"
                                 onClick={() => savePresetName(idx)}
                               >
-                                ✓
+                                ??
                               </button>
                               <button
                                 className="btn-3d btn-red text-xs px-2 py-1"
                                 onClick={cancelEditPreset}
                               >
-                                ✕
+                                ??
                               </button>
                             </div>
                           ) : (
@@ -1619,7 +1686,7 @@ export default function Home() {
                           
                           <div className="flex items-center gap-2">
                             <span className="text-xs bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded-full">
-                              규칙 {preset.rules?.length || 0}개
+                              洹쒖튃 {preset.rules?.length || 0}媛?
                             </span>
                             {preset.createdAt && (
                               <span className="text-xs text-slate-500">
@@ -1636,20 +1703,20 @@ export default function Home() {
                                 className="btn-3d text-sm px-3 py-1"
                                 onClick={() => loadPreset(preset)}
                               >
-                                📥 불러오기
+                                불러오기
                               </button>
                               <button
                                 className="btn-3d text-sm px-2 py-1"
                                 onClick={() => startEditPreset(idx)}
                                 title="이름 변경"
                               >
-                                ✏️
+                                편집
                               </button>
                               <button
                                 className="btn-3d btn-red text-sm px-3 py-1"
                                 onClick={() => deletePreset(idx)}
                               >
-                                ✕
+                                삭제
                               </button>
                             </>
                           )}
@@ -1669,7 +1736,7 @@ export default function Home() {
       </div>
     )}
 
-      {/* 언어 네이밍/세계관 모달 */}
+      {/* ?몄뼱 ?ㅼ씠諛??멸퀎愿 紐⑤떖 */}
       {showIdentityModal && (
         <LanguageIdentityModal
           rules={rules}
@@ -1678,7 +1745,7 @@ export default function Home() {
         />
       )}
 
-      {/* 언어 진화 모달 */}
+      {/* ?몄뼱 吏꾪솕 紐⑤떖 */}
       {showEvolutionModal && (
         <EvolutionModal
           baseRules={rules}
@@ -1687,42 +1754,42 @@ export default function Home() {
         />
       )}
 
-      {/* 튜토리얼 모달 (첫 방문자용) */}
+      {/* ?쒗넗由ъ뼹 紐⑤떖 (泥?諛⑸Ц?먯슜) */}
       {showTutorial && (
         <TutorialModal
           onClose={() => setShowTutorial(false)}
         />
       )}
 
-      {/* 빠른 가이드 모달 */}
+      {/* 鍮좊Ⅸ 媛?대뱶 紐⑤떖 */}
       {showQuickGuide && (
         <QuickGuideModal
           onClose={() => setShowQuickGuide(false)}
         />
       )}
 
-      {/* 백업/복원 모달 */}
+      {/* 諛깆뾽/蹂듭썝 紐⑤떖 */}
       {showBackupModal && (
         <BackupRestoreModal
           onClose={() => setShowBackupModal(false)}
           onRestore={() => {
-            // 복원 후 페이지 새로고침
+            // 蹂듭썝 ???섏씠吏 ?덈줈怨좎묠
             window.location.reload();
           }}
         />
       )}
 
-        {/* 🔧 localStorage 용량 모니터링 표시기 */}
+        {/* ?뵩 localStorage ?⑸웾 紐⑤땲?곕쭅 ?쒖떆湲?*/}
         <StorageIndicator onClick={() => setShowBackupModal(true)} />
 
-        {/* 충돌 검사는 모달로 이동 */}
+        {/* 異⑸룎 寃?щ뒗 紐⑤떖濡??대룞 */}
 
-      {/* ⌨️ 키보드 단축키 도움말 모달 */}
+      {/* ?⑨툘 ?ㅻ낫???⑥텞???꾩?留?紐⑤떖 */}
       {showShortcutsHelp && (
         <ShortcutsHelpModal onClose={() => setShowShortcutsHelp(false)} />
       )}
 
-      {/* 📜 번역 히스토리 모달 */}
+      {/* ?뱶 踰덉뿭 ?덉뒪?좊━ 紐⑤떖 */}
       {showHistory && (
         <TranslationHistory 
           onClose={() => setShowHistory(false)}
@@ -1734,7 +1801,7 @@ export default function Home() {
         />
       )}
 
-        {/* 📊 규칙 통계 모달 */}
+        {/* ?뱤 洹쒖튃 ?듦퀎 紐⑤떖 */}
         {showStatistics && (
           <RuleStatistics
             rules={rules}
@@ -1742,7 +1809,7 @@ export default function Home() {
           />
         )}
 
-        {/* 🔍 충돌 검사기 모달 */}
+        {/* ?뵇 異⑸룎 寃?ш린 紐⑤떖 */}
         {showConflictChecker && (
           <ConflictCheckerModal
             rules={rules}
@@ -1752,7 +1819,7 @@ export default function Home() {
           />
         )}
 
-        {/* 🧪 테스트 번역기 모달 */}
+        {/* ?㎦ ?뚯뒪??踰덉뿭湲?紐⑤떖 */}
         {showTestTranslator && (
           <TestTranslatorModal
             rules={rules}
